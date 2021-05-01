@@ -1,48 +1,47 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/* Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
+ * Copyright (C) 2021 Väinö viinikka
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package kva;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import kva.logiikka.Sovelluslogiikka;
+import kva.ui.Kayttoliittyma;
 
-/**
+/**Kurssivalinta-avustimen pääluokka, joka alustaa käyttöliittymän ja sovelluslogiikan
+ * ja käynnistää sovelluksen.
+ * <p>
+ * Luokka ei sisällä sovelluksen varsinaista toteutusta. Se ainoastaan luo ilmetymät
+ * luokista {@link kva.ui.Kayttoliittyma} ja {@link kva.logiikka.Sovelluslogiikka} 
+ * ja käynnistää sovelluksen {@code Kayttoliittyman} metodilla {@code luo}.
  *
- * @author vaino
+ * @author Väinö Viinikka
  */
 public class KurssivalintaAvustin extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-        Button btn = new Button();
-        btn.setText("Say 'Hello World'");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("Hello World!");
-            }
-        });
-        
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
-        
-        Scene scene = new Scene(root, 300, 250);
-        
-        primaryStage.setTitle("Hello World!");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        Sovelluslogiikka logiikka = new Sovelluslogiikka();
+        Kayttoliittyma kayttis = new Kayttoliittyma(logiikka);
+        kayttis.luo(primaryStage);
     }
 
-    /**
-     * @param args the command line arguments
+    /**Sovelluksen pääohjelma, jonka ainoa tehtävä on kutsua metodia {@code Application.launch()}.
+     * 
+     * @param args komentorivin argumentit
      */
     public static void main(String[] args) {
         launch(args);
