@@ -16,10 +16,34 @@
  */
 package kva.ui;
 
-/**
+import javafx.event.ActionEvent;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.layout.StackPane;
+import kva.logiikka.Sovelluslogiikka;
+
+/**Toteuttaa {@link kva.ui.Nakyma}n, jossa käyttäjä syöttää kurssitarjottimen konstruoimiseen  
+ * tarvittavat tiedot ja sen jälkeen valitsee kurssit.
  *
  * @author Väinö Viinikka
  */
-public class KurssitarjotinNakyma {
+public class KurssitarjotinNakyma extends Nakyma {
+
+    public KurssitarjotinNakyma(String otsikko, Sovelluslogiikka logiikka) {
+        super(otsikko, logiikka);
+    }
+
+    @Override
+    public Node luoSisalto() {
+        Button btn = new Button();
+        btn.setText("Tuo kurssit Wilmasta.");
+        btn.setOnAction((ActionEvent event) -> {
+            System.out.println("Kurssien tuontia ei ole toteutettu vielä.");
+        });
+        
+        StackPane root = new StackPane();
+        root.getChildren().add(btn);
+        return root;
+    }
     
 }

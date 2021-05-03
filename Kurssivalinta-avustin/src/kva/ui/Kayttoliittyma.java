@@ -16,11 +16,8 @@
  */
 package kva.ui;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 import kva.logiikka.Sovelluslogiikka;
 
@@ -58,22 +55,14 @@ public class Kayttoliittyma {
      * @param ikkuna {@code Stage}, johon käyttöliittymä luodaan
      */
     public void luo(Stage ikkuna) {
-        Button btn = new Button();
-        btn.setText("Say 'Hello World'");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("Hello World!");
-            }
-        });
+        AsetusNakyma asetusnakyma = new AsetusNakyma("Asetukset", logiikka);
+        KurssitarjotinNakyma kurssitarjotin = new KurssitarjotinNakyma("Kurssitarjotin", logiikka);
         
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
+        TabPane valilehdet = new TabPane(asetusnakyma.getValilehti(), kurssitarjotin.getValilehti());
+        valilehdet.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         
-        Scene scene = new Scene(root, 300, 250);
-        
-        ikkuna.setTitle("Hello World!");
+        Scene scene = new Scene(valilehdet, 300, 250);
+        ikkuna.setTitle("Kurssivalinta-avustin");
         ikkuna.setScene(scene);
         ikkuna.show();
     }

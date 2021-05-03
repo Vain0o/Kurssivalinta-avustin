@@ -16,10 +16,34 @@
  */
 package kva.ui;
 
-/**
+import javafx.event.ActionEvent;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.layout.StackPane;
+import kva.logiikka.Sovelluslogiikka;
+
+/**Toteuttaa {@link kva.ui.Nakyma}n, jossa käyttäjä valitsee aineet, joiden kursseja 
+ * hänelle näytetään.
  *
  * @author Väinö Viinikka
  */
-public class AsetusNakyma {
+public class AsetusNakyma extends Nakyma {
+
+    public AsetusNakyma(String otsikko, Sovelluslogiikka logiikka) {
+        super(otsikko, logiikka);
+    }
+
+    @Override
+    public Node luoSisalto() {
+        Button btn = new Button();
+        btn.setText("Valitse pitkä matikka!");
+        btn.setOnAction((ActionEvent event) -> {
+            System.out.println("Aineiden valintaa ei ole toteutettu vielä.");
+        });
+        
+        StackPane root = new StackPane();
+        root.getChildren().add(btn);
+        return root;
+    }
     
 }
