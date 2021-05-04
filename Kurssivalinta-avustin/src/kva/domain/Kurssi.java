@@ -16,10 +16,67 @@
  */
 package kva.domain;
 
-/**
+import java.util.Objects;
+
+/**Kapseloi ne tiedot, jotka ovat samat kaikissa saman kurssin {@code Ryhmissä}.
  *
- * @author vaino
+ * @author Väinö Viinikka
  */
-public class Kurssi {
+public class Kurssi implements Comparable<Kurssi> {
     
+    private String kurssikoodi;
+
+    /**Luo uuden kurssin annettulla kurssikoodilla
+     * 
+     * @param kurssikoodi Kurssin koodi ilman ryhmän numeroa, esim. FY05.
+     */
+    public Kurssi(String kurssikoodi) {
+        this.kurssikoodi = kurssikoodi;
+    }
+
+    public String getKurssikoodi() {
+        return kurssikoodi;
+    }
+    
+    public Tyyppi getTyyppi() {
+        return Tyyppi.SOVELTAVA;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 17 * hash + Objects.hashCode(this.kurssikoodi);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Kurssi other = (Kurssi) obj;
+        if (!Objects.equals(this.kurssikoodi, other.kurssikoodi)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int compareTo(Kurssi t) {
+        return kurssikoodi.compareTo(t.getKurssikoodi());
+    }
+    
+    /**Esitys kurssin tyypeistä, joita on kolmea eri lajia: pakollisia, valtakunnallisia 
+     * syventäviä ja koulukohtaisia soveltavia.
+     */
+    public enum Tyyppi {
+        
+        PAKOLLINEN, SYVENTÄVÄ, SOVELTAVA;
+    }
 }
