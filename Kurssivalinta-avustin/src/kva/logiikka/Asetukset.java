@@ -16,10 +16,26 @@
  */
 package kva.logiikka;
 
-/**
+import java.util.HashSet;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableSet;
+import kva.domain.Kurssi;
+
+/**Sisältää toiminnallisuuden, jolla kurssitarjottimen ryhmiä piilotetaan.
+ * <p>
+ * Myös ryhmien suosittelu tultanen toteuttamaan tänne.
  *
- * @author vaino
+ * @author Väinö Viinikka
  */
 public class Asetukset {
     
+    public final ObservableSet<String> piilotetutAineet;
+    public final ObservableSet<String> epakiinnostavatAineet;
+    public final ObservableSet<Kurssi> piilotetutKurssit;
+    
+    public Asetukset() {
+        piilotetutAineet = FXCollections.observableSet(new HashSet<>());
+        epakiinnostavatAineet = FXCollections.observableSet(new HashSet<>());
+        piilotetutKurssit = FXCollections.observableSet(new HashSet<>());
+    }
 }

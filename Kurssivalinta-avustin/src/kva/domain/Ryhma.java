@@ -78,13 +78,13 @@ public class Ryhma {
 
     /**Palauttaa samaa kurssia koskevia {@Ryhmia} toisistaan erottavan tunnuksen.
      * <p>
-     * Esimerkiksi ryhmäkoodin "FY05.2" ryhmänimi olisi "2". Nimeä ei palauteta 
+     * Esimerkiksi ryhmäkoodin "FY05.2" ryhmätunniste olisi "2". Nimeä ei palauteta 
      * kokonaislukumuodossa, koska ainakin Otaniemen lukiossa on käytössä myös kirjaimia 
      * sisältäviä ryhmänimiä, kuten MAA03.D1.
      * 
      * @return Ryhmäkoodin pistettä seuraava osa
      */
-    public String getRyhmanimi() {
+    public String getRyhmatunniste() {
         return ryhmanimi;
     }
 
