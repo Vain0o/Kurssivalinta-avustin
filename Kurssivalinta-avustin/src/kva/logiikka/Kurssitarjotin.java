@@ -1,4 +1,4 @@
-/* Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
+/**Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
  * Copyright (C) 2021 Väinö viinikka
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,67 +16,80 @@
  */
 package kva.logiikka;
 
-import java.util.Deque;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Set;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
-import kva.domain.Ryhma;
+import java.util.stream.Collectors;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableSet;
+import kva.logiikka.lataus.LuotavaRyhma;
 
-/**Säiliöluokka kurssitarjottimen {@link kva.domain.Ryhma}-olioille
- * <p>
- * Kurssitarjottimelle tehtävät operaatiot syötetään metodilla {@link #annaTehtava(java.util.function.Consumer)}
- * {@code Consumer<Stream<Ryhma>>}-tyyppisinä tehtävinä, joiden {@code accept()}-metodi 
- * saa parametrinaan {@code Ryhmat} sisältävän tietorakenteen {@code Streamin}. 
- * Toteutus mahdollistaa uusien tehtävien lisäämisen tehtävän suorittamisen aikana.
+/**Säiliöluokka kurssitarjottimen {@link kva.logiikka.Ryhma}-olioille
  *
  * @author Väinö Viinikka
  */
 public class Kurssitarjotin {
     
     private Set<Ryhma> ryhmat;
-    private volatile boolean suoritetaanTehtavaa;
-    private Deque<Consumer<Stream<Ryhma>>> tehtavat;
+    private Set<Moduuli> moduulit;
+    private Set<RyhmanSijainti> mahdollisetSijainnit;
+    private ObservableSet<Ryhma> valitutRyhmat;
     
     /**Luo uuden {@code Kurssitarjottimen}.
-     * 
-     */
-    public Kurssitarjotin() {
-        ryhmat = new HashSet<>();
-        suoritetaanTehtavaa = false;
-        tehtavat = new LinkedList<>();
-    }
-    
-    /**Suorittaa annetun operaation kurssit sisältävällä {@code Streamilla}.
      * <p>
-     * Jos metodia kutsutaan suoritettaessa jotakin muuta tehtävää, annettua tehtävää 
-     * ei suoriteta välittömästi. Sen sijaan tehtävä sijoitetaan jonon päähän, ja 
-     * suoritetaan käynnissä olevan tehtävän suorittamisen jälkeen.
+     * Konstruktori on tarkoitettu ensisijaisesti kutsuttavaksi {@link kva.logiikka.lataus.KurssitarjottimenLataaja}sta, 
+     * mutta sen luomiselle itse ei ole periaatteellista estettä.
      * 
-     * @param tehtava annettava tehtävä
-     * @throws Exception mikä tahansa poikkeus, joka syntyy suoritettaessa tehtävää 
-     *         tai sen suorittamisen aikana annettuja muita tehtäviä
-     * 
+     * @param ryhmat lista {@link kva.logiikka.lataus.LuotavaRyhma}-olioista, joiden 
+     *        perusteella {@code Kurssitarjotin} luo {@code Ryhmansa}
+     * @param moduulit lista {@code Ryhmien Moduuleista}
+     * @throws java.lang.IllegalArgumentException jos {@code moduulit} ei sisällä 
+     *         moduuleja kaikille {@code ryhmat}-listalla esiintyville ryhmille
+     * @throws java.lang.NullPointerException jos {@code ryhmat} tai {@code moduulit} 
+     *         on arvoltaan {@code null} tai sisältää {@code null}-arvon
      */
-    public void annaTehtava(Consumer<Stream<Ryhma>> tehtava) throws Exception {
-        tehtavat.addLast(tehtava);
-        suoritaTehtavat();
+    public Kurssitarjotin(Collection<LuotavaRyhma> ryhmat, Collection<Moduuli> moduulit) {
+        this.ryhmat = new HashSet<>();
+        this.moduulit = new HashSet<>(moduulit);
+        this.mahdollisetSijainnit = new HashSet<>();
+        this.valitutRyhmat = FXCollections.observableSet(new HashSet<>());
+        
+        HashMap<String, Moduuli> etsintaaVarten = new HashMap<>();
+        moduulit.forEach((moduuli) -> etsintaaVarten.put(moduuli.getKoodi(), moduuli));
+        
+        ryhmat.forEach((ryhmanPohja) -> {
+            if(!etsintaaVarten.containsKey(ryhmanPohja.getKurssikoodi())) {
+                throw new IllegalArgumentException("Kurssikoodille \"" + ryhmanPohja.getKurssikoodi() + "\" ei löydy Moduulia.");
+            }
+            this.ryhmat.add(new Ryhma(ryhmanPohja, etsintaaVarten.get(ryhmanPohja.getKurssikoodi()), this));
+            mahdollisetSijainnit.addAll(ryhmanPohja.getSijainnit());
+        });
     }
     
-    /**Suorittaa tehtävälistalla olevat tehtävät samassa järjestyksessä, kuin missä 
-     * ne lisättiin, ellei metodia kutsuta tehtävän suorittamisen aikana.
+    /**Palauttaa tällä hetkellä valituiksi merkityt {@code Ryhmat} {@link javafx.collections.ObservableSet}-muodossa.
+     * <p>
+     * Kursseja voi merkitä valituiksi tai ei-valituiksi yhtä hyvin komennoilla 
+     * {@code getValitutRyhmat().add()} ja {@code getValitutRyhmat().remove()} kuin 
+     * {@code Ryhman} metodin {@code setOnValittu()} kautta.
      * 
-     * @throws Exception mikä tahansa poikkeus, joka syntyy tehtävän suorittamisen 
-     *         aikana
+     * @return Listaus valituista {@code Ryhmista}
      */
-    private void suoritaTehtavat() throws Exception {
-        if(!suoritetaanTehtavaa) {
-            suoritetaanTehtavaa = true;
-            while(!tehtavat.isEmpty()) {
-                tehtavat.removeFirst().accept(ryhmat.stream());
-            }
-            suoritetaanTehtavaa = false;
-        }
+    public ObservableSet<Ryhma> getValitutRyhmat() {
+        return valitutRyhmat;
+    }
+    
+    /**Palauttaa sen {@code Kurssitarjottimen Moduulin}, jolla on annettu koodi.
+     * 
+     * @param koodi halutun moduulin koodi, esimerkiksi ENA05.
+     * @return haluttua kurssia kuvaava {@code Moduuli}-olio, tai {@code null} jos 
+     *         haluttua moduulia ei ole
+     */
+    public Moduuli haeModuuli(String koodi) {
+        //Moduulien haku voidaan muuttaa tehtäväksi HashMapin avulla, jos se osoittautuu tarpeelliseksi.
+        return moduulit.stream()
+                .filter((moduuli) -> moduuli.getKoodi().equals(koodi))
+                .findAny()
+                .orElse(null);
     }
 }

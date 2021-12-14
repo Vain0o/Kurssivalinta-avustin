@@ -18,14 +18,18 @@ package kva.ui;
 
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
-import kva.logiikka.Sovelluslogiikka;
 
 /**Yläluokka käyttöliittymässä esiintyville välilehdille
  * <p>
  * Luokka hallinnoi alaluokkien puolesta {@link javafx.scene.control.Tab}-välilehteä 
- * ja {@link kva.logiikka.Sovelluslogiikka}a. Välilehden varsinaisen sisällön luonti 
- * jätetään alaluokan tehtäväksi {@link #luoSisalto()}-metodilla. Sisällön voi myöhemmin 
- * vaihtaa metodin {@link #setSisalto(javafx.scene.Node)} avulla.
+ * ja tietoa käytetystä {@code Kayttoliittymasta}. Välilehden varsinaisen sisällön 
+ * luonti jätetään alaluokan tehtäväksi {@link #luoSisalto()}-metodilla. Sisällön 
+ * voi myöhemmin vaihtaa metodin {@link #setSisalto(javafx.scene.Node)} avulla.
+ * <p>
+ * Luokka kutsuu konstruktorissaan alaluokan metodia {@code luoSisalto()}. Näin ollen 
+ * alaluokan konstruktorissa ei tulisi olla muuta koodia, kuin viittaus tämän luokan 
+ * konstruktoriin. (Hyvä ohjelmointitapa ei välttämättä toteudu, mutta parempaa ratkaisua 
+ * ei äkkiseltään tule mieleen.)
  *
  * @author Väinö Viinikka
  */
@@ -34,40 +38,41 @@ public abstract class Nakyma {
     /**{@code Nakyma}n hallinnoima välilehti */
     private final Tab valilehti;
     
-    /**Sen {@code Kayttoliittyma}n {@code Sovelluslogiikka}, jossa {@code Nakyma}a 
+    /**Sen {@code Kayttoliittyma}n {@code Kurssitarjotin}, jossa {@code Nakyma}a 
      * käytetään
      */
-    private final Sovelluslogiikka logiikka;
+    private final Kayttoliittyma kayttis;
     
     /**Luo uuden Nakyman, jonka {@code Tabillä} on annettu otsikko ja joka käyttää 
-     * annettua {@code Sovelluslogiikkaa}.
+     * annettua {@code Kurssitarjotinta}.
      * <p>
-     * {@code Nakyma}t tulisi luoda luokassa {@link kva.ui.Kayttoliittyma} ja parametriksi 
-     * annetun {@Sovelluslogiikan} tulisi olla {@code Kayttoliittyman} oma {@code Sovelluslogiikka}
+     * {@code Nakymat} tulisi luoda luokassa {@link kva.ui.Kayttoliittyma} ja parametriksi 
+     * annetun {@code Kurssitarjottimen} tulisi olla {@code Kayttoliittyman} oma 
+     * {@code Kurssitarjotin}.
      * 
-     * @param otsikko {@Nakyman} kuvastaman välilehden otsikko
-     * @param logiikka {@Nakyman} käyttöön annettava {@Sovelluslogiikka}
+     * @param otsikko {@code Nakyman} kuvastaman välilehden otsikko
+     * @param kayttis {@code Kayttoliittyma}, johon {@code Nakyma} kuuluu
      */
-    public Nakyma(String otsikko, Sovelluslogiikka logiikka) {
-        this.logiikka = logiikka;
+    public Nakyma(String otsikko, Kayttoliittyma kayttis) {
+        this.kayttis = kayttis;
         this.valilehti = new Tab(otsikko, luoSisalto());
     }
     
     /**Metodi, jota kutsutaan luokkaa luotaessa ja jonka paluuarvosta tulee {@code Nakyman} 
      * kuvaaman välilehden sisältö
      * <p>
-     * Metodin suorittamisen jälkeen sisällön voi vaihtaa metodilla {@link #setSisalto(javafx.scene.Node) 
+     * Metodin suorittamisen jälkeen sisällön voi vaihtaa metodilla {@link #setSisalto(javafx.scene.Node)} 
      * 
-     * @return Luotavan välilehden ensimmäinen sisältö
+     * @return luotavan välilehden ensimmäinen sisältö
      */
     public abstract Node luoSisalto();
     
-    /**Palauttaa {@code Nakyman} käytössä olevan {@code Sovelluslogiikan}.
+    /**Palauttaa {@code Kayttoliittyman}, johon {@code Nakyma} kuuluu.
      *   
-     * @return {@code Nakymalle} annettu {@code Sovelluslogiikka}
+     * @return {@code Nakymalle} annettu {@code Kayttoliittyma}
      */
-    public final Sovelluslogiikka getLogiikka(){
-        return logiikka;
+    public final Kayttoliittyma getKayttoliittyma(){
+        return kayttis;
     }
     
     /**Palauttaa {@code Nakyman} kuvaaman {@code Tab}-välilehden.
@@ -97,7 +102,7 @@ public abstract class Nakyma {
      * @exception java.lang.NullPointerException jos metodia kutsutaan metodista 
      *            {@link #luoSisalto()}
      */
-    public final void setSisalto(Node sisalto) {
+    protected final void setSisalto(Node sisalto) {
         valilehti.setContent(sisalto);
     }
 }

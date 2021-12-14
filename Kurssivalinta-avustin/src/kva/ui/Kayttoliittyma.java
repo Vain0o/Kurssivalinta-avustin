@@ -21,49 +21,79 @@ import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 import kva.logiikka.Sovelluslogiikka;
 
-/**JavaFX-kirjastojen avulla luotu urssivalinta-avustimen käyttöliittymä
+/**JavaFX-kirjastojen avulla luotu Kurssivalinta-avustimen käyttöliittymä.
  * <p>
  * Käyttöliittymä-ikkuna luodaan metodissa {@code luo} annettuun {@code Stage}-olioon. 
- * Ikkuna sisältää {@link kva.ui.AsetusNakyma}n ja {@link kva.ui.KurssitarjotinNakyma}n 
- * {@link javafx.scene.control.TabPane}n välilehdillä. Näkymien varsinainen toteutus 
- * on kyseisissä luokissa.
+ * Ikkuna koostuu {@code Nakymista}, jotka näytetään {@link javafx.scene.control.TabPane}n 
+ * välilehdillä. Aluksi näkyvissä ovat {@link kva.ui.AsetusNakyma} sekä {@link kva.ui.KurssitarjottimenValintaNakyma}, 
+ * joka korvataan {@link kva.ui.KurssitarjotinNakyma}lla kun kurssitarjotin luodaan. 
+ * Näkymien varsinainen toteutus on kyseisissä luokissa.
+ * <p>
+ * {@code KurssitarjottimenValintaNakyman} korvaamista ei ole vielä toteutettu.
  *
  * @author Väinö Viinikka
+ * @see kva.ui.Nakyma
  */
 public class Kayttoliittyma {
     
+    private static final int IKKUNAN_LEVEYS = 800;
+    private static final int IKKUNAN_KORKEUS = 600;
+    
     /**Sisältää tiedon käyttöliittymän käyttämästä sovelluslogiikasta.*/
-    private Sovelluslogiikka logiikka;
+    private final Sovelluslogiikka logiikka;
+    
+    /**Sisältää kurssien piilottamista koskevat asetukset.*/
+    private final Asetukset asetukset;
 
     /**Luo uuden käyttöliittymän, joka käyttää parametrina annettua sovelluslogiikkaa.
      * <p>
      * Konstruktori ei vielä luo uutta, käyttäjälle näytettävää ikkunaa, vaan se
      * tehdään vasta metodissa {@code luo}.
      * 
-     * @param logiikka {@code Sovelluslogiikka}, joka vastaa ohjeman varsinaisesta toteutuksesta
+     * @param logiikka {@code Sovelluslogiikka}, joka vastaa ohjeman varsinaisesta 
+     *                 toteutuksesta
      */
     public Kayttoliittyma(Sovelluslogiikka logiikka) {
         this.logiikka = logiikka;
+        asetukset = new Asetukset();
     }
     
     /**Luo käyttöliittymäikkunan ja sen sisällön annettuun {@link javafx.stage.Stage}en.
      * <p>
-     * Metodia tulisi kutsua JavaFX:n luomassa säikeessä. Suositeltava tapa käyttää
+     * Metodia tulisi kutsua JavaFX:n sovellussäikeessä. Suositeltava tapa käyttää
      * metodia on kutsua sitä luokan {@link javafx.application.Application} alaluokan
-     * metodissa {@Start}.
+     * metodissa {@code Start}.
      * 
      * @param ikkuna {@code Stage}, johon käyttöliittymä luodaan
      */
     public void luo(Stage ikkuna) {
-        AsetusNakyma asetusnakyma = new AsetusNakyma("Asetukset", logiikka);
-        KurssitarjotinNakyma kurssitarjotin = new KurssitarjotinNakyma("Kurssitarjotin", logiikka);
+        AsetusNakyma asetusnakyma = new AsetusNakyma("Asetukset", this);
+        KurssitarjottimenValintaNakyma valintanakyma = new KurssitarjottimenValintaNakyma("Kurssitarjotin", this);
         
-        TabPane valilehdet = new TabPane(asetusnakyma.getValilehti(), kurssitarjotin.getValilehti());
+        TabPane valilehdet = new TabPane(asetusnakyma.getValilehti(), valintanakyma.getValilehti());
         valilehdet.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         
-        Scene scene = new Scene(valilehdet, 300, 250);
+        Scene scene = new Scene(valilehdet, IKKUNAN_LEVEYS, IKKUNAN_KORKEUS);
         ikkuna.setTitle("Kurssivalinta-avustin");
         ikkuna.setScene(scene);
         ikkuna.show();
+    }
+    
+    /**Palauttaa {@code Kayttoliityman} käyttämän {@link kva.logiikka.Sovelluslogiikka}-olion.
+     * 
+     * @return käytössä oleva {@code Kurssitarjotin}
+     */
+    public Sovelluslogiikka getLogiikka() {
+        return logiikka;
+    }
+    
+    /**Palauttaa {@code Kayttoliittyman} piilotettavat aineet ja kurssit sisältävän 
+     * {@code Asetukset}-olion.
+     * 
+     * @return {@code Kayttoliittyman Asetukset}
+     * @see kva.ui.Asetukset
+     */
+    public Asetukset getAsetukset() {
+        return asetukset;
     }
 }

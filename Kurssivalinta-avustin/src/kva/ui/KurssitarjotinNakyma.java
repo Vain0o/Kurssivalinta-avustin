@@ -20,17 +20,20 @@ import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
-import kva.logiikka.Sovelluslogiikka;
 
-/**Toteuttaa {@link kva.ui.Nakyma}n, jossa käyttäjä syöttää kurssitarjottimen konstruoimiseen  
- * tarvittavat tiedot ja sen jälkeen valitsee kurssit.
+/**Toteuttaa {@code Nakyman}, jossa käyttäjä valitsee kurssit.
  *
  * @author Väinö Viinikka
  */
 public class KurssitarjotinNakyma extends Nakyma {
 
-    public KurssitarjotinNakyma(String otsikko, Sovelluslogiikka logiikka) {
-        super(otsikko, logiikka);
+    /**Luo uuden kurssivalintanäkymän.
+     * 
+     * @param otsikko {@code Nakyman} kuvastaman välilehden otsikko
+     * @param kayttis {@code Kayttoliittyma}, johon {@code Nakyma} kuuluu
+     */
+    public KurssitarjotinNakyma(String otsikko, Kayttoliittyma kayttis) {
+        super(otsikko, kayttis);
     }
 
     @Override

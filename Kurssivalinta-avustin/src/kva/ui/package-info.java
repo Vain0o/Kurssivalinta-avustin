@@ -17,6 +17,11 @@
 
 /**Sisältää luokat, jotka toteuttavat Kurssivalinta-avustimen graafisen käyttöliittymän 
  * JavaFX-kirjastoa hyödyntäen.
+ * <p>
+ * Käyttöliittymän keskus on luokka {@code Kayttoliittyma}. Se hallinnoi {@code Nakymia}, 
+ * jotka luovat käyttöliittymän varsinaisen sisällön, sekä luokkaa {@code Asetukset}, 
+ * joka sisältää tiedot siitä, miten kurssit esitetään kurssitarjottimessa.
  * 
+ * @author Väinö Viinikka
  */
 package kva.ui;
