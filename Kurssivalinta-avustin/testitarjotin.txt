@@ -1,0 +1,26 @@
+PERIODIEN_TUNNISTEET
+#Esimerkkilukio
+Esimerkkilukio, periodi 1A
+Esimerkkilukio, periodi 1B
+Esimerkkilukio, periodi 2A
+Esimerkkilukio, periodi 2B
+#Pääskysaaren lukio
+1. jakso
+2. jakso
+3. jakso
+MODUULIEN_TIEDOT
+
+
+
+&Esimerkkilukio, periodi 1A
+1. palkki/MAY01.1/MAY01.2/FY01.1
+2. palkki/UE01.1/ET01.1/RAA01.1
+&Esimerkkilukio, periodi 1B
+1. palkki/MAY01.1/MAY01.2/FY01.1
+2. palkki/UE01.1/ET01.1/RAA01.1/YH09.1
+&Esimerkkilukio, periodi 2A
+1. palkki/MAA02.1/MAB02.1/BI12.1
+2. palkki/FY01.2/YH09.1
+&Esimerkkilukio, periodi 2B
+1. palkki/MAA02.1/MAB02.1
+2. palkki/FY01.2/YH09.1
