@@ -17,7 +17,7 @@
 package kva.logiikka.lataus;
 
 import java.util.ArrayList;
-import kva.logiikka.RyhmanSijainti;
+import kva.logiikka.PalkinTunniste;
 
 /**Säiliöluokka, johon kerätään ryhmien tiedot niiden luontivaiheessa.
  * <p>
@@ -29,13 +29,13 @@ import kva.logiikka.RyhmanSijainti;
  *
  * @author Väinö Viinikka
  * @see kva.logiikka.Ryhma
- * @see kva.logiikka.RyhmanSijainti
+ * @see kva.logiikka.PalkinTunniste
  * @see kva.logiikka.lataus.KurssitarjottimenLataaja
  */
 public class LuotavaRyhma {
     
     private final String ryhmakoodi;
-    private ArrayList<RyhmanSijainti> sijainnit;
+    private ArrayList<PalkinTunniste> sijainnit;
 
     /**Luo uuden {@code LuotavanRyhman}, jolla ei ole toistaiseksi sijainteja.
      * <p>
@@ -49,8 +49,8 @@ public class LuotavaRyhma {
      *         ts. jotakin muuta muotoa, kuin "[merkkijono].[merkkijono]".
      */
     public LuotavaRyhma(String ryhmakoodi) {
-        if(ryhmakoodi.split(".").length != 2) {
-            throw new IllegalArgumentException("Virheellinen ryhmäkoodi: " + ryhmakoodi);
+        if(ryhmakoodi.split("[.]").length != 2) {
+            throw new IllegalArgumentException("Virheellinen ryhmäkoodi: " + ryhmakoodi + " " + ryhmakoodi.split(".").length);
         }
         this.ryhmakoodi = ryhmakoodi;
         sijainnit = new ArrayList<>();
@@ -69,7 +69,7 @@ public class LuotavaRyhma {
      * @return ryhmäkoodin pistettä edeltävä osa, esim. "HI02" ryhmäkoodilla "HI02.3"
      */
     public String getKurssikoodi() {
-        String[] osat = ryhmakoodi.split(".");
+        String[] osat = ryhmakoodi.split("[.]");
         return osat[0];
     }
     
@@ -81,7 +81,7 @@ public class LuotavaRyhma {
      * @return ryhmäkoodin pilkkua seuraava osa, esim. "3" ryhmäkoodilla "HI02.3"
      */
     public String getRyhmatunniste() {
-        String[] osat = ryhmakoodi.split(".");
+        String[] osat = ryhmakoodi.split("[.]");
         return osat[osat.length - 1];
     }
     
@@ -89,7 +89,7 @@ public class LuotavaRyhma {
      * 
      * @param uusiSijainti lisättävä merkkijono
      */
-    public void lisaaSijainti(RyhmanSijainti uusiSijainti) {
+    public void lisaaSijainti(PalkinTunniste uusiSijainti) {
         sijainnit.add(uusiSijainti);
     }
     
@@ -101,7 +101,7 @@ public class LuotavaRyhma {
      * 
      * @return ryhmän sijainnit
      */
-    public ArrayList<RyhmanSijainti> getSijainnit() {
+    public ArrayList<PalkinTunniste> getSijainnit() {
         return new ArrayList<>(sijainnit);
     }
 }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package kva.logiikka.lataus;
+package kva.logiikka;
 
 import java.util.Objects;
 
@@ -40,10 +40,11 @@ public class PeriodinTunniste {
      *                   lukio"
      * @param periodi tarkoitetun periodin nimi, esimerkiksi "Periodi 1A" tai "1. 
      *                jakso"
+     * @throws java.lang.NullPointerException jos jompikumpi parametreistä on null;
      */
     public PeriodinTunniste(String oppilaitos, String periodi) {
-        this.oppilaitos = oppilaitos;
-        this.periodi = periodi;
+        this.oppilaitos = Objects.requireNonNull(oppilaitos);
+        this.periodi = Objects.requireNonNull(periodi);
     }
 
     /**Kertoo, minkä oppilaitoksen kurssitarjottimesta on kyse.

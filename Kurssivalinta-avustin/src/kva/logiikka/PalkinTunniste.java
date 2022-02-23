@@ -20,7 +20,7 @@ import java.util.Objects;
 
 /**Esitys {@code Ryhman} sijainnista kurssitarjottimessa.
  * <p>
- * {@code RyhmanSijainti} sisältää tiedot siitä oppilaitoksesta, periodista ja palkista, 
+ * {@code PalkinTunniste} sisältää tiedot siitä oppilaitoksesta, periodista ja palkista, 
  * jossa ryhmään liittyvä opetus pidetään. Samalla {@code Ryhmalla} voi olla useita 
  * sijainteja, esimerkiksi yksi kummallekin periodinpuolikkaalle.
  * <p>
@@ -29,11 +29,11 @@ import java.util.Objects;
  * @author Väinö Viinikka
  * @see kva.logiikka.Ryhma
  */
-public class RyhmanSijainti {
+public class PalkinTunniste {
     
-    private String oppilaitos;
-    private String periodi;
-    private String palkki;
+    private final String oppilaitos;
+    private final String periodi;
+    private final String palkki;
 
     /**Luo uuden {@code RyhmanSijainnin}.
      * 
@@ -43,7 +43,7 @@ public class RyhmanSijainti {
      *        opetus pidetään
      * @param palkki sen palkin nimi tai numero, jossa ryhmään liittyvä opetus pidetään.
      */
-    public RyhmanSijainti(String oppilaitos, String periodi, String palkki) {
+    public PalkinTunniste(String oppilaitos, String periodi, String palkki) {
         this.oppilaitos = oppilaitos;
         this.periodi = periodi;
         this.palkki = palkki;
@@ -74,6 +74,27 @@ public class RyhmanSijainti {
     public String getPalkki() {
         return palkki;
     }
+    
+    public PeriodinTunniste getPeriodinTunniste() {
+        return new PeriodinTunniste(oppilaitos, periodi);
+    }
+    
+    /** * Kertoo, kuuluuko annettu {@code PalkinTunniste} samaan periodiin.
+     * <p>
+     * {@code true} palautetaan, jos annetun {@code toisen} oppilaitos ja 
+     * periodi ovat samat, kuin tämän {@code RyhmanSijainnin}, riippumatta palkeista. 
+     * Lisäksi jos {@code toinen} on {@code null}, palautetaan arvo {@code false}.
+     * 
+     * @param toinen {@code PalkinTunniste}, jonka kuuluvuus samaan periodiin halutaan 
+     *               selvittää
+     * @return {@code true}, jos {@code toinen} kuuluu samaan periodiin
+     */
+    public boolean onSamaPeriodi(PalkinTunniste toinen) {
+        if(toinen == null) {
+            return false;
+        }
+        return getPeriodinTunniste().equals(toinen.getPeriodinTunniste());
+    }
 
     @Override
     public int hashCode() {
@@ -95,7 +116,7 @@ public class RyhmanSijainti {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final RyhmanSijainti other = (RyhmanSijainti) obj;
+        final PalkinTunniste other = (PalkinTunniste) obj;
         if (!Objects.equals(this.oppilaitos, other.oppilaitos)) {
             return false;
         }
@@ -110,6 +131,6 @@ public class RyhmanSijainti {
 
     @Override
     public String toString() {
-        return "RyhmanSijainti{" + "oppilaitos=" + oppilaitos + ", periodi=" + periodi + ", palkki=" + palkki + '}';
+        return "PalkinTunniste{" + "oppilaitos=" + oppilaitos + ", periodi=" + periodi + ", palkki=" + palkki + '}';
     }
 }

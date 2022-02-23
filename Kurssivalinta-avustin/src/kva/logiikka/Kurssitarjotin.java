@@ -16,16 +16,24 @@
  */
 package kva.logiikka;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import kva.logiikka.lataus.LuotavaRyhma;
 
-/**Säiliöluokka kurssitarjottimen {@link kva.logiikka.Ryhma}-olioille
+/**Säiliöluokka kurssitarjottimen {@link kva.logiikka.Ryhma}-olioille.
+ * <p>
+ * Luokka sisältää toiminnallisuuden kurssien merkitsemiseen valituksi tai ei-valituksi, 
+ * sekä näiden toimenpiteiden kuuntelulle. Se sisältää myös tiedot {@code Ryhmien} 
+ * {@link kva.logiikka.Moduuli}-olioista sekä järjestyksestä, jossa käyttöliittymän 
+ * tulisi jaksot esittää.
  *
  * @author Väinö Viinikka
  */
@@ -33,26 +41,30 @@ public class Kurssitarjotin {
     
     private Set<Ryhma> ryhmat;
     private Set<Moduuli> moduulit;
-    private Set<RyhmanSijainti> mahdollisetSijainnit;
+    private List<PalkinTunniste> mahdollisetPalkit;
     private ObservableSet<Ryhma> valitutRyhmat;
     
     /**Luo uuden {@code Kurssitarjottimen}.
      * <p>
-     * Konstruktori on tarkoitettu ensisijaisesti kutsuttavaksi {@link kva.logiikka.lataus.KurssitarjottimenLataaja}sta, 
+     * Konstruktori on tarkoitettu ensisijaisesti kutsuttavaksi {@link kva.logiikka.Sovelluslogiikka}sta, 
      * mutta sen luomiselle itse ei ole periaatteellista estettä.
      * 
      * @param ryhmat lista {@link kva.logiikka.lataus.LuotavaRyhma}-olioista, joiden 
      *        perusteella {@code Kurssitarjotin} luo {@code Ryhmansa}
      * @param moduulit lista {@code Ryhmien Moduuleista}
+     * @param periodienJarjestys kertoo periodien keskinäisen järjestyksen.
      * @throws java.lang.IllegalArgumentException jos {@code moduulit} ei sisällä 
-     *         moduuleja kaikille {@code ryhmat}-listalla esiintyville ryhmille
-     * @throws java.lang.NullPointerException jos {@code ryhmat} tai {@code moduulit} 
-     *         on arvoltaan {@code null} tai sisältää {@code null}-arvon
+     *         moduuleja kaikille {@code ryhmat}-listalla esiintyville ryhmille, tai 
+     *         jos {@code periodienJarjestys} ei sisällä kaikkia oppilaitoksen ja 
+     *         periodin yhdistelmiä, jotka esiintyvät {@code ryhmien} alkioiden mahdollisissa 
+     *         sijainneissa
+     * @throws java.lang.NullPointerException jos jokin parametreistä on arvoltaan 
+     *         {@code null} tai sisältää {@code null}-arvon
      */
-    public Kurssitarjotin(Collection<LuotavaRyhma> ryhmat, Collection<Moduuli> moduulit) {
+    public Kurssitarjotin(Collection<LuotavaRyhma> ryhmat, Collection<Moduuli> moduulit, List<PeriodinTunniste> periodienJarjestys) {
         this.ryhmat = new HashSet<>();
         this.moduulit = new HashSet<>(moduulit);
-        this.mahdollisetSijainnit = new HashSet<>();
+        this.mahdollisetPalkit = new ArrayList<>();
         this.valitutRyhmat = FXCollections.observableSet(new HashSet<>());
         
         HashMap<String, Moduuli> etsintaaVarten = new HashMap<>();
@@ -63,8 +75,29 @@ public class Kurssitarjotin {
                 throw new IllegalArgumentException("Kurssikoodille \"" + ryhmanPohja.getKurssikoodi() + "\" ei löydy Moduulia.");
             }
             this.ryhmat.add(new Ryhma(ryhmanPohja, etsintaaVarten.get(ryhmanPohja.getKurssikoodi()), this));
-            mahdollisetSijainnit.addAll(ryhmanPohja.getSijainnit());
+            ryhmanPohja.getSijainnit().stream()
+                    .filter((palkki) -> !mahdollisetPalkit.contains(palkki))
+                    .forEach((palkki) -> mahdollisetPalkit.add(palkki));
         });
+        
+        Comparator<PalkinTunniste> vertailija = Comparator.comparing((sijainti) -> {
+            PeriodinTunniste kokeilu = new PeriodinTunniste(sijainti.getOppilaitos(), sijainti.getPeriodi());
+            int tulos = periodienJarjestys.indexOf(kokeilu);
+            if(tulos == -1) {
+                throw new IllegalArgumentException("Periodin " + kokeilu.toString() + " paikkaa ei kerrottu.");
+            }
+            return tulos;
+        });
+        Comparator<PalkinTunniste> vertailija2 = vertailija.thenComparing((sijainti) -> sijainti.getPalkki());
+        mahdollisetPalkit.sort(vertailija2);
+    }
+    
+    /**Palauttaa listan kaikista 
+     * 
+     * @return 
+     */
+    public Set<Ryhma> getKaikkiRyhmat() {
+        return new HashSet<>(ryhmat);
     }
     
     /**Palauttaa tällä hetkellä valituiksi merkityt {@code Ryhmat} {@link javafx.collections.ObservableSet}-muodossa.
@@ -77,6 +110,31 @@ public class Kurssitarjotin {
      */
     public ObservableSet<Ryhma> getValitutRyhmat() {
         return valitutRyhmat;
+    }
+    
+    /**Palauttaa listan {@code Kurssitarjottimen Moduulien} mahdollisista sijainneista.
+     * <p>
+     * Lista palautetaan siinä järjestyksessä, jossa palkit tulee käyttöliittymässä 
+     * esittää.
+     * 
+     * @return lista mahdollisia sijainteja kuvaavista {@code PalkinTunnisteista}.
+     */
+    public List<PalkinTunniste> getMahdollisetPalkit() {
+        return new ArrayList<>(mahdollisetPalkit);
+    }
+    
+    /**Palauttaa listan {@code Kurssitarjottimen Moduulien} mahdollisista periodeista.
+     * <p>
+     * Lista palautetaan siinä järjestyksessä, jossa periodit tulee käyttöliittymässä 
+     * esittää.
+     * 
+     * @return lista mahdollisia sijainteja kuvaavista {@code PeriodinTunnisteista}.
+     */
+    public List<PeriodinTunniste> getMahdollisetPeriodit() {
+        return mahdollisetPalkit.stream()
+                .map((palkki) -> palkki.getPeriodinTunniste())
+                .distinct()
+                .collect(Collectors.toList());
     }
     
     /**Palauttaa sen {@code Kurssitarjottimen Moduulin}, jolla on annettu koodi.

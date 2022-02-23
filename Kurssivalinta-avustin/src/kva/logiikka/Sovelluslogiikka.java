@@ -17,14 +17,18 @@
 package kva.logiikka;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.concurrent.Task;
 import kva.logiikka.lataus.KurssitarjottimenLataaja;
-import kva.logiikka.lataus.PeriodinTunniste;
+import kva.logiikka.lataus.LuotavaRyhma;
 
 /**Ylin säiliöluokka Kurssivalinta-avustimen sovelluslogiikalle, sisältää {@code Kurssitarjottimen}.
  * <p>
@@ -80,8 +84,13 @@ public class Sovelluslogiikka {
      *        JavaFX:n sovellussäikeelle kutsumalla metodia {@code accept()}.
      * @throws java.lang.IllegalStateException jos {@link #getTila()} on {@code LADATAAN_PERIODIEN_NIMIA} 
      *         tai {@code LADATAAN_KURSSITARJOTINTA}
+     * @throws java.lang.NullPointerException jos jokin parametreistä on {@code null}
      */
     public void lataaPeriodienNimet(String URL, Consumer<List<PeriodinTunniste>> tuloksenKasittely, Consumer<Throwable> virheenKasittely) {
+        Objects.requireNonNull(URL);
+        Objects.requireNonNull(tuloksenKasittely);
+        Objects.requireNonNull(virheenKasittely);
+        
         if(tila == LatauksenTila.LADATAAN_PERIODIEN_NIMIA || tila == LatauksenTila.LADATAAN_KURSSITARJOTINTA) {
             throw new IllegalStateException("Periodien nimiä ei voi ladata, kun lataajalla on taustaprosessi käynnissä.");
         }
@@ -118,19 +127,122 @@ public class Sovelluslogiikka {
         th.start();
     }
     
-    /**dokumentaatio odottaa kirjoittamistaan.
+    /**Lataa {@code Kurssitarjottimen}, joka sisältää saatavilla olevat ryhmät ja moduulit.
+     * <p>
+     * Metodia tulee kutsua JavaFX:n sovellussäikeessä. Metodi antaa kurssitarjottimen 
+     * lataamisen taustasäikeen tehtäväksi, minkä jälkeen kurssitarjotin tai mahdollisesti 
+     * syntyvä poikkeus lähetetään takaisin JavaFX:n sovellussäikeelle.
      *
-     * @param valittavat
-     * @param tuloksenKasittely
-     * @param virheenKasittely
+     * @param valittavat mukaan otettavien periodien tunnisteet, järjestyksellä ei 
+     *        ole väliä
+     * @param tuloksenKasittely Kun kurssitarjotin on ladattu, se lähetetään JavaFX:n 
+     *        sovellussäikeelle metodilla {@code accept()}.
+     * @param virheenKasittely Jos kurssitarjottimen lataaminen kaatuu poikkeukseen, 
+     *        poikkeus lähetetään JavaFX:n sovellussäikeelle metodilla {@code accept()}.
+     * @throws java.lang.IllegalArgumentException jos {@code valittavat} sisältää 
+     *         {@code PeriodinTunnisteita}, joita ei löydy {@link #getPeriodienTunnisteet()}-listalta
+     * @throws java.lang.IllegalStateException jos {@link #getTila()} on {@code LUOTU}, 
+     *         {@code LADATAAN_PERIODIEN_NIMIA} tai {@code LADATAAN_KURSSITARJOTINTA}
+     * @throws java.lang.NullPointerException jos jokin parametreistä on {@code null}
      */
-    public final void lataaKurssitarjotin(Collection<PeriodinTunniste> valittavat, Consumer<Kurssitarjotin> tuloksenKasittely, Consumer<Throwable> virheenKasittely) {
-        throw new UnsupportedOperationException("Kurssitarjottimen latausta ei ole vielä toteutettu.");
+    public final void lataaKurssitarjotin(Set<PeriodinTunniste> valittavat, Consumer<Kurssitarjotin> tuloksenKasittely, 
+            Consumer<Throwable> virheenKasittely) {
+        Objects.requireNonNull(valittavat);
+        Objects.requireNonNull(tuloksenKasittely);
+        Objects.requireNonNull(virheenKasittely);
+        
+        if(tila == LatauksenTila.LUOTU || tila == LatauksenTila.LADATAAN_PERIODIEN_NIMIA) {
+            throw new IllegalStateException("Kurssitarjotinta ei voi ladata, kun periodien nimiä ei ole ladattu.");
+        } else if(tila == LatauksenTila.LADATAAN_KURSSITARJOTINTA) {
+            throw new IllegalStateException("Kurssitarjotinten latausta ei voi aloittaa, kun se on jo käynnissä.");
+        }
+        
+        HashSet<PeriodinTunniste> mukaanOtettavat = new HashSet<>(valittavat);
+        List<PeriodinTunniste> tunnisteet = getPeriodienTunnisteet();
+        Iterator<PeriodinTunniste> lapikaynti = tunnisteet.iterator();
+        while(lapikaynti.hasNext()) {
+            if(!mukaanOtettavat.remove(lapikaynti.next())) {
+                lapikaynti.remove();
+            }
+        }
+        if(!mukaanOtettavat.isEmpty()) {
+            StringBuilder poikkeusViesti = new StringBuilder("Yksi tai useampi tuntematon PeriodinTunniste:");
+            for(PeriodinTunniste ylijaama : mukaanOtettavat) {
+                poikkeusViesti = poikkeusViesti.append("\n").append(ylijaama.toString());
+            }
+            throw new IllegalArgumentException(poikkeusViesti.toString());
+        }
+        
+        LatauksenTila vanhaTila = tila;
+        tila = LatauksenTila.LADATAAN_KURSSITARJOTINTA;
+        
+        Task<Kurssitarjotin> tehtava = new Task<Kurssitarjotin>() {
+            
+            @Override
+            protected Kurssitarjotin call() throws Exception {
+                updateMessage("Valmistellaan kurssitarjottimen latausta.");
+                int periodienMaara = tunnisteet.size();
+                lataaja.valmisteleLataus(tunnisteet);
+                if(isCancelled()) {
+                   return null; 
+                }
+                
+                HashMap<String, LuotavaRyhma> ryhmat = new HashMap<>();
+                HashMap<String, Moduuli> moduulit = new HashMap<>();
+                
+                PalkinTunniste tarkistettava = null;
+                int vuoronumero = 0;
+                while(lataaja.onSeuraavaaRyhmaa()) {
+                    String koodi = lataaja.seuraavanRyhmanKoodi();
+                    PalkinTunniste sijainti = lataaja.getNykyinenSijainti();
+                    if(!sijainti.equals(tarkistettava)) {
+                        vuoronumero++;
+                        updateMessage("Ladataan kurssitarjottimia " + vuoronumero + "/" + periodienMaara + ".");
+                        tarkistettava = sijainti;
+                    }
+                    
+                    if(!ryhmat.containsKey(koodi)) {
+                        LuotavaRyhma luotava = lataaja.haeRyhmanTiedot(koodi);
+                        ryhmat.put(koodi, luotava);
+                        String kurssikoodi = luotava.getKurssikoodi();
+                        if(!moduulit.containsKey(kurssikoodi)) {
+                            moduulit.put(kurssikoodi, lataaja.haeModuulinTiedot(kurssikoodi));
+                        }
+                    }
+                    
+                    ryhmat.get(koodi).lisaaSijainti(sijainti);
+                    
+                    if(isCancelled()) {
+                        return null;
+                    }
+                }
+                
+                return new Kurssitarjotin(ryhmat.values(), moduulit.values(), tunnisteet);
+            }
+        };
+        
+        viesti.bind(tehtava.messageProperty());
+        tehtava.setOnSucceeded((ev) -> {
+            tila = LatauksenTila.KURSSITARJOTIN_LADATTU;
+            tarjotin = (Kurssitarjotin) ev.getSource().getValue();
+            viesti.unbind();
+            viesti.setValue("");
+            tuloksenKasittely.accept(tarjotin);
+        });
+        tehtava.setOnFailed((ev) -> {
+            tila = vanhaTila;
+            virheenKasittely.accept(ev.getSource().getException());
+        });
+        
+        Thread th = new Thread(tehtava);
+        th.setDaemon(true);
+        th.start();
     }
     
     /**Palauttaa listan periodeista, jotka on mahdollista ladata osaksi kurssitarjotinta.
      * 
-     * @return 
+     * @return lista mahdollisten periodien tunnisteista, tai tyhjä lista, jos {@link #getTila()} 
+     *         on {@code LUOTU} tai {@code LADATAAN_PERIODIEN_NIMIÄ}.
      */
     public List<PeriodinTunniste> getPeriodienTunnisteet() {
         if (getTila() == LatauksenTila.LUOTU || getTila() == LatauksenTila.LADATAAN_PERIODIEN_NIMIA) {
@@ -142,7 +254,7 @@ public class Sovelluslogiikka {
     /**Palauttaa viestin, joka kertoo, mitä {@code Sovelluslogiikka} tekee kullakin 
      * hetkellä.
      * 
-     * @return lataajan toimintaa kuvaava viesti, joka voidaan näyttää käyttöliittymässä.
+     * @return lataajan toimintaa kuvaava poikkeusViesti, joka voidaan näyttää käyttöliittymässä.
      */
     public String getViesti() {
         return viesti.get();

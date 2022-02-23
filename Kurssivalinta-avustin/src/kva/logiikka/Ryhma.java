@@ -40,7 +40,7 @@ public class Ryhma {
     private Kurssitarjotin tarjotin;
     private Moduuli moduuli;
     private String ryhmakoodi;
-    private ArrayList<RyhmanSijainti> sijainnit;
+    private ArrayList<PalkinTunniste> sijainnit;
     private Collection<ValintaKuuntelija> valintaKuuntelijat;//Tämä ja kaikki siihen liittyvä poistetaan, jos ne osoittautuvat tarpeettomiksi.
 
     /**Luo uuden {@code Ryhman} annettujen tietojen perusteella.
@@ -126,16 +126,16 @@ public class Ryhma {
      * @return Ryhmäkoodin pistettä seuraava osa
      */
     public String getRyhmatunniste() {
-        String[] arr = ryhmakoodi.split(".");
+        String[] arr = ryhmakoodi.split("[.]");
         return arr[arr.length - 1];
     }
 
     /**Palauttaa listan {@code RyhmanSijainneista}, jotka kuvaavat {@code Ryhman} 
      * sijainteja kurssitarjottimessa.
      * 
-     * @return lista sijainteja kuvaavista {@link kva.logiikka.RyhmanSijainti}-olioista
+     * @return lista sijainteja kuvaavista {@link kva.logiikka.PalkinTunniste}-olioista
      */
-    public ArrayList<RyhmanSijainti> getSijainnit() {
+    public ArrayList<PalkinTunniste> getSijainnit() {
         return new ArrayList<>(sijainnit);
     }
     
@@ -200,5 +200,10 @@ public class Ryhma {
      */
     public void poistaValintaKuuntelija(ValintaKuuntelija kuuntelija) {
         valintaKuuntelijat.remove(kuuntelija);
+    }
+
+    @Override
+    public String toString() {
+        return "Ryhma{" + "moduuli=" + moduuli + ", ryhmakoodi=" + ryhmakoodi + ", sijainnit=" + sijainnit + '}';
     }
 }

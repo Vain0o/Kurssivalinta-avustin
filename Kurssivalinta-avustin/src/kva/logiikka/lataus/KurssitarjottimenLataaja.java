@@ -16,9 +16,10 @@
  */
 package kva.logiikka.lataus;
 
+import kva.logiikka.PeriodinTunniste;
 import java.util.List;
 import kva.logiikka.Moduuli;
-import kva.logiikka.RyhmanSijainti;
+import kva.logiikka.PalkinTunniste;
 
 /**Määrittelee komennot, joilla kurssitarjottimen tiedot haetaan.
  * <p>
@@ -109,8 +110,9 @@ public interface KurssitarjottimenLataaja {
      * {@code Sovelluslogiikka} kutsuu tätä metodia taustasäikeessä. Metodia ei tule 
      * kutsua muualta.
      * 
-     * @param periodit niiden periodien nimet, joissa sijaitsevat kurssit halutaan 
-     *                 osaksi {@code Kurssitarjotinta}
+     * @param periodit niiden periodien tunnisteet, joissa sijaitsevat kurssit halutaan 
+     *                 osaksi {@code Kurssitarjotinta}, samassa järjestyksessä, kuin 
+     *                 missä metodi {@code haePeriodienNimet()} palautti ne.
      * @throws java.lang.IllegalStateException jos metodeja {@link #muodostaYhteys(java.lang.String)} 
      *         tai {@link #haePeriodienNimet()} ei ole kutsuttu
      * @throws java.lang.Exception jos latauksen valmistelu epäonnistuu jollakin muulla 
@@ -151,13 +153,13 @@ public interface KurssitarjottimenLataaja {
      * Metodia ei tule kutsua muualta.
      * 
      * @return tällä hetkellä läpikäynnin kohteena olevaa jaksoa ja palkkia kuvaileva 
-     *         {@link kva.logiikka.RyhmanSijainti}
+     *         {@link kva.logiikka.PalkinTunniste}
      * @throws java.lang.IllegalStateException jos metodia {@link #valmisteleLataus(java.util.Collection)} 
      *         ei ole kutsuttu, tai jos metodia {@link #seuraavanRyhmanKoodi()} ei 
      *         ole kutsuttu kertaakaan sen jälkeen
      * @throws java.lang.Exception jos sijaintia lukiessa tapahtuu virhe
      */
-    public abstract RyhmanSijainti getNykyinenSijainti() throws Exception;
+    public abstract PalkinTunniste getNykyinenSijainti() throws Exception;
     
     /**Palauttaa {@code LuotavanRyhman}, joka sisältää {@code seuraavanRyhmanKoodi()}-metodin 
      * viimeksi palauttaman ryhmän tiedot.

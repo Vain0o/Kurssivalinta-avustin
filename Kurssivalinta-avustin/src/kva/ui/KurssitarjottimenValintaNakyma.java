@@ -16,21 +16,25 @@
  */
 package kva.ui;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.StackPane;
-import kva.logiikka.lataus.KurssitarjottimenLataaja;
-import kva.logiikka.lataus.PeriodinTunniste;
-import kva.logiikka.lataus.TestiLataaja;
+import kva.logiikka.Kurssitarjotin;
+import kva.logiikka.PeriodinTunniste;
 
 /**Toteuttaan {@code Nakyman} jossa käyttäjä antaa tarvittavat ohjeet kurssitarjottimen 
  * lataamiselle.
@@ -47,7 +51,6 @@ import kva.logiikka.lataus.TestiLataaja;
 public class KurssitarjottimenValintaNakyma extends Nakyma {
 
     private ScrollPane pohja;
-    private KurssitarjottimenLataaja lataaja;
     
     public KurssitarjottimenValintaNakyma(String otsikko, Kayttoliittyma kayttis) {
         super(otsikko, kayttis);
@@ -66,10 +69,7 @@ public class KurssitarjottimenValintaNakyma extends Nakyma {
         Button nappi = new Button("Tuo periodit");
         
         EventHandler<ActionEvent> kasittelija = (e) -> {
-            Consumer<List<PeriodinTunniste>> tuloksenKasittely = (lista) -> {
-                lista.forEach(System.out::println);
-                pohja.setContent(new Label("Tämä on väliaikaisratkaisu."));
-            };
+            Consumer<List<PeriodinTunniste>> tuloksenKasittely = (lista) -> luoPeriodienValinta(lista);
             Consumer<Throwable> virheenKasittely = (virhe) -> virhe.printStackTrace();
             super.getKayttoliittyma().getLogiikka().lataaPeriodienNimet(tekstikentta.getText(), tuloksenKasittely, virheenKasittely);
         };
@@ -87,4 +87,44 @@ public class KurssitarjottimenValintaNakyma extends Nakyma {
         return new StackPane(pohja);
     }
     
+    private void luoPeriodienValinta(List<PeriodinTunniste> periodit) {
+        HashMap<CheckBox, PeriodinTunniste> tunnisteenLoytaja = new HashMap<>();
+        VBox asettelu = new VBox();
+        asettelu.setSpacing(10);
+        asettelu.setPadding(new Insets(10, 0, 10, 5));
+        asettelu.getChildren().add(new Label("Valitse haluamasi periodit ja paina " + 
+                "sitten \"Lataa\"."));
+        
+        String oppilaitos = null;
+        for(PeriodinTunniste tunniste : periodit) {
+            if(!tunniste.getOppilaitos().equals(oppilaitos)) {
+                asettelu.getChildren().add(new Separator());
+                asettelu.getChildren().add(new Label(tunniste.getOppilaitos()));
+                oppilaitos = tunniste.getOppilaitos();
+            }
+            CheckBox nappi = new CheckBox(tunniste.getPeriodi());
+            nappi.setAllowIndeterminate(false);
+            tunnisteenLoytaja.put(nappi, tunniste);
+            asettelu.getChildren().add(nappi);
+        }
+        
+        Consumer<Kurssitarjotin> tuloksenKasittely = (tarjotin) -> {
+            tarjotin.getKaikkiRyhmat().forEach(System.out::println);
+            System.out.println("");
+            tarjotin.getMahdollisetPalkit().forEach(System.out::println);
+        };
+        Consumer<Throwable> virheenKasittely = ex -> ex.printStackTrace();
+        
+        Button latausnappi = new Button("Lataa");
+        latausnappi.setOnAction((ev) -> {
+            HashSet<PeriodinTunniste> mukaanOtettavat = tunnisteenLoytaja.keySet().stream()
+                    .filter((cb) -> cb.isSelected())
+                    .map((cb) -> tunnisteenLoytaja.get(cb))
+                    .collect(Collectors.toCollection(() -> new HashSet<>()));
+            super.getKayttoliittyma().getLogiikka().lataaKurssitarjotin(mukaanOtettavat, tuloksenKasittely, virheenKasittely);
+        });
+        asettelu.getChildren().add(latausnappi);
+        
+        pohja.setContent(asettelu);
+    }
 }

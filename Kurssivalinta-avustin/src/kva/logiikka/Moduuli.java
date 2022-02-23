@@ -56,6 +56,11 @@ public class Moduuli implements Comparable<Moduuli> {
     public int compareTo(Moduuli t) {
         return koodi.compareTo(t.getKoodi());
     }
+
+    @Override
+    public String toString() {
+        return "Moduuli{" + "koodi=" + koodi + ", tyyppi=" + tyyppi + '}';
+    }
     
     /**Esitys kurssin tyypeistä, joita on neljää eri lajia: pakollisia, valtakunnallisia 
      * syventäviä, koulukohtaisia syventäviä ja koulukohtaisia soveltavia.

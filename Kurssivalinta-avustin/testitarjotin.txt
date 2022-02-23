@@ -9,9 +9,18 @@ Esimerkkilukio, periodi 2B
 2. jakso
 3. jakso
 MODUULIEN_TIEDOT
-
-
-
+MAY01/pakollinen
+MAA02/pakollinen
+MAB02/pakollinen
+FY01/pakollinen
+FY02/valtakunnallinen syventava
+UE01/pakollinen
+ET01/pakollinen
+RAA01/pakollinen
+YH09/koulukohtainen soveltava
+BI12/koulukohtainen soveltava
+KURSSITARJOTTIMET
+#Esimerkkilukio
 &Esimerkkilukio, periodi 1A
 1. palkki/MAY01.1/MAY01.2/FY01.1
 2. palkki/UE01.1/ET01.1/RAA01.1
@@ -20,7 +29,14 @@ MODUULIEN_TIEDOT
 2. palkki/UE01.1/ET01.1/RAA01.1/YH09.1
 &Esimerkkilukio, periodi 2A
 1. palkki/MAA02.1/MAB02.1/BI12.1
-2. palkki/FY01.2/YH09.1
+2. palkki/FY01.2/YH09.1/FY02.1
 &Esimerkkilukio, periodi 2B
 1. palkki/MAA02.1/MAB02.1
-2. palkki/FY01.2/YH09.1
+2. palkki/FY01.2/YH09.1/FY02.1
+#Pääskysaaren lukio
+&1. jakso
+Ainoa palkki/MAY01.22
+&2. jakso
+Ainoa palkki/MAB02.32
+&3. jakso
+Ainoa palkki/FY01.FFF
