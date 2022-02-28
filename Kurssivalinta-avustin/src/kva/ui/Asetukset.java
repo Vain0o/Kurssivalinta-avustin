@@ -20,6 +20,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
+import kva.logiikka.Moduuli;
+import kva.logiikka.Moduuli.Tyyppi;
 
 /**Sisältää toiminnallisuuden, jolla kurssitarjottimen ryhmiä piilotetaan.
  * <p>
@@ -63,7 +65,7 @@ public class Asetukset {
      * opiskelija ei aio käydä, mutta jotka eivät sovellu lisättäväksi piilotettuihin 
      * tai epäkiinnostaviin aineisiin.
      */
-    public final ObservableSet<String> piilotetutKurssit;
+    public final ObservableSet<String> piilotetutModuulit;
     
     /**Luo uuden {@code Asetukset}-olion, johon ei vielä ole merkitty piilotettavia 
      * aineita tai kursseja.
@@ -72,7 +74,7 @@ public class Asetukset {
     public Asetukset() {
         piilotetutAineet = FXCollections.observableSet(new HashSet<>());
         epakiinnostavatAineet = FXCollections.observableSet(new HashSet<>());
-        piilotetutKurssit = FXCollections.observableSet(new HashSet<>());
+        piilotetutModuulit = FXCollections.observableSet(new HashSet<>());
     }
     
     /**Luo uuden {@code Asetukset}-olion, johon on lisätty valmiiksi piilotettavia 
@@ -83,10 +85,10 @@ public class Asetukset {
      * 
      * @param piilotetutAineet Sisältää kurssikoodit, jotka lisätään {@code piilotetutAineet}-listalle.
      * @param epakiinnostavatAineet Sisältää kurssikoodit, jotka lisätään {@code epakiinnostavatAineet}-listalle.
-     * @param piilotetutKurssit Sisältää kurssikoodit, jotka lisätään {@code piilotetutKurssit}-listalle.
+     * @param piilotetutModuulit Sisältää kurssikoodit, jotka lisätään {@code piilotetutModuulit}-listalle.
      */
     public Asetukset(Collection<String> piilotetutAineet, Collection<String> epakiinnostavatAineet, 
-            Collection<String> piilotetutKurssit) {
+            Collection<String> piilotetutModuulit) {
         this();
         if (piilotetutAineet != null) {
             this.piilotetutAineet.addAll(piilotetutAineet);
@@ -94,8 +96,25 @@ public class Asetukset {
         if (epakiinnostavatAineet != null) {
             this.epakiinnostavatAineet.addAll(epakiinnostavatAineet);
         }
-        if (piilotetutKurssit != null) {
-            this.piilotetutKurssit.addAll(piilotetutKurssit);
+        if (piilotetutModuulit != null) {
+            this.piilotetutModuulit.addAll(piilotetutModuulit);
         }
+    }
+    
+    public boolean pitaisiPiilottaa(Moduuli moduuli) {
+        if(piilotetutModuulit.contains(moduuli.getKoodi())) {
+            return true;
+        }
+        if(piilotetutAineet.stream()
+                .anyMatch((koodi) -> moduuli.getKoodi().contains(koodi))) {
+            return true;
+        }
+        if(moduuli.getTyyppi() != Tyyppi.PAKOLLINEN) {
+            if(epakiinnostavatAineet.stream()
+                    .anyMatch((koodi) -> moduuli.getKoodi().contains(koodi))) {
+                return true;
+            }
+        }
+        return false;
     }
 }

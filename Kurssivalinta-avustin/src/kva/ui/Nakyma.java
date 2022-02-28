@@ -36,12 +36,14 @@ import javafx.scene.control.Tab;
 public abstract class Nakyma {
     
     /**{@code Nakyma}n hallinnoima välilehti */
-    private final Tab valilehti;
+    private Tab valilehti;
     
     /**Sen {@code Kayttoliittyma}n {@code Kurssitarjotin}, jossa {@code Nakyma}a 
      * käytetään
      */
     private final Kayttoliittyma kayttis;
+    
+    private String otsikko;
     
     /**Luo uuden Nakyman, jonka {@code Tabillä} on annettu otsikko ja joka käyttää 
      * annettua {@code Kurssitarjotinta}.
@@ -54,8 +56,8 @@ public abstract class Nakyma {
      * @param kayttis {@code Kayttoliittyma}, johon {@code Nakyma} kuuluu
      */
     public Nakyma(String otsikko, Kayttoliittyma kayttis) {
+        this.otsikko = otsikko;
         this.kayttis = kayttis;
-        this.valilehti = new Tab(otsikko, luoSisalto());
     }
     
     /**Metodi, jota kutsutaan luokkaa luotaessa ja jonka paluuarvosta tulee {@code Nakyman} 
@@ -81,6 +83,9 @@ public abstract class Nakyma {
      *         kutsutaan metodissa {@link #luoSisalto()}.
      */
     public final Tab getValilehti() {
+        if(valilehti == null) {
+            valilehti = new Tab(otsikko, luoSisalto());
+        }
         return valilehti;
     }
     

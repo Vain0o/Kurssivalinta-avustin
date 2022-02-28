@@ -16,9 +16,13 @@
  */
 package kva.ui;
 
+import java.util.Collection;
+import java.util.function.Consumer;
 import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
+import kva.logiikka.Kurssitarjotin;
+import kva.logiikka.PeriodinTunniste;
 import kva.logiikka.Sovelluslogiikka;
 
 /**JavaFX-kirjastojen avulla luotu Kurssivalinta-avustimen käyttöliittymä.
@@ -44,6 +48,9 @@ public class Kayttoliittyma {
     
     /**Sisältää kurssien piilottamista koskevat asetukset.*/
     private final Asetukset asetukset;
+    
+    /**Sisältää käyttöliittymän välilehdet*/
+    private TabPane valilehdet;
 
     /**Luo uuden käyttöliittymän, joka käyttää parametrina annettua sovelluslogiikkaa.
      * <p>
@@ -70,7 +77,7 @@ public class Kayttoliittyma {
         AsetusNakyma asetusnakyma = new AsetusNakyma("Asetukset", this);
         KurssitarjottimenValintaNakyma valintanakyma = new KurssitarjottimenValintaNakyma("Kurssitarjotin", this);
         
-        TabPane valilehdet = new TabPane(asetusnakyma.getValilehti(), valintanakyma.getValilehti());
+        valilehdet = new TabPane(asetusnakyma.getValilehti(), valintanakyma.getValilehti());
         valilehdet.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         
         Scene scene = new Scene(valilehdet, IKKUNAN_LEVEYS, IKKUNAN_KORKEUS);
@@ -95,5 +102,31 @@ public class Kayttoliittyma {
      */
     public Asetukset getAsetukset() {
         return asetukset;
+    }
+    
+    /**Käskee {@code Sovelluslogiikkaa} lataamaan {@code Kurssitarjottimen} ja luo 
+     * sen perusteella {@link kva.ui.KurssitarjotinNakyma}n.
+     * <p>
+     * Metodin kutsuminen edellyttää, että {@code Sovelluslogiikasta} on jo ladattu 
+     * periodien nimet, ja {@code valittavat} kuuluvat niihin.
+     * 
+     * @param valittavat niiden periodien tunnisteet, joiden halutaan kuuluvan {@code Kurssitarjottimeen}
+     * @throws java.lang.IllegalArgumentException jos {@code valittavat} sisältää 
+     *         {@code PeriodinTunnisteita}, joita ei löydy {@link kva.logiikka.Sovelluslogiikka#getPeriodienTunnisteet() }-listalta
+     * @throws java.lang.IllegalStateException jos {@code Sovelluslogiikan Tila} on 
+     *         {@code LUOTU}, {@code LADATAAN_PERIODIEN_NIMIA} tai {@code LADATAAN_KURSSITARJOTINTA}
+     * @throws java.lang.NullPointerException jos {@code valittavat} on {@code null}
+     */
+    public void lataaKurssitarjotin(Collection<PeriodinTunniste> valittavat) {
+        Consumer<Kurssitarjotin> tuloksenKasittely = (tarjotin) -> luoKurssitarjotinNakyma(tarjotin);
+        Consumer<Throwable> virheenKasittely = ex -> ex.printStackTrace();
+        getLogiikka().lataaKurssitarjotin(valittavat, tuloksenKasittely, virheenKasittely);
+    }
+    
+    private void luoKurssitarjotinNakyma(Kurssitarjotin tarjotin) {
+        valilehdet.getTabs().removeIf((tab) -> tab.getText().equals("Kurssitarjotin"));
+        KurssitarjotinNakyma tarjotinNakyma = new KurssitarjotinNakyma("Kurssitarjotin", this, tarjotin);
+        valilehdet.getTabs().add(tarjotinNakyma.getValilehti());
+        valilehdet.getSelectionModel().select(tarjotinNakyma.getValilehti());
     }
 }

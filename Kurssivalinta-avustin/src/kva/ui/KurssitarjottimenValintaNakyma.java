@@ -108,20 +108,13 @@ public class KurssitarjottimenValintaNakyma extends Nakyma {
             asettelu.getChildren().add(nappi);
         }
         
-        Consumer<Kurssitarjotin> tuloksenKasittely = (tarjotin) -> {
-            tarjotin.getKaikkiRyhmat().forEach(System.out::println);
-            System.out.println("");
-            tarjotin.getMahdollisetPalkit().forEach(System.out::println);
-        };
-        Consumer<Throwable> virheenKasittely = ex -> ex.printStackTrace();
-        
         Button latausnappi = new Button("Lataa");
         latausnappi.setOnAction((ev) -> {
             HashSet<PeriodinTunniste> mukaanOtettavat = tunnisteenLoytaja.keySet().stream()
                     .filter((cb) -> cb.isSelected())
                     .map((cb) -> tunnisteenLoytaja.get(cb))
                     .collect(Collectors.toCollection(() -> new HashSet<>()));
-            super.getKayttoliittyma().getLogiikka().lataaKurssitarjotin(mukaanOtettavat, tuloksenKasittely, virheenKasittely);
+            super.getKayttoliittyma().lataaKurssitarjotin(mukaanOtettavat);
         });
         asettelu.getChildren().add(latausnappi);
         

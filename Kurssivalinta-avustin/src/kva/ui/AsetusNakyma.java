@@ -129,7 +129,7 @@ public class AsetusNakyma extends Nakyma {
         
         asettelu.getChildren().add(new Label("Tässä voit lisätä ja poistaa sellaisten yksittäisten kurssien koodeja, joita et" 
                 + "\nhalua näytettävän kurssitarjottimessa."));
-        asettelu.getChildren().add(luoEsitys(getKayttoliittyma().getAsetukset().piilotetutKurssit, "k"));
+        asettelu.getChildren().add(luoEsitys(getKayttoliittyma().getAsetukset().piilotetutModuulit, "k"));
         
         ScrollPane pohja = new ScrollPane();
         pohja.setContent(asettelu);

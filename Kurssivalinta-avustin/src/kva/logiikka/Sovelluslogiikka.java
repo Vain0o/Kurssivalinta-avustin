@@ -17,6 +17,7 @@
 package kva.logiikka;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -145,7 +146,7 @@ public class Sovelluslogiikka {
      *         {@code LADATAAN_PERIODIEN_NIMIA} tai {@code LADATAAN_KURSSITARJOTINTA}
      * @throws java.lang.NullPointerException jos jokin parametreistä on {@code null}
      */
-    public final void lataaKurssitarjotin(Set<PeriodinTunniste> valittavat, Consumer<Kurssitarjotin> tuloksenKasittely, 
+    public final void lataaKurssitarjotin(Collection<PeriodinTunniste> valittavat, Consumer<Kurssitarjotin> tuloksenKasittely, 
             Consumer<Throwable> virheenKasittely) {
         Objects.requireNonNull(valittavat);
         Objects.requireNonNull(tuloksenKasittely);
