@@ -16,10 +16,18 @@
  */
 package kva.ui.tarjotinnakyma;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import javafx.collections.SetChangeListener;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
@@ -94,6 +102,9 @@ public class PalkkiEsitys {
             @Override
             public void valintaPoistettu(Ryhma ryhma) {
                 nappi.setOnValittu(false);
+                if(asetukset.pitaisiPiilottaa(ryhma.getModuuli())) {
+                    olennaiset.poistaNappi(nappi);
+                }
             }
 
             @Override
@@ -112,7 +123,7 @@ public class PalkkiEsitys {
             if(me.getButton() == MouseButton.PRIMARY) {
                 if(ryhma.OnValittu()) {
                     ryhma.setOnValittu(false);
-                } else {
+                } else if(!onkoValinnalleEstetta(ryhma)) {
                     ryhma.setOnValittu(true);
                 }
             }
@@ -120,41 +131,27 @@ public class PalkkiEsitys {
     }
     
     private void alustaAsetustenKuuntelu() {
-        //Seuraavaksi yritetään saada tämä toimimaan asetusten mukaan.
-        asetukset.piilotetutAineet.addListener((SetChangeListener.Change<? extends String> change) -> {
-            if(change.wasAdded()) {
+        SetChangeListener<String> kuuntelija = (muutos) -> {
+            if(muutos.wasAdded()) {
                 sisalto.stream()
-                        .filter((nappi) -> nappi.getText().contains(change.getElementAdded()))
+                        .filter((nappi) -> nappi.getText().contains(muutos.getElementAdded()))
                         .filter((nappi) -> asetukset.pitaisiPiilottaa(nappi.getRyhma().getModuuli()))
+                        .filter((nappi) -> !nappi.getRyhma().OnValittu())
                         .forEach((nappi) -> {
                             olennaiset.poistaNappi(nappi);
                         });
             } else {
                 sisalto.stream()
-                        .filter((nappi) -> nappi.getText().contains(change.getElementRemoved()))
+                        .filter((nappi) -> nappi.getText().contains(muutos.getElementRemoved()))
                         .filter((nappi) -> !asetukset.pitaisiPiilottaa(nappi.getRyhma().getModuuli()))
                         .forEach((nappi) -> {
                             olennaiset.lisaaNappi(nappi);
                         });
             }
-        });
-        asetukset.epakiinnostavatAineet.addListener((SetChangeListener.Change<? extends String> change) -> {
-            if(change.wasAdded()) {
-                sisalto.stream()
-                        .filter((nappi) -> nappi.getText().contains(change.getElementAdded()))
-                        .filter((nappi) -> asetukset.pitaisiPiilottaa(nappi.getRyhma().getModuuli()))
-                        .forEach((nappi) -> {
-                            olennaiset.poistaNappi(nappi);
-                        });
-            } else {
-                sisalto.stream()
-                        .filter((nappi) -> nappi.getText().contains(change.getElementRemoved()))
-                        .filter((nappi) -> !asetukset.pitaisiPiilottaa(nappi.getRyhma().getModuuli()))
-                        .forEach((nappi) -> {
-                            olennaiset.lisaaNappi(nappi);
-                        });
-            }
-        });
+        };
+        asetukset.piilotetutAineet.addListener(kuuntelija);
+        asetukset.epakiinnostavatAineet.addListener(kuuntelija);
+        
         asetukset.piilotetutModuulit.addListener((SetChangeListener.Change<? extends String> change) -> {
             if(change.wasAdded()) {
                 sisalto.stream()
@@ -171,5 +168,49 @@ public class PalkkiEsitys {
                         });
             }
         });
+    }
+    
+    private boolean onkoValinnalleEstetta(Ryhma tarkistettava) {
+        ArrayList<Ryhma> paallekkaiset = tarkistettava.getTarjotin().getValitutRyhmat().stream()
+                .filter((ryhma) -> {
+                    return ryhma.getSijainnit().stream()
+                            .anyMatch((sijainti) -> tarkistettava.getSijainnit().contains(sijainti));
+                })
+                .collect(Collectors.toCollection(() -> new ArrayList<>()));
+        if(!paallekkaiset.isEmpty()) {
+            StringBuilder viesti = new StringBuilder("Valitsemasi ryhmä ")
+                    .append(tarkistettava.getKoodi())
+                    .append(" on päällekkäin ");
+            if(paallekkaiset.size() == 1) {
+                viesti.append("ryhmän ")
+                        .append(paallekkaiset.get(0).getKoodi())
+                        .append(" kanssa. Poistetaanko päällekkäisen ryhmän valinta?");
+            } else {
+                viesti.append(" seuraavien ryhmien kanssa:\n\n");
+                paallekkaiset.stream()
+                        .map((ryhma) -> ryhma.getKoodi())
+                        .forEach((koodi) -> viesti.append(koodi).append("\n"));
+                viesti.append("\nPoistetaanko päällekkäisten ryhmien valinnat?");
+            }
+            if(!kysyKayttajalta(viesti.toString())) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    private boolean kysyKayttajalta(String kysymys) {
+        ButtonType kylla = new ButtonType("Kyllä", ButtonData.YES);
+        ButtonType ei = new ButtonType("Ei", ButtonData.NO);
+        
+        Alert ikkuna = new Alert(AlertType.NONE, kysymys, kylla, ei);
+        ikkuna.setTitle("Kurssivalinta-avustin");
+        
+        Optional<ButtonType> tulos = ikkuna.showAndWait();
+        if(tulos.isPresent() && tulos.get().equals(kylla)) {
+            return true;
+        }
+        return false;
     }
 }

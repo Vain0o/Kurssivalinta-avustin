@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
+import javafx.collections.SetChangeListener;
 import kva.logiikka.lataus.LuotavaRyhma;
 
 /**Säiliöluokka kurssitarjottimen {@link kva.logiikka.Ryhma}-olioille.
@@ -34,6 +35,11 @@ import kva.logiikka.lataus.LuotavaRyhma;
  * sekä näiden toimenpiteiden kuuntelulle. Se sisältää myös tiedot {@code Ryhmien} 
  * {@link kva.logiikka.Moduuli}-olioista sekä järjestyksestä, jossa käyttöliittymän 
  * tulisi jaksot esittää.
+ * <p>
+ * {@code Kurssitarjottimessa} ei voi valita samaan aikaan useampaa {@code Ryhmaa}, 
+ * joilla on samat {@code Moduulit}, eikä useampaa ryhmaa, jotka sijaitsevat samassa 
+ * palkissa. Kun käyttäjä valitsee {@code Ryhman}, mahdollisten päällekkäisten {@code Ryhmien} 
+ * valinta poistetaan.
  *
  * @author Väinö Viinikka
  */
@@ -42,7 +48,7 @@ public class Kurssitarjotin {
     private Set<Ryhma> ryhmat;
     private Set<Moduuli> moduulit;
     private List<PalkinTunniste> mahdollisetPalkit;
-    private ObservableSet<Ryhma> valitutRyhmat;
+    private final ObservableSet<Ryhma> valitutRyhmat;
     
     /**Luo uuden {@code Kurssitarjottimen}.
      * <p>
@@ -90,11 +96,28 @@ public class Kurssitarjotin {
         });
         Comparator<PalkinTunniste> vertailija2 = vertailija.thenComparing((sijainti) -> sijainti.getPalkki());
         mahdollisetPalkit.sort(vertailija2);
+        
+        valitutRyhmat.addListener((SetChangeListener.Change<? extends Ryhma> change) -> {
+            if(change.wasAdded()) {
+                HashSet<Ryhma> poistettavat = new HashSet<>();
+                valitutRyhmat.stream()
+                        .filter((ryhma) -> {
+                            if(ryhma.getModuuli().equals(change.getElementAdded().getModuuli())) {
+                                return true;
+                            }
+                            return change.getElementAdded().getSijainnit().stream()
+                                    .anyMatch((tunniste) -> (ryhma.getSijainnit().contains(tunniste)));
+                        })
+                        .filter((ryhma) -> !change.getElementAdded().equals(ryhma))
+                        .forEach((ryhma) -> poistettavat.add(ryhma));
+                valitutRyhmat.removeAll(poistettavat);
+            }
+        });
     }
     
-    /**Palauttaa listan kaikista 
+    /**Palauttaa kaikki {@code Kurssitarjottimen Ryhmat}.
      * 
-     * @return 
+     * @return kokoelma {@code Ryhma}-olioista
      */
     public Set<Ryhma> getKaikkiRyhmat() {
         return new HashSet<>(ryhmat);
