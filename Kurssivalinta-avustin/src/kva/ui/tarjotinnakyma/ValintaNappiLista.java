@@ -43,6 +43,7 @@ public class ValintaNappiLista {
         lista = new FlowPane();
         lista.setHgap(5);
         lista.setVgap(5);
+        lista.setPrefWidth(300);
     }
     
     public ValintaNappiLista(Collection<ValintaNappi> jasenet) {

@@ -65,6 +65,8 @@ public class PalkkiEsitys {
         
         olennaiset = new ValintaNappiLista();
         kehikko.setLeft(olennaiset.getNode());
+        muualtaValitut = new ValintaNappiLista();
+        kehikko.setRight(muualtaValitut.getNode());
         
         sisalto = new HashSet<>();
         alustaAsetustenKuuntelu();
@@ -89,7 +91,7 @@ public class PalkkiEsitys {
         ValintaNappi nappi = new ValintaNappi(ryhma);
         sisalto.add(nappi);
         if(!asetukset.pitaisiPiilottaa(ryhma.getModuuli())) {
-            olennaiset.lisaaNappi(nappi);
+            lisaaNakyviin(nappi);
         }
         
         ValintaKuuntelija kuuntelija = new ValintaKuuntelija() {
@@ -103,18 +105,24 @@ public class PalkkiEsitys {
             public void valintaPoistettu(Ryhma ryhma) {
                 nappi.setOnValittu(false);
                 if(asetukset.pitaisiPiilottaa(ryhma.getModuuli())) {
-                    olennaiset.poistaNappi(nappi);
+                    poistaNakyvista(nappi);
                 }
             }
 
             @Override
             public void valittuMuualta(Ryhma ryhma) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                if(!asetukset.pitaisiPiilottaa(ryhma.getModuuli())) {
+                    olennaiset.poistaNappi(nappi);
+                    muualtaValitut.lisaaNappi(nappi);
+                }
             }
 
             @Override
             public void valintaPoistettuMuualta(Ryhma ryhma) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                if(!asetukset.pitaisiPiilottaa(ryhma.getModuuli())) {
+                    muualtaValitut.poistaNappi(nappi);
+                    olennaiset.lisaaNappi(nappi);
+                }
             }
         };
         ryhma.lisaaValintaKuuntelija(kuuntelija);
@@ -138,14 +146,14 @@ public class PalkkiEsitys {
                         .filter((nappi) -> asetukset.pitaisiPiilottaa(nappi.getRyhma().getModuuli()))
                         .filter((nappi) -> !nappi.getRyhma().OnValittu())
                         .forEach((nappi) -> {
-                            olennaiset.poistaNappi(nappi);
+                            poistaNakyvista(nappi);
                         });
             } else {
                 sisalto.stream()
                         .filter((nappi) -> nappi.getText().contains(muutos.getElementRemoved()))
                         .filter((nappi) -> !asetukset.pitaisiPiilottaa(nappi.getRyhma().getModuuli()))
                         .forEach((nappi) -> {
-                            olennaiset.lisaaNappi(nappi);
+                            lisaaNakyviin(nappi);
                         });
             }
         };
@@ -157,14 +165,14 @@ public class PalkkiEsitys {
                 sisalto.stream()
                         .filter((nappi) -> nappi.getRyhma().getModuuli().getKoodi().equals(change.getElementAdded()))
                         .forEach((nappi) -> {
-                            olennaiset.poistaNappi(nappi);
+                            poistaNakyvista(nappi);
                         });
             } else {
                 sisalto.stream()
                         .filter((nappi) -> nappi.getRyhma().getModuuli().getKoodi().equals(change.getElementRemoved()))
                         .filter((nappi) -> !asetukset.pitaisiPiilottaa(nappi.getRyhma().getModuuli()))
                         .forEach((nappi) -> {
-                            olennaiset.lisaaNappi(nappi);
+                            lisaaNakyviin(nappi);
                         });
             }
         });
@@ -208,9 +216,19 @@ public class PalkkiEsitys {
         ikkuna.setTitle("Kurssivalinta-avustin");
         
         Optional<ButtonType> tulos = ikkuna.showAndWait();
-        if(tulos.isPresent() && tulos.get().equals(kylla)) {
-            return true;
+        return tulos.isPresent() && tulos.get().equals(kylla);
+    }
+    
+    private void lisaaNakyviin(ValintaNappi nappi) {
+        if(!nappi.getRyhma().onValittuMuualta()) {
+            olennaiset.lisaaNappi(nappi);
+        } else {
+            muualtaValitut.lisaaNappi(nappi);
         }
-        return false;
+    }
+    
+    private void poistaNakyvista(ValintaNappi nappi) {
+        olennaiset.poistaNappi(nappi);
+        muualtaValitut.poistaNappi(nappi);
     }
 }
