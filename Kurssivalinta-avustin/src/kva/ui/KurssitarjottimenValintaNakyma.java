@@ -1,5 +1,5 @@
 /* Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
- * Copyright (C) 2021 Väinö Viinikka
+ * Copyright (C) 2022 Väinö Viinikka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,6 @@ import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.StackPane;
-import kva.logiikka.Kurssitarjotin;
 import kva.logiikka.PeriodinTunniste;
 
 /**Toteuttaan {@code Nakyman} jossa käyttäjä antaa tarvittavat ohjeet kurssitarjottimen 
@@ -52,6 +51,12 @@ public class KurssitarjottimenValintaNakyma extends Nakyma {
 
     private ScrollPane pohja;
     
+    /**Luo uuden {@code KurssitarjottimenValintaNakyman}.
+     * 
+     * @param otsikko välilehden otsikko
+     * @param kayttis {@code Kayttoliittyma}, johon {@code KurssitarjottimenValintaNakyma} 
+     *        kuuluu
+     */
     public KurssitarjottimenValintaNakyma(String otsikko, Kayttoliittyma kayttis) {
         super(otsikko, kayttis);
     }
@@ -87,6 +92,11 @@ public class KurssitarjottimenValintaNakyma extends Nakyma {
         return new StackPane(pohja);
     }
     
+    /**Muuttaa näkymän Wilma-palvelimen osoitteen syötöstä ladattavien periodien valintaan.
+     * 
+     * @param periodit lista {@code PeriodinTunnisteista}, joita kuvaavien periodien 
+     *        lataaminen on mahdollista.
+     */
     private void luoPeriodienValinta(List<PeriodinTunniste> periodit) {
         HashMap<CheckBox, PeriodinTunniste> tunnisteenLoytaja = new HashMap<>();
         VBox asettelu = new VBox();

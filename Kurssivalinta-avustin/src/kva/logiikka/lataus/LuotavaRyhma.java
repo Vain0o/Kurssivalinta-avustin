@@ -1,5 +1,5 @@
 /* Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
- * Copyright (C) 2021 Väinö Viinikka
+ * Copyright (C) 2022 Väinö Viinikka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ import kva.logiikka.PalkinTunniste;
  * Luokka eroaa luokasta {@link kva.logiikka.Ryhma} siten, että siihen ei ole tallennettu 
  * {@link kva.logiikka.Moduuli}a ja sijainteja kuvaavia merkkijonoja on mahdollista 
  * lisätä. Luokkaan kerätään ryhmän sisältämät tiedot ryhmien luontivaiheessa, minkä 
- * jälkeen {@link kva.logiikka.Kurssitarjotin} luo varsinaiset {@code Ryhmat} {@code LuotavanRyhman} 
+ * jälkeen {@link kva.logiikka.Kurssitarjotin} luo varsinaiset {@code Ryhmat LuotavanRyhman} 
  * pohjalta.
  *
  * @author Väinö Viinikka
@@ -50,7 +50,7 @@ public class LuotavaRyhma {
      */
     public LuotavaRyhma(String ryhmakoodi) {
         if(ryhmakoodi.split("[.]").length != 2) {
-            throw new IllegalArgumentException("Virheellinen ryhmäkoodi: " + ryhmakoodi + " " + ryhmakoodi.split(".").length);
+            throw new IllegalArgumentException("Virheellinen ryhmäkoodi: " + ryhmakoodi);
         }
         this.ryhmakoodi = ryhmakoodi;
         sijainnit = new ArrayList<>();
@@ -95,7 +95,7 @@ public class LuotavaRyhma {
     
     /**Palauttaa listan ryhmälle annetuista sijainneista.
      * <p>
-     * Sijainnit ovat siinä järjestyksessä, kuin missä ne on lisätty metodilla {@link #lisaaSijainti(java.lang.String)}.
+     * Sijainnit ovat siinä järjestyksessä, kuin missä ne on lisätty metodilla {@link #lisaaSijainti(kva.logiikka.PalkinTunniste) }.
      * Sijainnit palautetaan tätä tarkoitusta varten luodulla uudella listalla, eikä 
      * niitä voi poistaa kutsumalla {@code getSijainnit().remove()}.
      * 

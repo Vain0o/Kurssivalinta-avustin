@@ -1,5 +1,5 @@
 /* Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
- * Copyright (C) 2021 Väinö Viinikka
+ * Copyright (C) 2022 Väinö Viinikka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,8 +44,8 @@ import javafx.scene.layout.VBox;
  * näytetään.
  * <p>
  * Näkymässä käyttäjä voi valita ensin suomen kielen, matematiikan ja ruotsin kielen 
- * oppimäärät sekä katsomusaineen {@code RadioButton}-painikkeilla. Tämän jälkeen 
- * hän valitsee muut opiskelemansa kielet oppimäärittäin  {@code CheckBox}-painikkeilla.
+ * oppimäärät sekä katsomusaineen {@link javafx.scene.control.RadioButton}-painikkeilla. 
+ * Tämän jälkeen hän valitsee muut opiskelemansa kielet oppimäärittäin {@link javafx.scene.control.CheckBox}-painikkeilla.
  * Lopussa on lisäksi toiminnallisuus piilotettavien ja epäkiinnostavien aineiden 
  * lisäämiseen ja poistamiseen manuaalisesti. Näitä työkaluja voi käyttää esimerkiksi 
  * silloin, jos sattui vahingossa klikkaamaan kurssitarjottimesta "piilota aine".
@@ -55,7 +55,7 @@ import javafx.scene.layout.VBox;
  * työkaluihin, mutteivät {@code CheckBoxeihin} eivätkä {@code RadioButtoneihin}.
  *
  * @author Väinö Viinikka
- * @see Asetukset
+ * @see kva.ui.Asetukset
  */
 public class AsetusNakyma extends Nakyma {
     
@@ -141,7 +141,8 @@ public class AsetusNakyma extends Nakyma {
         return new StackPane(pohja);
     }
     
-    /**Luo {@code RadioButtonit} aineen oppimäärien valintaan tms. ja alustaa niiden kuuntelun.
+    /**Luo {@code RadioButtonit} aineen oppimäärien tms. valintaan ja alustaa niiden 
+     * kuuntelun.
      * <p>
      * Jokaisesta {@code vaihtoehdot}-taulukon alkiosta luodaan {@code RadioButton}, 
      * jolle alustetaan kuuntelu siten, että {@code ainekoodit}-taulukossa samalla 
@@ -151,15 +152,14 @@ public class AsetusNakyma extends Nakyma {
      * 
      * @param vaihtoehdot {@code RadioButtonien} tekstit
      * @param ainekoodit niiden kouluaineiden koodit, joiden statusta {@code RadioButtoneilla} 
-     *                   halutaan muuttaa
+     *        halutaan muuttaa
      * @param oletusarvo Se {@code RadioButton}, jonka ainekoodi on sama, kuin {@code oletusarvo} 
-     *                   asetetaan automaattisesti valituksi. Jos mikään ainekoodeista 
-     *                   ei ole sama kuin oletusarvo, mitään {@code RadioButtonia} 
-     *                   ei valita.
+     *        asetetaan automaattisesti valituksi. Jos mikään ainekoodeista ei ole 
+     *        sama kuin oletusarvo, mitään {@code RadioButtonia} ei valita.
      * @return luodut {@code RadioButtonit} samassa järjestyksessä, kuin missä ne 
      *         ovat {@code vaihtoehdot}-taulukossa
-     * @exception java.lang.ArrayIndexOutOfBoundsException jos {@code ainekoodit} 
-     *            on lyhyempi kuin {@code vaihtoehdot}
+     * @throws java.lang.ArrayIndexOutOfBoundsException jos {@code ainekoodit} on 
+     *         lyhyempi kuin {@code vaihtoehdot}
      */
     private ArrayList<RadioButton> luoRadioButtonit(String[] vaihtoehdot, String[] ainekoodit, String oletusarvo) {
         ArrayList<RadioButton> napit = new ArrayList<>();
@@ -191,11 +191,11 @@ public class AsetusNakyma extends Nakyma {
      * 
      * @param vaihtoehdot {@code CheckBoxien} tekstit
      * @param ainekoodit niiden kouluaineiden koodit, joiden statusta {@code CheckBoxeilla} 
-     *                   halutaan muuttaa
+     *        halutaan muuttaa
      * @return luodut {@code CheckBoxit} samassa järjestyksessä, kuin missä ne ovat 
-     *                {@code vaihtoehdot}-taulukossa
-     * @exception java.lang.ArrayIndexOutOfBoundsException jos {@code ainekoodit} 
-     *            on lyhyempi kuin {@code vaihtoehdot}
+     *         {@code vaihtoehdot}-taulukossa
+     * @throws java.lang.ArrayIndexOutOfBoundsException jos {@code ainekoodit} on 
+     *         lyhyempi kuin {@code vaihtoehdot}
      */
     private ArrayList<CheckBox> luoCheckBoxit(String[] vaihtoehdot, String[] ainekoodit) {
         ArrayList<CheckBox> napit = new ArrayList<>();
@@ -223,9 +223,9 @@ public class AsetusNakyma extends Nakyma {
      * ainekoodin tarvittaessa piilotetuista aineista.
      * 
      * @param nayttaminen {@code BooleanProperty}, joka kertoo, pitäisikö {@code ainekoodin} 
-     *                    kurssien olla näkyvissä vai ei.
+     *        kurssien olla näkyvissä vai ei.
      * @param ainekoodi sen kouluaineen koodi, jonka kurssit halutaan näyttää tai 
-     *                  piilottaa.
+     *        piilottaa.
      */
     private void alustaKuuntelu(BooleanProperty nayttaminen, String ainekoodi) {
         nayttaminen.addListener((obs, vanhaArvo, uusiArvo) -> {
@@ -265,7 +265,7 @@ public class AsetusNakyma extends Nakyma {
      * 
      * @param tarkkailtava kokoelma, jota esitys kuvaa
      * @param etuliite merkkijono, joka lisätään kokoelman sisältämien alkioiden ID:iden
-     *                 alkuun
+     *        alkuun
      * @return komponentti, joka sisältää esitysnäkymän.
      */
     private Region luoEsitys(ObservableSet<String> tarkkailtava, String etuliite) {

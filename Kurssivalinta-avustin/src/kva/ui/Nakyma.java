@@ -1,5 +1,5 @@
 /* Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
- * Copyright (C) 2021 Väinö Viinikka
+ * Copyright (C) 2022 Väinö Viinikka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,31 +16,25 @@
  */
 package kva.ui;
 
+import java.util.Objects;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
 
-/**Yläluokka käyttöliittymässä esiintyville välilehdille
+/**Yläluokka käyttöliittymässä esiintyville välilehdille.
  * <p>
  * Luokka hallinnoi alaluokkien puolesta {@link javafx.scene.control.Tab}-välilehteä 
  * ja tietoa käytetystä {@code Kayttoliittymasta}. Välilehden varsinaisen sisällön 
  * luonti jätetään alaluokan tehtäväksi {@link #luoSisalto()}-metodilla. Sisällön 
  * voi myöhemmin vaihtaa metodin {@link #setSisalto(javafx.scene.Node)} avulla.
- * <p>
- * Luokka kutsuu konstruktorissaan alaluokan metodia {@code luoSisalto()}. Näin ollen 
- * alaluokan konstruktorissa ei tulisi olla muuta koodia, kuin viittaus tämän luokan 
- * konstruktoriin. (Hyvä ohjelmointitapa ei välttämättä toteudu, mutta parempaa ratkaisua 
- * ei äkkiseltään tule mieleen.)
  *
  * @author Väinö Viinikka
  */
 public abstract class Nakyma {
     
-    /**{@code Nakyma}n hallinnoima välilehti */
+    /**{@code Nakyma}n hallinnoima välilehti. */
     private Tab valilehti;
     
-    /**Sen {@code Kayttoliittyma}n {@code Kurssitarjotin}, jossa {@code Nakyma}a 
-     * käytetään
-     */
+    /**Sen {@code Kayttoliittyma}n {@code Kurssitarjotin}, jossa {@code Nakymaa} käytetään. */
     private final Kayttoliittyma kayttis;
     
     private String otsikko;
@@ -48,9 +42,8 @@ public abstract class Nakyma {
     /**Luo uuden Nakyman, jonka {@code Tabillä} on annettu otsikko ja joka käyttää 
      * annettua {@code Kurssitarjotinta}.
      * <p>
-     * {@code Nakymat} tulisi luoda luokassa {@link kva.ui.Kayttoliittyma} ja parametriksi 
-     * annetun {@code Kurssitarjottimen} tulisi olla {@code Kayttoliittyman} oma 
-     * {@code Kurssitarjotin}.
+     * {@code Nakymat} tulee luoda luokassa {@link kva.ui.Kayttoliittyma} ja parametriksi 
+     * annetun {@code Kurssitarjottimen} tulee {@code Nakyman} luonut {@code Kayttoliittyma}.
      * 
      * @param otsikko {@code Nakyman} kuvastaman välilehden otsikko
      * @param kayttis {@code Kayttoliittyma}, johon {@code Nakyma} kuuluu
@@ -60,8 +53,7 @@ public abstract class Nakyma {
         this.kayttis = kayttis;
     }
     
-    /**Metodi, jota kutsutaan luokkaa luotaessa ja jonka paluuarvosta tulee {@code Nakyman} 
-     * kuvaaman välilehden sisältö
+    /**Luo ja palauttaa {@code Nakyman} sisältämän käyttöliittymätoiminnallisuuden.
      * <p>
      * Metodin suorittamisen jälkeen sisällön voi vaihtaa metodilla {@link #setSisalto(javafx.scene.Node)} 
      * 
@@ -92,8 +84,6 @@ public abstract class Nakyma {
     /**Palauttaa välilehden sisällön {@link javafx.scene.Node}-muodossa.
      * 
      * @return {@code Nakyman} kuvaaman välilehden sisältö
-     * @exception java.lang.NullPointerException jos metodia kutsutaan metodista 
-     *            {@link #luoSisalto()}
      */
     public final Node getSisalto() {
         return valilehti.getContent();
@@ -104,10 +94,9 @@ public abstract class Nakyma {
      * Metodia tulisi lähtökohtaisesti kutsua vain alaluokista.
      * 
      * @param sisalto välilehden uusi sisältö
-     * @exception java.lang.NullPointerException jos metodia kutsutaan metodista 
-     *            {@link #luoSisalto()}
+     * @throws java.lang.NullPointerException jos {@code sisalto} on {@code null}.
      */
     protected final void setSisalto(Node sisalto) {
-        valilehti.setContent(sisalto);
+        valilehti.setContent(Objects.requireNonNull(sisalto));
     }
 }

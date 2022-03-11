@@ -1,5 +1,5 @@
 /* Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
- * Copyright (C) 2021 Väinö viinikka
+ * Copyright (C) 2022 Väinö Viinikka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,15 +28,12 @@ import kva.logiikka.Sovelluslogiikka;
 /**JavaFX-kirjastojen avulla luotu Kurssivalinta-avustimen käyttöliittymä.
  * <p>
  * Käyttöliittymä-ikkuna luodaan metodissa {@code luo} annettuun {@code Stage}-olioon. 
- * Ikkuna koostuu {@code Nakymista}, jotka näytetään {@link javafx.scene.control.TabPane}n 
+ * Ikkuna koostuu {@link kva.ui.Nakyma}-olioista, jotka näytetään {@link javafx.scene.control.TabPane}n 
  * välilehdillä. Aluksi näkyvissä ovat {@link kva.ui.AsetusNakyma} sekä {@link kva.ui.KurssitarjottimenValintaNakyma}, 
  * joka korvataan {@link kva.ui.KurssitarjotinNakyma}lla kun kurssitarjotin luodaan. 
  * Näkymien varsinainen toteutus on kyseisissä luokissa.
- * <p>
- * {@code KurssitarjottimenValintaNakyman} korvaamista ei ole vielä toteutettu.
  *
  * @author Väinö Viinikka
- * @see kva.ui.Nakyma
  */
 public class Kayttoliittyma {
     
@@ -54,11 +51,11 @@ public class Kayttoliittyma {
 
     /**Luo uuden käyttöliittymän, joka käyttää parametrina annettua sovelluslogiikkaa.
      * <p>
-     * Konstruktori ei vielä luo uutta, käyttäjälle näytettävää ikkunaa, vaan se
-     * tehdään vasta metodissa {@code luo}.
+     * Konstruktori ei vielä luo uutta, käyttäjälle näytettävää ikkunaa, vaan se tehdään 
+     * vasta metodissa {@code luo}.
      * 
      * @param logiikka {@code Sovelluslogiikka}, joka vastaa ohjeman varsinaisesta 
-     *                 toteutuksesta
+     *        toteutuksesta
      */
     public Kayttoliittyma(Sovelluslogiikka logiikka) {
         this.logiikka = logiikka;
@@ -67,9 +64,9 @@ public class Kayttoliittyma {
     
     /**Luo käyttöliittymäikkunan ja sen sisällön annettuun {@link javafx.stage.Stage}en.
      * <p>
-     * Metodia tulisi kutsua JavaFX:n sovellussäikeessä. Suositeltava tapa käyttää
+     * Metodia tulee kutsua JavaFX:n sovellussäikeessä. Suositeltava tapa käyttää
      * metodia on kutsua sitä luokan {@link javafx.application.Application} alaluokan
-     * metodissa {@code Start}.
+     * metodissa {@code start()}.
      * 
      * @param ikkuna {@code Stage}, johon käyttöliittymä luodaan
      */
@@ -88,7 +85,7 @@ public class Kayttoliittyma {
     
     /**Palauttaa {@code Kayttoliityman} käyttämän {@link kva.logiikka.Sovelluslogiikka}-olion.
      * 
-     * @return käytössä oleva {@code Kurssitarjotin}
+     * @return käytössä oleva {@code Sovelluslogiikka}
      */
     public Sovelluslogiikka getLogiikka() {
         return logiikka;
@@ -98,7 +95,6 @@ public class Kayttoliittyma {
      * {@code Asetukset}-olion.
      * 
      * @return {@code Kayttoliittyman Asetukset}
-     * @see kva.ui.Asetukset
      */
     public Asetukset getAsetukset() {
         return asetukset;
@@ -123,6 +119,10 @@ public class Kayttoliittyma {
         getLogiikka().lataaKurssitarjotin(valittavat, tuloksenKasittely, virheenKasittely);
     }
     
+    /**Luo {@code Kayttoliittymalle KurssitarjotinNakyman} ja korvaa sillä {@code KurssitarjottimenValintaNakyman}. 
+     * 
+     * @param tarjotin {@code Sovelluslogiikan Kurssitarjotin} 
+     */
     private void luoKurssitarjotinNakyma(Kurssitarjotin tarjotin) {
         valilehdet.getTabs().removeIf((tab) -> tab.getText().equals("Kurssitarjotin"));
         KurssitarjotinNakyma tarjotinNakyma = new KurssitarjotinNakyma("Kurssitarjotin", this, tarjotin);

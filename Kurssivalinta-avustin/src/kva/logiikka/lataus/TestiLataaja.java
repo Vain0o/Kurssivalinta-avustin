@@ -1,5 +1,5 @@
 /* Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
- * Copyright (C) 2021 Väinö viinikka
+ * Copyright (C) 2022 Väinö Viinikka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,7 +64,6 @@ public class TestiLataaja implements KurssitarjottimenLataaja {
     /**Sisältää moduulit, jotka ladataan tiedostosta.*/
     private HashMap<String, Moduuli> moduulit;
     private HashSet<PeriodinTunniste> ladattavatPeriodit;
-    
     private boolean latausKaynnissa = false;
     private ArrayList<String> kaytavaPalkki = new ArrayList<>();
     private String nykyinenOppilaitos;
@@ -222,7 +221,7 @@ public class TestiLataaja implements KurssitarjottimenLataaja {
         return palautus;
     }
     
-    /**Palauttaa {@code lukijan} seuraavan rivin
+    /**Palauttaa {@code lukijan} seuraavan rivin.
      * <p>
      * Tätä metodia tulisi käyttää aina kutsun {@code lukija.nextLine()} sijasta, ellei 
      * muuhun ole painavaa syytä. Näin muuttujien {@code rivi} ja {@code viimeisinRivi} 

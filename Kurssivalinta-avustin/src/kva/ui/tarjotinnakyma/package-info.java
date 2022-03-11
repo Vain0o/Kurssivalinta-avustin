@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**Sisältää luokkia, jotka kuvaavat {@KurssitarjotinNakyman} sisältämiä elementtejä.
+/**Sisältää luokat, jotka kuvaavat {@code KurssitarjotinNakyman} sisältämiä elementtejä.
  * 
  * @author Väinö Viinikka
  * @see kva.ui.KurssitarjotinNakyma

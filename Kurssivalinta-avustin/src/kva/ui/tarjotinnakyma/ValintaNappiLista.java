@@ -19,10 +19,15 @@ package kva.ui.tarjotinnakyma;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Objects;
 import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
 
 /**Hallinnoi {@code FlowPanea}, johon voi lisätä {@code ValintaNappeja}.
+ * <p>
+ * {@link kva.ui.tarjotinnakyma.PalkkiEsitys} sisältää kaksi {@code ValintaNappiListaa}: 
+ * toisessa esitetään ne {@link kva.logiikka.Ryhma}t, joiden {@link kva.logiikka.Moduuli}t 
+ * käyttjä on valinnut muualta, ja toisessa loput.
  * <p>
  * {@link javafx.scene.layout.FlowPane}n saa {@code Node}-muodossa käyttöön metodilla 
  * {@link #getNode()}. Luokka pitää {@code FlowPaneen} lisätyt komponentit järjestyksessä, 
@@ -34,11 +39,13 @@ import javafx.scene.layout.FlowPane;
  * EI PIDÄ YRITTÄÄ MISSÄÄN NIMESSÄ, SILLÄ SE TULEE AIHEUTTAMAAN VIRHEITÄ.
  *
  * @author Väinö Viinikka
+ * @see kva.ui.tarjotinnakyma.ValintaNappi
  */
 public class ValintaNappiLista {
     
     private FlowPane lista;
     
+    /**Luo uuden, tyhjän {@code ValintaNappiListan}. */
     public ValintaNappiLista() {
         lista = new FlowPane();
         lista.setHgap(5);
@@ -46,14 +53,33 @@ public class ValintaNappiLista {
         lista.setPrefWidth(300);
     }
     
+    /**Luo uuden {@code ValintaNappiListan}, joka sisältää annetut {@code ValintaNapit}.
+     * <p>
+     * {@code ValintaNappiLista} järjestää itsenäisesti lisättävät {@code ValintaNapit}.
+     * 
+     * @param jasenet {@code ValintaNapit}, jotka halutaan lisätä listalle
+     * @throws java.lang.IllegalArgumentException jos {@code jasenet} sisältää {@code null}-arvoja
+     * @throws java.lang.NullPointerException jos {@code jasenet} on {@code null}.
+     */
     public ValintaNappiLista(Collection<ValintaNappi> jasenet) {
         this();
+        if(jasenet.contains(null)) {
+            throw new IllegalArgumentException("ValintaNappiListalle ei voi lisätä null-arvoja.");
+        }
         ArrayList<ValintaNappi> lisays = new ArrayList<>(jasenet);
         lisays.sort(Comparator.naturalOrder());
         lista.getChildren().addAll(lisays);
     }
 
+    /**Lisää listalle uuden {@code ValintaNapin}.
+     * <p>
+     * {@code ValintaNappiLista} pitää napit järjestyksessä. Samaa nappia ei voi lisätä 
+     * useita kertoja, vaan jos tätä yritetään, mitään ei tapahdu.
+     *
+     * @param nappi lisättävä {@code ValintaNappi}
+     */
     public void lisaaNappi(ValintaNappi nappi) {
+        Objects.requireNonNull(nappi, "ValintaNappiListalle ei voi lisätä null-arvoja.");
         if(lista.getChildren().contains(nappi)) {
             return;
         }
@@ -76,10 +102,18 @@ public class ValintaNappiLista {
         lista.getChildren().add(pieninIndeksi, nappi);
     }
     
+    /**Poistaa listalta annetun {@code ValintaNapin}, jos se on listalla.
+     * 
+     * @param nappi poistettava {@code ValintaNappi}
+     */
     public void poistaNappi(ValintaNappi nappi) {
         lista.getChildren().remove(nappi);
     }
     
+    /**Palauttaa listaa kuvaavan käyttöliittymäkomponentin.
+     * 
+     * @return {@code Node}, jossa listan {@code ValintaNapit} sijaitsevat.
+     */
     public Node getNode() {
         return lista;
     }

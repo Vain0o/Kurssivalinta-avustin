@@ -1,5 +1,5 @@
 /* Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
- * Copyright (C) 2021 Väinö viinikka
+ * Copyright (C) 2022 Väinö Viinikka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,10 +21,11 @@ import java.util.Objects;
 /**Esitys {@code Ryhman} sijainnista kurssitarjottimessa.
  * <p>
  * {@code PalkinTunniste} sisältää tiedot siitä oppilaitoksesta, periodista ja palkista, 
- * jossa ryhmään liittyvä opetus pidetään. Samalla {@code Ryhmalla} voi olla useita 
- * sijainteja, esimerkiksi yksi kummallekin periodinpuolikkaalle.
+ * jossa ryhmään liittyvä opetus pidetään. Samalla {@link kva.logiikka.Ryhma}lla voi 
+ * olla sijainteinaan useita {@code PalkinTunnisteita}, esimerkiksi yksi kummallekin 
+ * periodinpuolikkaalle.
  * <p>
- * {@code RyhmanSijainnin} sisältämiä tietoja ei voi muuttaa luomisen jälkeen.
+ * {@code PalkinTunnisteen} sisältämiä tietoja ei voi muuttaa luomisen jälkeen.
  *
  * @author Väinö Viinikka
  * @see kva.logiikka.Ryhma
@@ -66,7 +67,7 @@ public class PalkinTunniste {
         return periodi;
     }
 
-    /**Palauttaa sen palkin nimen, joka määrää {@code Ryhmaan} liittyvän opetuksen 
+    /**Palauttaa sen palkin nimen, joka määrittää {@code Ryhmaan} liittyvän opetuksen 
      * ajankohdat.
      * 
      * @return palkin nimi tai numero
@@ -75,19 +76,24 @@ public class PalkinTunniste {
         return palkki;
     }
     
+    /**Palauttaa {@code PeriodinTunnisteen}, joka sisältää tiedot {@code PalkinTunnisteen} 
+     * oppilaitoksesta ja periodista.
+     * 
+     * @return {@code PeriodinTunniste}, joka kuvaa palkin sisältävää periodia.
+     */
     public PeriodinTunniste getPeriodinTunniste() {
         return new PeriodinTunniste(oppilaitos, periodi);
     }
     
-    /** * Kertoo, kuuluuko annettu {@code PalkinTunniste} samaan periodiin.
+    /**Kertoo, kuuluuko annettu {@code PalkinTunniste} samaan periodiin, kuin tämä.
      * <p>
-     * {@code true} palautetaan, jos annetun {@code toisen} oppilaitos ja 
-     * periodi ovat samat, kuin tämän {@code RyhmanSijainnin}, riippumatta palkeista. 
-     * Lisäksi jos {@code toinen} on {@code null}, palautetaan arvo {@code false}.
+     * {@code true} palautetaan, jos annetun {@code PalkinTunnisteen} oppilaitos ja 
+     * periodi ovat samat, kuin tämän, palkeista riippumatta. Lisäksi jos annettu 
+     * {@code PalkinTunniste} on {@code null}, palautetaan {@code false}.
      * 
      * @param toinen {@code PalkinTunniste}, jonka kuuluvuus samaan periodiin halutaan 
-     *               selvittää
-     * @return {@code true}, jos {@code toinen} kuuluu samaan periodiin
+     *        selvittää
+     * @return {@code true}, jos {@code toinen} kuuluu samaan periodiin, kuin tämä
      */
     public boolean onSamaPeriodi(PalkinTunniste toinen) {
         if(toinen == null) {

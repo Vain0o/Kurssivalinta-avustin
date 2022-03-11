@@ -1,5 +1,5 @@
 /**Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
- * Copyright (C) 2021 Väinö viinikka
+ * Copyright (C) 2022 Väinö Viinikka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,8 +18,8 @@
 /**Sisältää luokat, jotka toteuttavat Kurssivalinta-avustimen graafisen käyttöliittymän 
  * JavaFX-kirjastoa hyödyntäen.
  * <p>
- * Käyttöliittymän keskus on luokka {@code Kayttoliittyma}. Se hallinnoi {@code Nakymia}, 
- * jotka luovat käyttöliittymän varsinaisen sisällön, sekä luokkaa {@code Asetukset}, 
+ * Käyttöliittymän keskus on luokka {@link kva.ui.Kayttoliittyma}. Se hallinnoi {@link kva.ui.Nakyma}-olioita, 
+ * jotka luovat käyttöliittymän varsinaisen sisällön, sekä luokkaa {@link kva.ui.Asetukset}, 
  * joka sisältää tiedot siitä, miten kurssit esitetään kurssitarjottimessa.
  * 
  * @author Väinö Viinikka

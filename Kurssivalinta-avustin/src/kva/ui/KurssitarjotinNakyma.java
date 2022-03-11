@@ -1,5 +1,5 @@
 /* Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
- * Copyright (C) 2021 Väinö viinikka
+ * Copyright (C) 2022 Väinö Viinikka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,12 @@ import kva.logiikka.PalkinTunniste;
 import kva.ui.tarjotinnakyma.PalkkiEsitys;
 
 /**Toteuttaa {@code Nakyman}, jossa käyttäjä valitsee kurssit.
+ * <p>
+ * Näkymä sisältää {@link kva.logiikka.Kurssitarjotin}-olion mahdollisia palkkeja 
+ * kuvaavat {@link kva.ui.tarjotinnakyma.PalkkiEsitys}-oliot {@code Kurssitarjottimen} 
+ * {@code getMahdollisetPalkit()}-metodin kuvaamassa järjestyksessä. Ne puolestaan 
+ * sisältävät yksittäisiä {@link kva.logiikka.Ryhma}-olioita kuvaavat {@link kva.ui.tarjotinnakyma.ValintaNappi}-napit.
+ * Lisäksi näkymä sisältää oppilaitoksen ja periodin vaihtumista kuvaavat otsikot.
  *
  * @author Väinö Viinikka
  */
@@ -82,5 +88,4 @@ public class KurssitarjotinNakyma extends Nakyma {
         ylin.setCenter(pohja);
         return ylin;
     }
-    
 }

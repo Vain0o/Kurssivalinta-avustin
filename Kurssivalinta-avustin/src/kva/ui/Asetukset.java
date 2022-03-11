@@ -1,5 +1,5 @@
 /* Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
- * Copyright (C) 2021 Väinö viinikka
+ * Copyright (C) 2022 Väinö Viinikka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,9 +23,11 @@ import javafx.collections.ObservableSet;
 import kva.logiikka.Moduuli;
 import kva.logiikka.Moduuli.Tyyppi;
 
-/**Sisältää toiminnallisuuden, jolla kurssitarjottimen ryhmiä piilotetaan.
+/**Sisältää tiedot siitä, mitä ryhmiä piilotetaan.
  * <p>
- * Myös ryhmien suosittelu tultanen toteuttamaan tänne aikanaan.
+ * Tiedot piilotuksista ovat kolmessa {@link javafx.collections.ObservableSet}issä, 
+ * joita kuuntelemalla on mahdollista pysyä kärryillä siitä, mitkä ryhmät käyttöliittymän 
+ * tulisi piilottaa.
  *
  * @author Väinö Viinikka
  */
@@ -49,8 +51,8 @@ public class Asetukset {
      * "YH", käyttäjälle ei näytetä ryhmiä, joiden kurssikoodeissa on merkkijono 
      * "YH" ja jotka eivät ole pakollisia.
      * <p>
-     * Kokoelmaan kannattaa lisätä sellaiset aineet, joista opiskelija haluaa opiskella 
-     * vain pakolliset kurssit.
+     * Kokoelmaan kannattaa lisätä sellaiset aineet, joista opiskelija ei ole kiinnostunut, 
+     * ja joista hän haluaa opiskella vain pakolliset kurssit.
      */
     public final ObservableSet<String> epakiinnostavatAineet;
     
@@ -58,8 +60,7 @@ public class Asetukset {
      * <p>
      * Toteutus perustuu kurssikoodeihin, mutta se poikkeaa kokoelmien  {@code piilotetutAineet} 
      * ja {@code epakiinnostavatAineet} toteutuksista: jos kokoelmaan lisätään merkkijono 
-     * "HI04", käyttäjälle ei näytetä ryhmiä, joiden kurssin kurssikoodi on nimenomaan 
-     * "HI04".
+     * "HI04", käyttäjälle ei näytetä ryhmiä, joiden moduuli koodi on nimenomaan "HI04".
      * <p>
      * Kokoelmaan kannattaa lisätä sellaiset sellaisten kurssien kurssikoodit, joita 
      * opiskelija ei aio käydä, mutta jotka eivät sovellu lisättäväksi piilotettuihin 
@@ -101,6 +102,15 @@ public class Asetukset {
         }
     }
     
+    /**Kertoo, pitäisikö annettu {@code Moduuli} piilottaa asetusten mukaan.
+     * <p>
+     * Moduuli piilotetaan, mikäli 1) sen kurssikoodi on {@code piilotetutModuulit}-listalla, 
+     * 2) osa sen kurssikoodista on {@code piilotetutAineet}-listalla tai 3) se ei 
+     * ole pakollinen ja osa sen kurssikoodista on {@code epakiinnostavatAineet}-listalla.
+     * 
+     * @param moduuli {@code Moduuli}, josta halutaan selvittää, pitäisikö se piilottaa
+     * @return {@code true}, jos {@code moduuli} on asetusten mukaan piilotettava.
+     */
     public boolean pitaisiPiilottaa(Moduuli moduuli) {
         if(piilotetutModuulit.contains(moduuli.getKoodi())) {
             return true;

@@ -1,5 +1,5 @@
 /* Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
- * Copyright (C) 2021 Väinö Viinikka
+ * Copyright (C) 2022 Väinö Viinikka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,10 +18,10 @@ package kva.logiikka.tapahtumat;
 
 import kva.logiikka.Ryhma;
 
-/** Toteuttaa mahdollisuuden kuunnella tiettyyn {@link kva.logiikka.Ryhma}an kohdistuvia 
+/**Toteuttaa mahdollisuuden kuunnella tiettyyn {@code Ryhmaan} kohdistuvia 
  * valintoja.
  * <p>
- * Rajapinnan toteuttava olio lisätään {@code Ryhmalle} {@code lisaaValintaKuuntelija()}-metodilla, 
+ * Rajapinnan toteuttava olio lisätään {@link kva.logiikka.Ryhma}lle {@code lisaaValintaKuuntelija()}-metodilla, 
  * minkä jälkeen {@code ValintaKuuntelijaa} tiedotetaan {@code Ryhmaan} vaikuttavista 
  * valintatoimenpiteistä. Kuuntelijan voi myös poistaa {@code Ryhman poistaValintaKuuntelija()}-metodilla. 
  * Sama {@code ValitaKuuntelija} voidaan lisätä usealle eri {@code Ryhmalle}.

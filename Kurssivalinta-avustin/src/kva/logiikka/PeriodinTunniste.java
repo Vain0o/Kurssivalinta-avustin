@@ -1,5 +1,5 @@
 /* Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
- * Copyright (C) 2021 Väinö viinikka
+ * Copyright (C) 2022 Väinö Viinikka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,27 +20,28 @@ import java.util.Objects;
 
 /**Olio, jolla kurssitarjottimen periodit tunnistetaan.
  * <p>
- * {@code KurssitarjottimenLataaja} kertoo mahdolliset periodit muodossa {@code List<PeriodinTunniste>}.
- * Tieto siitä, mitkä periodit halutaan ladata, annetaan lataajalle niin ikään muodossa 
- * {@code Collection<PeriodinTunniste>}.
+ * {@link kva.logiikka.lataus.KurssitarjottimenLataaja} ilmoittaa mahdolliset periodit 
+ * muodossa {@code List<PeriodinTunniste>}. Tieto siitä, mitkä periodit halutaan ladata, 
+ * annetaan lataajalle niin ikään muodossa {@code Collection<PeriodinTunniste>}.
  * <p>
  * {@code PeriodinTunnistetta} ei voi muuttaa luomisensa jälkeen, ja se sisältää tiedot 
  * oppilaitoksen ja periodin nimistä.
  *
  * @author Väinö Viinikka
+ * @see kva.logiikka.PalkinTunniste
  */
 public class PeriodinTunniste {
     
     private final String oppilaitos;
     private final String periodi;
 
-    /**Luo uuden tunnisteen.
+    /**Luo uuden {@code PeriodinTunnisteen}.
      * 
      * @param oppilaitos sen oppilaitoksen nimi, jossa periodi käydään, esim. "Otaniemen 
-     *                   lukio"
+     *        lukio"
      * @param periodi tarkoitetun periodin nimi, esimerkiksi "Periodi 1A" tai "1. 
-     *                jakso"
-     * @throws java.lang.NullPointerException jos jompikumpi parametreistä on null;
+     *        jakso"
+     * @throws java.lang.NullPointerException jos jompikumpi parametreistä on {@code null}
      */
     public PeriodinTunniste(String oppilaitos, String periodi) {
         this.oppilaitos = Objects.requireNonNull(oppilaitos);

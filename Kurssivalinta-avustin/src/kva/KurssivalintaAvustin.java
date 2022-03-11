@@ -1,5 +1,5 @@
 /* Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
- * Copyright (C) 2021 Väinö viinikka
+ * Copyright (C) 2022 Väinö Viinikka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ import kva.ui.Kayttoliittyma;
  * ja käynnistää sovelluksen.
  * <p>
  * Luokka ei sisällä sovelluksen varsinaista toteutusta. Se ainoastaan luo ilmetymät
- * luokista {@link kva.ui.Kayttoliittyma}, {@link kva.logiikka.Sovelluslogiikka} ja 
+ * luokista {@link kva.ui.Kayttoliittyma}, {@link kva.logiikka.Sovelluslogiikka} sekä 
  * {@link kva.logiikka.lataus.KurssitarjottimenLataaja} ja käynnistää sovelluksen 
  * {@code Kayttoliittyman} metodilla {@code luo}.
  * <p>

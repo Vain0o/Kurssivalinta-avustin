@@ -25,7 +25,6 @@ import javafx.collections.SetChangeListener;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
@@ -38,7 +37,15 @@ import kva.logiikka.Ryhma;
 import kva.logiikka.tapahtumat.ValintaKuuntelija;
 import kva.ui.Asetukset;
 
-/**
+/**Luo esityksen, joka kuvaa yksittäistä kurssitarjottimessa esiintyvää palkkia.
+ * <p>
+ * {@code PalkkiEsitys} sisältää palkin ryhmiä kuvaavat {@link kva.ui.tarjotinnakyma.ValintaNappi}-oliot, 
+ * ja huolehtii niiden esittämisestä {@link kva.logiikka.Kurssitarjotin}-olion tilan 
+ * mukaisesti: valitut ryhmät korostetaan, ja muualta valitut ryhmät näytetään erillään 
+ * muista omassa sarakkeessaan. Lisäksi luokka piilottaa halutut {@code ValintaNapit} 
+ * sen mukaan mitä {@link kva.ui.Asetukset} käskee.
+ * <p>
+ * Palkkia kuvaava käyttöliittymäkomponentti saadaan metodilla {@link #getEsitys()}.
  *
  * @author Väinö Viinikka
  */
@@ -52,6 +59,13 @@ public class PalkkiEsitys {
     private Collection<ValintaNappi> sisalto;
     private final Asetukset asetukset;
 
+    /**Luo uuden {@code PalkkiEsityksen}.
+     * 
+     * @param tarjotin {@code Kurssitarjotin}, jonka tiettyä palkkia {@code PalkkiEsitys}
+     *        kuvailee
+     * @param palkki sen palkin tunniste, jota {@code PalkkiEsitys} kuvailee
+     * @param asetukset määrittää perusteet {@code ValintaNappien} piilottamiseen
+     */
     public PalkkiEsitys(Kurssitarjotin tarjotin, PalkinTunniste palkki, Asetukset asetukset) {
         this.tarjotin = tarjotin;
         this.palkki = palkki;
@@ -79,14 +93,29 @@ public class PalkkiEsitys {
         esitys = kehikko;
     }
 
+    /**Palauttaa sen palkin tunnisteen, jonka kurssit {@code PalkkiEsitys} esittää.
+     * 
+     * @return palkkia kuvaava {@code PalkinTunniste}
+     */
     public PalkinTunniste getPalkki() {
         return palkki;
     }
 
+    /**Palauttaa käyttöliittymäkomponentin, jossa palkin tiedot esitetään.
+     * 
+     * @return {@code Node}, joka esittää palkin tiedot
+     */
     public Node getEsitys() {
         return esitys;
     }
     
+    /**Lisää uuden {@code Ryhman} palkin tietoihin.
+     * <p>
+     * Metodia kutsutaan ainoastaan konstruktorista, joskaan tekinstä estettä {@code Ryhmien} 
+     * lisäämiselle myöhemminkään ei ole.
+     * 
+     * @param ryhma lisättävä {@code Ryhma}
+     */
     private void lisaaRyhma(Ryhma ryhma) {
         ValintaNappi nappi = new ValintaNappi(ryhma);
         sisalto.add(nappi);
@@ -138,6 +167,12 @@ public class PalkkiEsitys {
         });
     }
     
+    /**Lisää {@code Asetukset}-oliolle tarvittvat kuuntelijat, jotka huolehtivat {@code ValintaNappien} 
+     * näyttämisestä ja piilottamisesta, kun asetuksia muutetaan.
+     * <p>
+     * Metodia kutsutaan ainoastaan kerran konstruktorista.
+     * 
+     */
     private void alustaAsetustenKuuntelu() {
         SetChangeListener<String> kuuntelija = (muutos) -> {
             if(muutos.wasAdded()) {
@@ -178,6 +213,17 @@ public class PalkkiEsitys {
         });
     }
     
+    /**Kertoo, voidaanko parametrina annettu {@code Ryhma} valita.
+     * <p>
+     * {@code Ryhma} voidaan aina valita, jos se ei mene päällekkäin (ts. sillä ei  
+     * ole sijainneissaan yhtään samaa {@code PalkinTunnistetta}) jo valittujen {@code Ryhmien} 
+     * kanssa. Jos päällekkäisiä {@code Ryhmia} löytyy, niiden valinta on poistettava, 
+     * jotta annettu {@code Ryhma} voidaan valita. Tähän kysytään erikseen vahvistus 
+     * käyttäjältä {@link #kysyKayttajalta(java.lang.String)}-metodilla.
+     * 
+     * @param tarkistettava {@code Ryhma}, josta halutaan tietää, voidaanko se valita
+     * @return {@code true}, jos {@code tarkistettavan} voi merkitä valituksi
+     */
     private boolean onkoValinnalleEstetta(Ryhma tarkistettava) {
         ArrayList<Ryhma> paallekkaiset = tarkistettava.getTarjotin().getValitutRyhmat().stream()
                 .filter((ryhma) -> {
@@ -185,6 +231,7 @@ public class PalkkiEsitys {
                             .anyMatch((sijainti) -> tarkistettava.getSijainnit().contains(sijainti));
                 })
                 .collect(Collectors.toCollection(() -> new ArrayList<>()));
+        
         if(!paallekkaiset.isEmpty()) {
             StringBuilder viesti = new StringBuilder("Valitsemasi ryhmä ")
                     .append(tarkistettava.getKoodi())
@@ -208,6 +255,19 @@ public class PalkkiEsitys {
         return false;
     }
     
+    /**Luo ikkunan, jossa käyttäjälle esitetään kysymys, ja palauttaa vastauksen.
+     * <p>
+     * Kysymysikkuna luodaan {@link javafx.scene.control.Alert}-luokan avulla. Ikkunan 
+     * otsikkona on aina "Kurssivalinta-avustin" ja vastausvaihtoehtoina "Kyllä" ja 
+     * "Ei".
+     * <p>
+     * Metodia saa kutsua vain JavaFX:n sovellussäikeessä samoissa tilanteissa, kuin 
+     * metodia {@link javafx.scene.control.Alert#showAndWait()}. Kun metodia kutsutaan, 
+     * säikeen toiminta pysähtyy siksi aikaa, kunnes käyttäjä on vastannut kysymykseen.
+     * 
+     * @param kysymys käyttäjälle esitettävän kysymyksen teksti
+     * @return {@code true}, jos käyttäjä vastasi kysymykseen painamalla "Kyllä"
+     */
     private boolean kysyKayttajalta(String kysymys) {
         ButtonType kylla = new ButtonType("Kyllä", ButtonData.YES);
         ButtonType ei = new ButtonType("Ei", ButtonData.NO);
@@ -219,6 +279,14 @@ public class PalkkiEsitys {
         return tulos.isPresent() && tulos.get().equals(kylla);
     }
     
+    /**Lisää annetun {@code ValintaNapin} näkyville.
+     * <p>
+     * Metodi lisää {@code ValintaNapin} oikeaan sarakkeeseen sen mukaan, onko se 
+     * valittu muualta. Metodi on tarkoitettu ainoastaan niille {@code ValintaNapeille}, 
+     * jotka ovat valmiiksi osa {@code PalkkiEsitysta}.
+     * 
+     * @param nappi lisättävä {@code ValintaNappi}
+     */
     private void lisaaNakyviin(ValintaNappi nappi) {
         if(!nappi.getRyhma().onValittuMuualta()) {
             olennaiset.lisaaNappi(nappi);
@@ -227,6 +295,10 @@ public class PalkkiEsitys {
         }
     }
     
+    /**Poistaa annetun {@code ValintaNapin} näkyviltä.
+     * 
+     * @param nappi poistettava {@code ValintaNappi}
+     */
     private void poistaNakyvista(ValintaNappi nappi) {
         olennaiset.poistaNappi(nappi);
         muualtaValitut.poistaNappi(nappi);

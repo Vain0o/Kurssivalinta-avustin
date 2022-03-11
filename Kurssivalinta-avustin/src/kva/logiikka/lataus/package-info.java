@@ -1,5 +1,5 @@
 /* Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
- * Copyright (C) 2021 Väinö viinikka
+ * Copyright (C) 2022 Väinö Viinikka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,8 @@
  * Lataukseen tarvittavat komennot määritellään rajapinnassa {@link kva.logiikka.lataus.KurssitarjottimenLataaja}. 
  * Rajapinnan toteutukset vastaavat tietojen hakemisesta kukin omalla tavallaan. Toistaiseksi 
  * valmiina on ainoastaan {@link kva.logiikka.lataus.TestiLataaja}, joka hakee tiedot 
- * tekstitiedostosta, ja internetiä hyödyntävä lataaja on suunnitteilla.
+ * tekstitiedostosta. Internetiä hyödyntävä lataaja tullaa toteuttamaan lopulliseen 
+ * versioon.
  * 
  * @author Väinö Viinikka
  */

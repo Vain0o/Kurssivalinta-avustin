@@ -1,5 +1,5 @@
 /* Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
- * Copyright (C) 2021 Väinö viinikka
+ * Copyright (C) 2022 Väinö Viinikka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package kva.logiikka;
 /**Kapseloi ne tiedot, jotka ovat samat kaikissa saman moduulin {@code Ryhmissä}.
  *
  * @author Väinö Viinikka
+ * @see kva.logiikka.Ryhma
  */
 public class Moduuli implements Comparable<Moduuli> {
     
@@ -26,6 +27,10 @@ public class Moduuli implements Comparable<Moduuli> {
     private Tyyppi tyyppi;
 
     /**Luo uuden kurssin annettulla kurssikoodilla.
+     * <p>
+     * Moduuliin voidaan myöhemmin liittää muuta tietoa, esim. opintopisteiden määrä 
+     * ja kuvaus opetussisällöstä. Tällöin luokalle luodaan uusi konstruktori ja tämä 
+     * merkitään vanhentuneeksi.
      * 
      * @param koodi Kurssin koodi ilman ryhmän numeroa, esim. FY05
      * @param tyyppi Kertoo kurssin pakollisuuden
@@ -62,8 +67,11 @@ public class Moduuli implements Comparable<Moduuli> {
         return "Moduuli{" + "koodi=" + koodi + ", tyyppi=" + tyyppi + '}';
     }
     
-    /**Esitys kurssin tyypeistä, joita on neljää eri lajia: pakollisia, valtakunnallisia 
-     * syventäviä, koulukohtaisia syventäviä ja koulukohtaisia soveltavia.
+    /**Esitys {@code Moduulien} tyypeistä, jotka määrittävät mm. moduulin pakollisuuden 
+     * ja saatavuuden eri lukioissa.
+     * 
+     * @author Väinö Viinikka
+     * @see kva.logiikka.Moduuli
      */
     public enum Tyyppi {
         
@@ -84,7 +92,9 @@ public class Moduuli implements Comparable<Moduuli> {
         /**Kertoo, että kyseessä on valtakunnallinen syventävä kurssi.
          * <p>
          * Valtakunnalliset syventävät kurssit ovat tarjolla kaikissa lukioissa, 
-         * mutta niiden käyminen ei ole pakollista.
+         * mutta niiden käyminen ei ole pakollista. Kuitenkaan vieraiden kielten syventäviä 
+         * kursseja ei ole tarjolla lukioissa, joissa kyseisten kielten opetusta ei 
+         * ole järjestetty.
          * <p>
          * Ylioppilaskokeen kysymykset perustuvat kunkin aineen pakollisiin ja syventäviin 
          * kursseihin. Lyhyissä kielissä ei ole pakollisia kursseja, ja niiden ylioppilaskokeeseen 
@@ -102,7 +112,10 @@ public class Moduuli implements Comparable<Moduuli> {
         
         /**Kertoo, että kyseessä on koulukohtainen soveltava kurssi.
          * <p>
-         * Koulukohtaiset soveltavat kurssit eivät ole pakollisia. Kyseessä ovat 
+         * Koulukohtaiset soveltavat kurssit eivät ole pakollisia, ja lukiot päättävät 
+         * itsenäisesti niiden tarjonnasta.
+         * <p>
+         * Kyseessä ovat 
          * usein kunkin lukion omat erikoisuudet, kuten projekit ja opintomatkat. 
          * Myös ylioppilastutkintoon valmistavat kertauskurssit ovat pääsääntöisesti 
          * koulukohtaisia soveltavia kursseja.

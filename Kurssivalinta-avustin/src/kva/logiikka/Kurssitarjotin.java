@@ -1,5 +1,5 @@
 /**Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
- * Copyright (C) 2021 Väinö viinikka
+ * Copyright (C) 2022 Väinö Viinikka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,12 +29,12 @@ import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import kva.logiikka.lataus.LuotavaRyhma;
 
-/**Säiliöluokka kurssitarjottimen {@link kva.logiikka.Ryhma}-olioille.
+/**Säiliöluokka kurssitarjottimen {@code Ryhmille}.
  * <p>
- * Luokka sisältää toiminnallisuuden kurssien merkitsemiseen valituksi tai ei-valituksi, 
- * sekä näiden toimenpiteiden kuuntelulle. Se sisältää myös tiedot {@code Ryhmien} 
- * {@link kva.logiikka.Moduuli}-olioista sekä järjestyksestä, jossa käyttöliittymän 
- * tulisi jaksot esittää.
+ * Luokka sisältää toiminnallisuuden {@link kva.logiikka.Ryhma}-olioiden merkitsemiseen 
+ * valituksi tai ei-valituksi, sekä näiden toimenpiteiden kuuntelulle. Se sisältää 
+ * myös tiedot {@code Ryhmien} {@link kva.logiikka.Moduuli}-olioista sekä järjestyksestä, 
+ * jossa käyttöliittymän tulisi esittää periodit ja palkit.
  * <p>
  * {@code Kurssitarjottimessa} ei voi valita samaan aikaan useampaa {@code Ryhmaa}, 
  * joilla on samat {@code Moduulit}, eikä useampaa ryhmaa, jotka sijaitsevat samassa 
@@ -53,17 +53,17 @@ public class Kurssitarjotin {
     /**Luo uuden {@code Kurssitarjottimen}.
      * <p>
      * Konstruktori on tarkoitettu ensisijaisesti kutsuttavaksi {@link kva.logiikka.Sovelluslogiikka}sta, 
-     * mutta sen luomiselle itse ei ole periaatteellista estettä.
+     * mutta sen luomiselle muualla ei ole periaatteellista estettä.
      * 
      * @param ryhmat lista {@link kva.logiikka.lataus.LuotavaRyhma}-olioista, joiden 
      *        perusteella {@code Kurssitarjotin} luo {@code Ryhmansa}
      * @param moduulit lista {@code Ryhmien Moduuleista}
      * @param periodienJarjestys kertoo periodien keskinäisen järjestyksen.
      * @throws java.lang.IllegalArgumentException jos {@code moduulit} ei sisällä 
-     *         moduuleja kaikille {@code ryhmat}-listalla esiintyville ryhmille, tai 
-     *         jos {@code periodienJarjestys} ei sisällä kaikkia oppilaitoksen ja 
-     *         periodin yhdistelmiä, jotka esiintyvät {@code ryhmien} alkioiden mahdollisissa 
-     *         sijainneissa
+     *         moduuleja kaikille {@code ryhmat}-listalla esiintyville ryhmille
+     * @throws java.lang.IllegalArgumentException jos {@code periodienJarjestys} 
+     *         ei sisällä kaikkia oppilaitoksen ja periodin yhdistelmiä, jotka esiintyvät 
+     *         {@code ryhmien} alkioiden mahdollisissa sijainneissa
      * @throws java.lang.NullPointerException jos jokin parametreistä on arvoltaan 
      *         {@code null} tai sisältää {@code null}-arvon
      */
@@ -116,6 +116,9 @@ public class Kurssitarjotin {
     }
     
     /**Palauttaa kaikki {@code Kurssitarjottimen Ryhmat}.
+     * <p>
+     * Metodia kannattaa käyttää yhdessä Stream-API:n kanssa esimerkikisi tiettyjen 
+     * {@code Ryhmien} hakemiseen.
      * 
      * @return kokoelma {@code Ryhma}-olioista
      */
@@ -129,7 +132,7 @@ public class Kurssitarjotin {
      * {@code getValitutRyhmat().add()} ja {@code getValitutRyhmat().remove()} kuin 
      * {@code Ryhman} metodin {@code setOnValittu()} kautta.
      * 
-     * @return Listaus valituista {@code Ryhmista}
+     * @return listaus valituista {@code Ryhmista}
      */
     public ObservableSet<Ryhma> getValitutRyhmat() {
         return valitutRyhmat;
@@ -140,18 +143,18 @@ public class Kurssitarjotin {
      * Lista palautetaan siinä järjestyksessä, jossa palkit tulee käyttöliittymässä 
      * esittää.
      * 
-     * @return lista mahdollisia sijainteja kuvaavista {@code PalkinTunnisteista}.
+     * @return lista mahdollisia sijainteja kuvaavista {@link kva.logiikka.PalkinTunniste}ista.
      */
     public List<PalkinTunniste> getMahdollisetPalkit() {
         return new ArrayList<>(mahdollisetPalkit);
     }
     
-    /**Palauttaa listan {@code Kurssitarjottimen Moduulien} mahdollisista periodeista.
+    /**Palauttaa listan {@code Kurssitarjottimen Ryhmien} mahdollisista periodeista.
      * <p>
      * Lista palautetaan siinä järjestyksessä, jossa periodit tulee käyttöliittymässä 
      * esittää.
      * 
-     * @return lista mahdollisia sijainteja kuvaavista {@code PeriodinTunnisteista}.
+     * @return lista mahdollisia sijainteja kuvaavista {@link kva.logiikka.PeriodinTunniste}
      */
     public List<PeriodinTunniste> getMahdollisetPeriodit() {
         return mahdollisetPalkit.stream()

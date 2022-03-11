@@ -1,5 +1,5 @@
 /* Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
- * Copyright (C) 2021 Väinö viinikka
+ * Copyright (C) 2022 Väinö Viinikka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Consumer;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -34,8 +33,8 @@ import kva.logiikka.lataus.LuotavaRyhma;
 /**Ylin säiliöluokka Kurssivalinta-avustimen sovelluslogiikalle, sisältää {@code Kurssitarjottimen}.
  * <p>
  * {@link kva.logiikka.Kurssitarjotin} luodaan komennoilla {@link #lataaPeriodienNimet(java.lang.String, java.util.function.Consumer, java.util.function.Consumer)} 
- * ja {@link #lataaKurssitarjotin()}. Lataamiseen käytetään konstruktoriparametrina 
- * annettua {@link kva.logiikka.lataus.KurssitarjottimenLataaja}a.
+ * ja {@link #lataaKurssitarjotin(java.util.Collection, java.util.function.Consumer, java.util.function.Consumer)}. 
+ * Lataamiseen käytetään konstruktoriparametrina annettua {@link kva.logiikka.lataus.KurssitarjottimenLataaja}a.
  *
  * @author Väinö Viinikka
  */
@@ -50,7 +49,7 @@ public class Sovelluslogiikka {
     /**Luo uuden {@code Sovelluslogiikan}.
      * 
      * @param lataaja {@code KurssitarjottimenLataaja}, joka hakee {@code Kurssitarjottimen} 
-     *        luomiseen tarvittavat tiedot.
+     *        luomiseen tarvittavat tiedot eri käskyllä
      */
     public Sovelluslogiikka(KurssitarjottimenLataaja lataaja) {
         this.lataaja = lataaja;
@@ -76,9 +75,9 @@ public class Sovelluslogiikka {
      * riippuen toivon mukaan järjestetty: saman oppilaitoksen periodit ovat peräkkäin 
      * aikajärjestyksessä.
      * 
-     * @param URL sen nettisivun, tiedoston tm. osoite, josta tiedot haetaan. Osoite 
-     *        pidetään muistissa, jotta periodien varsinaiset tiedot voidaan hakea 
-     *        myöhemmin samasta paikasta.
+     * @param URL sen nettisivun, tiedoston tm. osoite, josta tiedot haetaan. {@code KurssitarjottimenLataaja} 
+     *        pitää osoitteen muistissa, jotta periodien varsinaiset tiedot voidaan 
+     *        hakea myöhemmin samasta paikasta.
      * @param tuloksenKasittely Kun periodien nimet on selvitetty, ne lähetetään JavaFX:n 
      *        sovellussäikeelle kutsumalla metodia {@code accept()}.
      * @param virheenKasittely Jos nimien haku kaatuu poikkeukseen, poikkeus lähetetään 
@@ -128,7 +127,8 @@ public class Sovelluslogiikka {
         th.start();
     }
     
-    /**Lataa {@code Kurssitarjottimen}, joka sisältää saatavilla olevat ryhmät ja moduulit.
+    /**Lataa {@code Kurssitarjottimen}, joka sisältää saatavilla olevat ryhmät ja 
+     * moduulit.
      * <p>
      * Metodia tulee kutsua JavaFX:n sovellussäikeessä. Metodi antaa kurssitarjottimen 
      * lataamisen taustasäikeen tehtäväksi, minkä jälkeen kurssitarjotin tai mahdollisesti 
@@ -285,8 +285,7 @@ public class Sovelluslogiikka {
     /**Esitys {@code Sovelluslogiikan} kulloisestakin toimintavaiheesta.
      * <p>
      * {@link kva.logiikka.Sovelluslogiikka} on aina aluksi tilassa {@code LUOTU}. 
-     * Kun käyttäjä 
-     * kutsuu metodia {@link #lataaPeriodienNimet(java.lang.String, java.util.function.Consumer, java.util.function.Consumer)}, 
+     * Kun käyttäjä kutsuu metodia {@link #lataaPeriodienNimet(java.lang.String, java.util.function.Consumer, java.util.function.Consumer)}, 
      * tilaksi vaihtuu {@code LADATAAN_PERIODIEN_NIMIA}. Kun lataus taustasäikeessä 
      * saadaan valmiiksi, tilaksi vaihdetaan {@code PERIODIEN_NIMET_LADATTU}, paitsi 
      * jos lataus kaatuu poikkeukseen, jolloin lataaja palaa tilaan {@code LUOTU}. 

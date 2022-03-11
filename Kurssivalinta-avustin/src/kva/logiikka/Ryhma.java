@@ -1,5 +1,5 @@
 /* Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
- * Copyright (C) 2021 Väinö viinikka
+ * Copyright (C) 2022 Väinö Viinikka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,15 +23,15 @@ import javafx.collections.SetChangeListener;
 import kva.logiikka.lataus.LuotavaRyhma;
 import kva.logiikka.tapahtumat.ValintaKuuntelija;
 
-/**Esitys kurssitarjottimeen kuuluvasta ryhmästä
+/**Esitys kurssitarjottimeen kuuluvasta ryhmästä.
  * <p>
  * Moduulia itseään kuvaavat tiedot, esimerkiksi onko moduuli pakollinen, säilötään 
  * luokassa {@link kva.logiikka.Moduuli}, ja ne saa selville {@link #getModuuli()}-metodin 
- * kautta. Ryhmää itseään koskevat tiedot, kuten sijainti kurssitarjottimessa säilötään 
+ * kautta. Ryhmää itseään koskevat tiedot, kuten sijainti kurssitarjottimessa, säilötään 
  * tähän luokkaan.
  * <p>
- * {@code Kurssitarjotin} luo omat {@code Ryhmansa} sille annettujen tietojen pohjalta. 
- * {@code Ryhmien} sisältämiä tietoja ei voi muuttaa jälkikäteen.
+ * {@link kva.logiikka.Kurssitarjotin} luo omat {@code Ryhmansa} sille annettujen 
+ * tietojen pohjalta. {@code Ryhmien} sisältämiä tietoja ei voi muuttaa jälkikäteen.
  *
  * @author Väinö Viinikka
  */
@@ -41,26 +41,24 @@ public class Ryhma {
     private Moduuli moduuli;
     private String ryhmakoodi;
     private ArrayList<PalkinTunniste> sijainnit;
-    private Collection<ValintaKuuntelija> valintaKuuntelijat;//Tämä ja kaikki siihen liittyvä poistetaan, jos ne osoittautuvat tarpeettomiksi.
+    private Collection<ValintaKuuntelija> valintaKuuntelijat;
 
     /**Luo uuden {@code Ryhman} annettujen tietojen perusteella.
      * <p>
      * Tiedot ryhmäkoodista, sijainneista kurssitarjottimessa sekä muut ryhmälle yksilölliset 
      * tiedot saadaan parametrina annetulta {@code LuotavaltaRyhmalta}.
      * 
-     * @param pohja sisältää tiedot sijainneista ym. ryhmän asioista
+     * @param pohja sisältää tiedot sijainneista ym. ryhmäkohtaisista asioista
      * @param moduuli sisältää tiedot {@code Ryhman} kuvaamasta opintokokonaisuudesta
-     * @param tarjotin {@link kva.logiikka.Kurssitarjotin}, johon {@code Ryhma} kuuluu
+     * @param tarjotin {@code Kurssitarjotin}, johon {@code Ryhma} kuuluu
      * @throws java.lang.NullPointerException jos jokin parametreista on {@code null}
      * @throws java.lang.IllegalArgumentException jos {@code moduuli} ja {@code pohja} 
      *         palauttavat eri ryhmäkoodit
-     * @see kva.logiikka.Moduuli
-     * @see kva.logiikka.lataus.LuotavaRyhma
      */
     public Ryhma(LuotavaRyhma pohja, Moduuli moduuli, Kurssitarjotin tarjotin) {
-        Objects.requireNonNull(pohja, "pohja ei saa olla null.");
-        Objects.requireNonNull(moduuli, "moduuli ei saa olla null.");
-        Objects.requireNonNull(tarjotin, "tarjotin ei saa olla null.");
+        Objects.requireNonNull(pohja, "Pohja ei saa olla null.");
+        Objects.requireNonNull(moduuli, "Moduuli ei saa olla null.");
+        Objects.requireNonNull(tarjotin, "Tarjotin ei saa olla null.");
         if(!pohja.getKurssikoodi().equals(moduuli.getKoodi())) {
             throw new IllegalArgumentException("Ryhmän kurssikoodit ovat ristiriitaiset: LuotavanRyhman koodi on \"" + 
                     pohja.getKurssikoodi() + "\" ja Moduulin \"" + moduuli.getKoodi() + "\".");
@@ -72,7 +70,6 @@ public class Ryhma {
         this.moduuli = moduuli;
         this.tarjotin = tarjotin;
         
-        //Nämä poistetaan, jos ValintaKuuntelija poistetaan
         valintaKuuntelijat = new ArrayList<>();
         SetChangeListener<Ryhma> kuuntelija = (muutos) -> {
             if(muutos.wasAdded()) {
@@ -111,7 +108,7 @@ public class Ryhma {
     /**Palauttaa ryhmän ryhmäkoodin, joka sisältää kurssikoodin sekä ryhmätunnisteen, 
      * esimerkiksi HI02.4.
      * 
-     * @return Ryhmäkoodi
+     * @return ryhmäkoodi
      */
     public String getKoodi() {
         return ryhmakoodi;
@@ -123,7 +120,7 @@ public class Ryhma {
      * kokonaislukumuodossa, koska ainakin Otaniemen lukiossa on käytössä myös kirjaimia 
      * sisältäviä ryhmänimiä, kuten MAA03.D1.
      * 
-     * @return Ryhmäkoodin pistettä seuraava osa
+     * @return ryhmäkoodin pistettä seuraava osa
      */
     public String getRyhmatunniste() {
         String[] arr = ryhmakoodi.split("[.]");
@@ -132,8 +129,10 @@ public class Ryhma {
 
     /**Palauttaa listan {@code RyhmanSijainneista}, jotka kuvaavat {@code Ryhman} 
      * sijainteja kurssitarjottimessa.
+     * <p>
+     * Sijainteja ei voi lisätä tai poistaa palautetun listan kautta.
      * 
-     * @return lista sijainteja kuvaavista {@link kva.logiikka.PalkinTunniste}-olioista
+     * @return lista sijainteja kuvaavista {@code PalkinTunniste}-olioista
      */
     public ArrayList<PalkinTunniste> getSijainnit() {
         return new ArrayList<>(sijainnit);
@@ -151,7 +150,7 @@ public class Ryhma {
      * tapauksessa poistaa {@code Ryhman} valinnan.
      * 
      * @param onValittu määrittää, valitaanko {@code Ryhma} vai poistetaanko sen 
-     *                  valinta
+     *        valinta
      */
     public void setOnValittu(boolean onValittu) {
         if(onValittu) {
@@ -164,21 +163,18 @@ public class Ryhma {
     /**Kertoo, onko samalta kurssitarjottimelta valittu jokin muu {@code Ryhma}, jolla 
      * on sama {@code Moduuli}.
      * <p>
-     * Jos {@code Kurssitarjottimesta} on valittu tällainen {@code Ryhma}, metodi 
-     * palauttaa arvon {@code true} siinäkin tapauksessa, että myös tämä moduuli on 
-     * valittu. Näin käy vain, jos {@code Kurssitarjotin} tukee saman {@code Kurssin} 
-     * valitsemista useaan kertaan.
+     * {@code Kurssitarjotin} ei salli useamman samamoduulisen {@code Ryhman} valintaa 
+     * samaan aikaan. 
      * 
      * @return {@code true}, jos moduuli on valittu muualta, muuten {@code false}
      */
     public boolean onValittuMuualta() {
         return tarjotin.getValitutRyhmat().stream()
-                .filter((ryhma) -> !this.equals(ryhma))
-                .map((ryhma) -> ryhma.getModuuli())
-                .anyMatch((mod) -> this.getModuuli().equals(mod));
+                .filter((ryhma) -> ryhma.getModuuli().equals(getModuuli()))
+                .anyMatch((ryhma) -> !ryhma.equals(this));
     }
     
-    /**Lisää {@code Ryhmalle} uuden {@link kva.logiikka.tapahtumat.ValintaKuuntelija}n.
+    /**Lisää {@code Ryhmalle} uuden {@code ValintaKuuntelijan}.
      * <p>
      * Sama {@code ValintaKuuntelija} voidaan lisätä {@code Ryhmalle} useita kertoja. 
      * Tällöin sen asiaankuuluvia metodeita kutsutaan useita kertoja kunkin tapahtuman 
@@ -204,6 +200,6 @@ public class Ryhma {
 
     @Override
     public String toString() {
-        return "Ryhma{" + "moduuli=" + moduuli + ", ryhmakoodi=" + ryhmakoodi + ", sijainnit=" + sijainnit + '}';
+        return "Ryhma{ryhmakoodi=" + ryhmakoodi + ", moduuli=" + moduuli + ", sijainnit=" + sijainnit + '}';
     }
 }

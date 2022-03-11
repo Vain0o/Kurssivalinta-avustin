@@ -1,5 +1,5 @@
 /* Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
- * Copyright (C) 2021 Väinö viinikka
+ * Copyright (C) 2022 Väinö Viinikka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +17,16 @@
 
 /**Sisältää luokat, jotka toteuttavat Kurssivalinta-avustimen sovelluslogiikan.
  * <p>
- * Sovelluslogiikan sydän on luokka {@code Kurssitarjotin}, joka sisältää saatavilla 
- * olevat {@code Moduulit} ja {@code Ryhmat}. Sovelluslogiikan lopullisen perustan 
- * muodostaa kuitenkin luokka {@code Sovelluslogiikka}, joka luo {@code Kurssitarjottimen}.
+ * Sovelluslogiikan sydän on luokka {@link kva.logiikka.Kurssitarjotin}, joka sisältää 
+ * saatavilla olevat {@link kva.logiikka.Moduuli}t ja {@link kva.logiikka.Ryhma}t. 
+ * Sovelluslogiikan lopullisen perustan muodostaa kuitenkin luokka {@link kva.logiikka.Sovelluslogiikka}, 
+ * joka luo {@code Kurssitarjottimen}.
  * <p>
  * {@code Moduuli} edustaa tiettyä opintokokonaisuutta, ja sisältää tiedot sen pakollisuudesta 
  * yms. tiedoista, jotka eivät riipu siitä, mihin kohtaan kurssitarjotinta moduulin 
  * valitsee. {@code Ryhma} puolestaan edustaa kursstarjottimella saatavilla olevaa 
  * ryhmää, ja se sisältää tiedot käytävästä {@code Moduulista}, sekä opetuksen ajankohdista, 
- * opettajasta, ja muista tiedoista, jotka vaihtelevat ryhmittäin.
+ *  ja muista tiedoista, jotka vaihtelevat ryhmittäin.
  * 
  * @author Väinö Viinikka
  */

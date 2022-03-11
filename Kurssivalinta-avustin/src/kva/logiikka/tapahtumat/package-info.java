@@ -1,5 +1,5 @@
 /* Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
- * Copyright (C) 2021 Väinö viinikka
+ * Copyright (C) 2022 Väinö Viinikka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**Sisältää käyttöliittymän tapahtumankuunteluun liittyvät luokat ja rajapinnat.
+/**Sisältää luokat ja rajapinnat, joita käytetään sovelluslogiikan tapahtumien kuunteluun.
+ * <p>
+ * Tämä tarkoittaa tällä hetkellä ainoastaan rajapintaa {@link kva.logiikka.tapahtumat.ValintaKuuntelija}.
+ * Muuta koodia saatetaan lisätä, jos se osoittautuu tarpeelliseksi.
  * 
  * @author Väinö Viinikka
  */
