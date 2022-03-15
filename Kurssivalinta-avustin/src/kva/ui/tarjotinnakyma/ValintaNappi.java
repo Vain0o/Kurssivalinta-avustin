@@ -17,6 +17,11 @@
 package kva.ui.tarjotinnakyma;
 
 import javafx.scene.control.Button;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import kva.logiikka.Ryhma;
@@ -37,6 +42,8 @@ import kva.logiikka.Ryhma;
  * @see kva.ui.tarjotinnakyma.ValintaNappiLista
  */
 public class ValintaNappi extends Button implements Comparable<ValintaNappi> {
+    
+    private static final Border VALITUN_RAJAUS = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderStroke.THICK));
     
     private final Ryhma ryhma;
 
@@ -74,8 +81,10 @@ public class ValintaNappi extends Button implements Comparable<ValintaNappi> {
     public void setOnValittu(boolean onValittu) {
         if(onValittu) {
             super.setFont(Font.font("System", FontWeight.BOLD, 12));
+            super.setBorder(VALITUN_RAJAUS);
         } else {
             super.setFont(Font.font("System", FontWeight.NORMAL, 12));
+            super.setBorder(Border.EMPTY);
         }
     }
     

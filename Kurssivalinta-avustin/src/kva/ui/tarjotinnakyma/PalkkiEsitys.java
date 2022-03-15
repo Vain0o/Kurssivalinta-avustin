@@ -22,12 +22,14 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javafx.collections.SetChangeListener;
+import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
@@ -76,6 +78,7 @@ public class PalkkiEsitys {
         Label otsikko = new Label(palkki.getPalkki());
         otsikko.setFont(new Font(15));
         kehikko.setTop(otsikko);
+        kehikko.setCenter(new Separator(Orientation.VERTICAL));
         
         olennaiset = new ValintaNappiLista();
         kehikko.setLeft(olennaiset.getNode());
