@@ -75,8 +75,12 @@ public class KurssitarjottimenValintaNakyma extends Nakyma {
         
         EventHandler<ActionEvent> kasittelija = (e) -> {
             Consumer<List<PeriodinTunniste>> tuloksenKasittely = (lista) -> luoPeriodienValinta(lista);
-            Consumer<Throwable> virheenKasittely = (virhe) -> virhe.printStackTrace();
-            super.getKayttoliittyma().getLogiikka().lataaPeriodienNimet(tekstikentta.getText(), tuloksenKasittely, virheenKasittely);
+            Consumer<Throwable> virheenKasittely = (virhe) -> {
+                getKayttoliittyma().naytaVirheviesti("Virhe periodien lataamisessa:\n\n" + virhe.getMessage());
+                //Seuraavan rivin kommentointi voidaan poistaa testaamisen ajaksi.
+                //virhe.printStackTrace();
+            };
+            getKayttoliittyma().getLogiikka().lataaPeriodienNimet(tekstikentta.getText(), tuloksenKasittely, virheenKasittely);
         };
         
         tekstikentta.setOnAction(kasittelija);

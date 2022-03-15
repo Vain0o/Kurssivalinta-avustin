@@ -19,6 +19,9 @@ package kva.ui;
 import java.util.Collection;
 import java.util.function.Consumer;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 import kva.logiikka.Kurssitarjotin;
@@ -115,8 +118,18 @@ public class Kayttoliittyma {
      */
     public void lataaKurssitarjotin(Collection<PeriodinTunniste> valittavat) {
         Consumer<Kurssitarjotin> tuloksenKasittely = (tarjotin) -> luoKurssitarjotinNakyma(tarjotin);
-        Consumer<Throwable> virheenKasittely = ex -> ex.printStackTrace();
+        Consumer<Throwable> virheenKasittely = (ex) -> {
+            naytaVirheviesti("Virhe kurssitarjottimen lataamisessa:\n\n" + ex.getMessage());
+            //Seuraavan rivin kommentointi voidaan poistaa testaamisesn ajaksi.
+            //ex.printStackTrace();
+        };
         getLogiikka().lataaKurssitarjotin(valittavat, tuloksenKasittely, virheenKasittely);
+    }
+    
+    public void naytaVirheviesti(String teksti) {
+        Alert ikkuna = new Alert(AlertType.NONE, teksti, ButtonType.OK);
+        ikkuna.setTitle("Kurssivalinta-avustin");
+        ikkuna.showAndWait();
     }
     
     /**Luo {@code Kayttoliittymalle KurssitarjotinNakyman} ja korvaa sillä {@code KurssitarjottimenValintaNakyman}. 
