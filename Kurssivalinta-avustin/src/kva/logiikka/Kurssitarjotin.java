@@ -73,6 +73,24 @@ public class Kurssitarjotin {
         this.mahdollisetPalkit = new ArrayList<>();
         this.valitutRyhmat = FXCollections.observableSet(new HashSet<>());
         
+        
+        valitutRyhmat.addListener((SetChangeListener.Change<? extends Ryhma> change) -> {
+            if(change.wasAdded()) {
+                HashSet<Ryhma> poistettavat = new HashSet<>();
+                valitutRyhmat.stream()
+                        .filter((ryhma) -> {
+                            if(ryhma.getModuuli().equals(change.getElementAdded().getModuuli())) {
+                                return true;
+                            }
+                            return change.getElementAdded().getSijainnit().stream()
+                                    .anyMatch((tunniste) -> (ryhma.getSijainnit().contains(tunniste)));
+                        })
+                        .filter((ryhma) -> !change.getElementAdded().equals(ryhma))
+                        .forEach((ryhma) -> poistettavat.add(ryhma));
+                valitutRyhmat.removeAll(poistettavat);
+            }
+        });
+        
         HashMap<String, Moduuli> etsintaaVarten = new HashMap<>();
         moduulit.forEach((moduuli) -> etsintaaVarten.put(moduuli.getKoodi(), moduuli));
         
@@ -96,23 +114,6 @@ public class Kurssitarjotin {
         });
         Comparator<PalkinTunniste> vertailija2 = vertailija.thenComparing((sijainti) -> sijainti.getPalkki());
         mahdollisetPalkit.sort(vertailija2);
-        
-        valitutRyhmat.addListener((SetChangeListener.Change<? extends Ryhma> change) -> {
-            if(change.wasAdded()) {
-                HashSet<Ryhma> poistettavat = new HashSet<>();
-                valitutRyhmat.stream()
-                        .filter((ryhma) -> {
-                            if(ryhma.getModuuli().equals(change.getElementAdded().getModuuli())) {
-                                return true;
-                            }
-                            return change.getElementAdded().getSijainnit().stream()
-                                    .anyMatch((tunniste) -> (ryhma.getSijainnit().contains(tunniste)));
-                        })
-                        .filter((ryhma) -> !change.getElementAdded().equals(ryhma))
-                        .forEach((ryhma) -> poistettavat.add(ryhma));
-                valitutRyhmat.removeAll(poistettavat);
-            }
-        });
     }
     
     /**Palauttaa kaikki {@code Kurssitarjottimen Ryhmat}.

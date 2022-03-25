@@ -15,11 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**Sisältää Kurssivalinta-avustimen lähdekoodin.
- * <p>
- * Pakkaus sisältää suoraan ainoastaan ohjelman pääluokan, luokan {@link kva.KurssivalintaAvustin}. 
- * Käyttöliittymän toteuttavat luokat ovat pakkauksessa {@link kva.ui} ja sovelluslogiikan 
- * toteuttavat luokat pakkauksessa {@link kva.logiikka}
+/**Sisältää Kurssivalinta-avustimen pääluokan.
  * 
  * @author Väinö Viinikka
  */

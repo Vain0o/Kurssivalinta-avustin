@@ -22,6 +22,8 @@ import java.util.Objects;
 import javafx.collections.SetChangeListener;
 import kva.logiikka.lataus.LuotavaRyhma;
 import kva.logiikka.tapahtumat.ValintaKuuntelija;
+import kva.logiikka.tapahtumat.ValintaTapahtuma;
+import kva.logiikka.tapahtumat.ValintaTapahtuma.TapahtumaTyyppi;
 
 /**Esitys kurssitarjottimeen kuuluvasta ryhmästä.
  * <p>
@@ -72,18 +74,24 @@ public class Ryhma {
         
         valintaKuuntelijat = new ArrayList<>();
         SetChangeListener<Ryhma> kuuntelija = (muutos) -> {
+            TapahtumaTyyppi tyyppi = null;
+            
             if(muutos.wasAdded()) {
                 if(this.equals(muutos.getElementAdded())) {
-                    valintaKuuntelijat.forEach((vk) -> vk.valittu(this));
+                    tyyppi = TapahtumaTyyppi.VALITTU;
                 } else if(this.getModuuli().equals(muutos.getElementAdded().getModuuli())) {
-                    valintaKuuntelijat.forEach((vk) -> vk.valittuMuualta(this));
+                    tyyppi = TapahtumaTyyppi.VALITTU_MUUALTA;
                 }
             } else {
                 if(this.equals(muutos.getElementRemoved())) {
-                    valintaKuuntelijat.forEach((vk) -> vk.valintaPoistettu(this));
+                    tyyppi = TapahtumaTyyppi.VALINTA_POISTETTU;
                 } else if(this.getModuuli().equals(muutos.getElementRemoved().getModuuli())) {
-                    valintaKuuntelijat.forEach((vk) -> vk.valintaPoistettuMuualta(this));
+                    tyyppi = TapahtumaTyyppi.VALINTA_POISTETTU_MUUALTA;
                 }
+            }
+            final TapahtumaTyyppi t = tyyppi;
+            if(tyyppi != null) {
+                valintaKuuntelijat.forEach((vk) -> vk.tilaMuuttui(new ValintaTapahtuma(this, t)));
             }
         };
         tarjotin.getValitutRyhmat().addListener(kuuntelija);

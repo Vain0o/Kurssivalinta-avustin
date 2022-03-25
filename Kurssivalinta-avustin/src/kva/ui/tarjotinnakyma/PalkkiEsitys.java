@@ -36,7 +36,7 @@ import javafx.scene.text.Font;
 import kva.logiikka.Kurssitarjotin;
 import kva.logiikka.PalkinTunniste;
 import kva.logiikka.Ryhma;
-import kva.logiikka.tapahtumat.ValintaKuuntelija;
+import kva.logiikka.tapahtumat.ValintaTapahtuma;
 import kva.ui.Asetukset;
 
 /**Luo esityksen, joka kuvaa yksittäistä kurssitarjottimessa esiintyvää palkkia.
@@ -126,38 +126,31 @@ public class PalkkiEsitys {
             lisaaNakyviin(nappi);
         }
         
-        ValintaKuuntelija kuuntelija = new ValintaKuuntelija() {
-            
-            @Override
-            public void valittu(Ryhma ryhma) {
-                nappi.setOnValittu(true);
+        ryhma.lisaaValintaKuuntelija((t) -> {
+            switch(t.getTyyppi()) {
+                case VALITTU:
+                    nappi.setOnValittu(true);
+                    break;
+                case VALINTA_POISTETTU:
+                    nappi.setOnValittu(false);
+                    if(asetukset.pitaisiPiilottaa(ryhma.getModuuli())) {
+                        poistaNakyvista(nappi);
+                    }
+                    break;
+                case VALITTU_MUUALTA:
+                    if(!asetukset.pitaisiPiilottaa(ryhma.getModuuli())) {
+                        olennaiset.poistaNappi(nappi);
+                        muualtaValitut.lisaaNappi(nappi);
+                    }
+                    break;
+                case VALINTA_POISTETTU_MUUALTA:
+                    if(!asetukset.pitaisiPiilottaa(ryhma.getModuuli())) {
+                        muualtaValitut.poistaNappi(nappi);
+                        olennaiset.lisaaNappi(nappi);
+                    }
+                    break;
             }
-
-            @Override
-            public void valintaPoistettu(Ryhma ryhma) {
-                nappi.setOnValittu(false);
-                if(asetukset.pitaisiPiilottaa(ryhma.getModuuli())) {
-                    poistaNakyvista(nappi);
-                }
-            }
-
-            @Override
-            public void valittuMuualta(Ryhma ryhma) {
-                if(!asetukset.pitaisiPiilottaa(ryhma.getModuuli())) {
-                    olennaiset.poistaNappi(nappi);
-                    muualtaValitut.lisaaNappi(nappi);
-                }
-            }
-
-            @Override
-            public void valintaPoistettuMuualta(Ryhma ryhma) {
-                if(!asetukset.pitaisiPiilottaa(ryhma.getModuuli())) {
-                    muualtaValitut.poistaNappi(nappi);
-                    olennaiset.lisaaNappi(nappi);
-                }
-            }
-        };
-        ryhma.lisaaValintaKuuntelija(kuuntelija);
+        });
         
         nappi.setOnMouseClicked((me) -> {
             if(me.getButton() == MouseButton.PRIMARY) {

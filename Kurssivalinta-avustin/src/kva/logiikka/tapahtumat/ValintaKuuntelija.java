@@ -16,45 +16,26 @@
  */
 package kva.logiikka.tapahtumat;
 
-import kva.logiikka.Ryhma;
-
-/**Toteuttaa mahdollisuuden kuunnella tiettyyn {@code Ryhmaan} kohdistuvia 
- * valintoja.
+/**Toteuttaa mahdollisuuden kuunnella tiettyyn {@code Ryhmaan} kohdistuvia valintoja.
  * <p>
  * Rajapinnan toteuttava olio lisätään {@link kva.logiikka.Ryhma}lle {@code lisaaValintaKuuntelija()}-metodilla, 
  * minkä jälkeen {@code ValintaKuuntelijaa} tiedotetaan {@code Ryhmaan} vaikuttavista 
- * valintatoimenpiteistä. Kuuntelijan voi myös poistaa {@code Ryhman poistaValintaKuuntelija()}-metodilla. 
+ * valintatoimenpiteistä: {@code Ryhman} itsensä valinnasta ja valinnan poistosta, 
+ * sekä samamoduulisen {@code Ryhman} valinnasta muualta samassa {@code Kurssitarjottimessa}.
+ * Kuuntelijan voi myös poistaa {@code Ryhman poistaValintaKuuntelija()}-metodilla. 
  * Sama {@code ValitaKuuntelija} voidaan lisätä usealle eri {@code Ryhmalle}.
+ * <p>
+ * Jos {@code Ryhma} valitaan muualta, kun se on jo valittu, {@code Ryhman} valinta 
+ * poistetaan automaattisesti. {@code ValintaKuuntelijaa} tiedotetaan tällöin kahdesti: 
+ * ensin poistamisesta ja sitten muualta valinnasta.
  *
  * @author Väinö Viinikka
  */
 public interface ValintaKuuntelija {
     
-    /**Metodia kutsutaan, kun {@code Ryhma} valitaan.
+    /**Metodia kutsutaan, kun {@code Ryhman} valintatila muuttuu
      * 
-     * @param ryhma {@code Ryhma}, joka valittiin
+     * @param t 
      */
-    public void valittu(Ryhma ryhma);
-    
-    /**Metodia kutsutaan, kun {@code Ryhman} valinta poistetaan.
-     * 
-     * @param ryhma {@code Ryhma}, jonka valinta poistettiin
-     */
-    public void valintaPoistettu(Ryhma ryhma);
-    
-    /**Metodia kutsutaan, kun samasta {@code Kurssitarjottimesta} valittiin {@code Ryhma}, 
-     * jonka {@code Kurssi} on sama, kuin kyseessä olevalla {@code Ryhmalla}, mutta 
-     * joka ei ole {@code Ryhma} itse.
-     * 
-     * @param ryhma kyseessä oleva {@code Ryhma}
-     */
-    public void valittuMuualta(Ryhma ryhma);
-    
-    /**Metodia kutsutaan, kun samassa {@code Kurssitarjottimessa} poistetaan sellaisen 
-     * {@code Ryhman} valinta, jonka {@code Kurssi} on sama, kuin kyseessä olevalla 
-     * {@code Ryhmalla}, mutta joka ei ole {@code Ryhma} itse.
-     * 
-     * @param ryhma kyseessä oleva {@code Ryhma}
-     */
-    public void valintaPoistettuMuualta(Ryhma ryhma);
+    public void tilaMuuttui(ValintaTapahtuma t);
 }
