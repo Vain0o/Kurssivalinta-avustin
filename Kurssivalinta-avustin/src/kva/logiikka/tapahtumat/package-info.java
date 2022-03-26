@@ -16,9 +16,6 @@
  */
 
 /**Sisältää luokat ja rajapinnat, joita käytetään sovelluslogiikan tapahtumien kuunteluun.
- * <p>
- * Tämä tarkoittaa tällä hetkellä ainoastaan rajapintaa {@link kva.logiikka.tapahtumat.ValintaKuuntelija}.
- * Muuta koodia saatetaan lisätä, jos se osoittautuu tarpeelliseksi.
  * 
  * @author Väinö Viinikka
  */
