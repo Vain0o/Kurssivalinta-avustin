@@ -19,7 +19,9 @@ package kva;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import kva.logiikka.Sovelluslogiikka;
-import kva.logiikka.lataus.TestiLataaja;
+import kva.logiikka.lataus.KurssitarjottimenLataaja;
+import kva.logiikka.lataus.TestiLataaja;//Tätä ei poisteta, sillä sitä voi tarvita testaamiseen.
+import kva.logiikka.lataus.WebEngineLataaja;
 import kva.ui.Kayttoliittyma;
 
 /**Kurssivalinta-avustimen pääluokka, joka alustaa käyttöliittymän ja sovelluslogiikan
@@ -38,7 +40,8 @@ public class KurssivalintaAvustin extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-        Sovelluslogiikka logiikka = new Sovelluslogiikka(new TestiLataaja());
+        KurssitarjottimenLataaja lataaja = new WebEngineLataaja();
+        Sovelluslogiikka logiikka = new Sovelluslogiikka(lataaja);
         Kayttoliittyma kayttis = new Kayttoliittyma(logiikka);
         kayttis.luo(primaryStage);
     }

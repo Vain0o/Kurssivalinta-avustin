@@ -72,10 +72,11 @@ public class TestiLataaja implements KurssitarjottimenLataaja {
     
 
     @Override
-    public void muodostaYhteys(String URL) throws Exception {
+    public void muodostaYhteys(Object... data) throws Exception {
+        String URL = (String) data[0];
         Scanner uusi = new Scanner(new FileInputStream(URL));
         if((!uusi.hasNext()) || (!uusi.nextLine().equals("PERIODIEN_TUNNISTEET"))) {
-            throw new TestiLataajaPoikkeus("Tiedosto \"" + URL + "\" ei ala rivillä \"PERIODIEN_TUNNISTEET\".");
+            throw new LataajaPoikkeus("Tiedosto \"" + URL + "\" ei ala rivillä \"PERIODIEN_TUNNISTEET\".");
         }
         
         rivi = 1;
@@ -95,7 +96,7 @@ public class TestiLataaja implements KurssitarjottimenLataaja {
         
         while(true) {
             if(!lukija.hasNext()) {
-                throw new TestiLataajaPoikkeus("Tiedosto \"" + URL + "\" sisältää vain periodien tunnistetietoja.");
+                throw new LataajaPoikkeus("Tiedosto \"" + URL + "\" sisältää vain periodien tunnistetietoja.");
             }
             String syote = seuraavaRivi();
             if(syote.equals("MODUULIEN_TIEDOT")) {
@@ -125,7 +126,7 @@ public class TestiLataaja implements KurssitarjottimenLataaja {
             }
             String[] osat = syote.split("/");
             if(osat.length != 2) {
-                throw new TestiLataajaPoikkeus("Virheellinen moduulin kuvaus tiedoston \"" 
+                throw new LataajaPoikkeus("Virheellinen moduulin kuvaus tiedoston \"" 
                         + URL + "\" rivillä " + rivi + ".");
             }
             Tyyppi tyyppi;
@@ -139,7 +140,7 @@ public class TestiLataaja implements KurssitarjottimenLataaja {
                 case "koulukohtainen soveltava": tyyppi = Tyyppi.SOVELTAVA;
                     break;
                 default:
-                    throw new TestiLataajaPoikkeus("Virheellinen moduulin kuvaus tiedoston \"" 
+                    throw new LataajaPoikkeus("Virheellinen moduulin kuvaus tiedoston \"" 
                             + URL + "\" rivillä " + rivi + ".");
             }
             Moduuli uusiModuuli = new Moduuli(osat[0], tyyppi);
@@ -183,7 +184,7 @@ public class TestiLataaja implements KurssitarjottimenLataaja {
         
         kaytavaPalkki.addAll(Arrays.asList(syote.split("/")));
         if(kaytavaPalkki.size() < 2) {
-            throw new TestiLataajaPoikkeus("Virheellinen palkin kuvaus tiedoston \"" 
+            throw new LataajaPoikkeus("Virheellinen palkin kuvaus tiedoston \"" 
                         + URL + "\" rivillä " + rivi + ".");
         }
         nykyinenPalkki = kaytavaPalkki.remove(0);
@@ -216,7 +217,7 @@ public class TestiLataaja implements KurssitarjottimenLataaja {
     public Moduuli haeModuulinTiedot(String kurssikoodi) throws Exception {
         Moduuli palautus = moduulit.get(kurssikoodi);
         if(palautus == null) {
-            throw new TestiLataajaPoikkeus("Moduulista" + kurssikoodi + " ei löydy tietoa.");
+            throw new LataajaPoikkeus("Moduulista" + kurssikoodi + " ei löydy tietoa.");
         }
         return palautus;
     }
@@ -252,23 +253,5 @@ public class TestiLataaja implements KurssitarjottimenLataaja {
         PeriodinTunniste nykyinen = new PeriodinTunniste(nykyinenOppilaitos, nykyinenPeriodi);
         
         return ladattavatPeriodit.contains(nykyinen);
-    }
-    
-    /**Poikkeus, joka syntyy, kun kurssitarjottimen latauksessa {@code TestiLataajalla} 
-     * tapahtuu virhe.
-     * 
-     * @author Väinö Viinikka
-     * @see kva.logiikka.lataus.TestiLataaja
-     */
-    public class TestiLataajaPoikkeus extends IOException {
-        
-        /**Luo uuden {@code TestiLataajaPoikkeuksen}.
-         * 
-         * @param viesti poikkeukseen liittyvä viesti, joka voidaan palauttaa metodilla 
-         *        {@link java.lang.Throwable#getMessage()}
-         */
-        public TestiLataajaPoikkeus(String viesti) {
-            super(viesti);
-        }
     }
 }

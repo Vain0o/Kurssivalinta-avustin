@@ -1,4 +1,4 @@
-/* Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
+/* Kurssivalinta-avustin  – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
  * Copyright (C) 2022 Väinö Viinikka
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,81 +19,68 @@ package kva.ui;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import kva.logiikka.Kurssitarjotin;
 import kva.logiikka.PeriodinTunniste;
+import kva.logiikka.Sovelluslogiikka.LatauksenTila;
 
-/**Toteuttaan {@code Nakyman} jossa käyttäjä antaa tarvittavat ohjeet kurssitarjottimen 
- * lataamiselle.
- * <p>
- * Ensiksi käyttäjä antaa tarvittavan Wilma-palvelimen (tai testiversioissa tiedoston) 
- * osoitteen. Tämän jälkeen hän pääsee valitsemaan haluamansa periodit mahdollisten 
- * periodien listalta. Kun käyttäjä tämän jälkeen käskee lataamaan kurssitarjottimen, 
- * {@code KurssitarjottimenValintaNakyma} korvataan {@link kva.ui.KurssitarjotinNakyma}lla, 
- * jossa kurssitarjotin esitetään.
+/**
  *
  * @author Väinö Viinikka
- * @see kva.logiikka.lataus.KurssitarjottimenLataaja
  */
-public class KurssitarjottimenValintaNakyma extends Nakyma {
-
+public abstract class LatausNakyma extends Nakyma {
+    
     private ScrollPane pohja;
     
-    /**Luo uuden {@code KurssitarjottimenValintaNakyman}.
-     * 
-     * @param otsikko välilehden otsikko
-     * @param kayttis {@code Kayttoliittyma}, johon {@code KurssitarjottimenValintaNakyma} 
-     *        kuuluu
-     */
-    public KurssitarjottimenValintaNakyma(String otsikko, Kayttoliittyma kayttis) {
+    public LatausNakyma(String otsikko, Kayttoliittyma kayttis) {
         super(otsikko, kayttis);
+        kayttis.getLogiikka().tilaProperty().addListener((a, vanhaArvo, uusiArvo) -> {
+            if(uusiArvo == LatauksenTila.PERIODIEN_NIMET_LADATTU) {
+                luoPeriodienValinta(kayttis.getLogiikka().getPeriodienTunnisteet());
+            }
+        });
     }
+    
+    public abstract Node luoAlkuTila();
+    
+    public abstract Consumer<Throwable> tarjottimenLatausVirheenKasittely();
 
+    /**
+     *
+     * @return
+     */
     @Override
-    public Node luoSisalto() {
+    public final Node luoSisalto() {
         pohja = new ScrollPane();
-        
-        VBox asettelu = new VBox();
-        asettelu.setSpacing(10);
-        asettelu.setPadding(new Insets(10, 0, 10, 5));
-        
-        asettelu.getChildren().add(new Label("Syötä tähän Wilma-palvelimesi osoite. Kirjaudu sitten Wilmaan selaimessa\nja paina \"Tuo periodit\"."));
-        TextField tekstikentta = new TextField("testitarjotin.txt");
-        Button nappi = new Button("Tuo periodit");
-        
-        EventHandler<ActionEvent> kasittelija = (e) -> {
-            Consumer<List<PeriodinTunniste>> tuloksenKasittely = (lista) -> luoPeriodienValinta(lista);
-            Consumer<Throwable> virheenKasittely = (virhe) -> {
-                getKayttoliittyma().naytaVirheviesti("Virhe periodien lataamisessa:\n\n" + virhe.getMessage());
-                //Seuraavan rivin kommentointi voidaan poistaa testaamisen ajaksi.
-                //virhe.printStackTrace();
-            };
-            getKayttoliittyma().getLogiikka().lataaPeriodienNimet(tekstikentta.getText(), tuloksenKasittely, virheenKasittely);
-        };
-        
-        tekstikentta.setOnAction(kasittelija);
-        nappi.setOnAction(kasittelija);
-        
-        asettelu.getChildren().addAll(tekstikentta, nappi);
-        
-        pohja.setContent(asettelu);
+        pohja.setContent(luoAlkuTila());
         pohja.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         pohja.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         pohja.setMaxWidth(450);
         
         return new StackPane(pohja);
+    }
+    
+    protected void setPohjanSisalto(Node uusiSisalto) {
+        pohja.setContent(Objects.requireNonNull(uusiSisalto));
+    }
+    
+    protected void naytaVirheviesti(String teksti) {
+        Alert ikkuna = new Alert(Alert.AlertType.NONE, teksti, ButtonType.OK);
+        ikkuna.setTitle("Kurssivalinta-avustin");
+        ikkuna.showAndWait();
     }
     
     /**Muuttaa näkymän Wilma-palvelimen osoitteen syötöstä ladattavien periodien valintaan.
@@ -128,7 +115,10 @@ public class KurssitarjottimenValintaNakyma extends Nakyma {
                     .filter((cb) -> cb.isSelected())
                     .map((cb) -> tunnisteenLoytaja.get(cb))
                     .collect(Collectors.toCollection(() -> new HashSet<>()));
-            super.getKayttoliittyma().lataaKurssitarjotin(mukaanOtettavat);
+            
+            Consumer<Kurssitarjotin> tuloksenKasittely = (tarjotin) -> {};
+            getKayttoliittyma().getLogiikka().lataaKurssitarjotin(mukaanOtettavat, 
+                    tuloksenKasittely, tarjottimenLatausVirheenKasittely());
         });
         asettelu.getChildren().add(latausnappi);
         

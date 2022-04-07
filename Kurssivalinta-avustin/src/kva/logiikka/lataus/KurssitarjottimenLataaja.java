@@ -16,6 +16,7 @@
  */
 package kva.logiikka.lataus;
 
+import java.io.IOException;
 import kva.logiikka.PeriodinTunniste;
 import java.util.List;
 import kva.logiikka.Moduuli;
@@ -76,11 +77,11 @@ public interface KurssitarjottimenLataaja {
      * {@code Sovelluslogiikka} kutsuu tätä metodia taustasäikeessä. Metodia ei tule 
      * kutsua muualta.
      * 
-     * @param URL sen tiedoston, nettisivun tms. sijainti, josta kurssitarjotin ladataan
+     * @param data tarvittavat tiedot paikasta, josta kurssitarjotin ladataan
      * @throws java.lang.Exception jos yhteyden muodostaminen epäonnistuu jollakin 
      *         tavalla
      */
-    public abstract void muodostaYhteys(String URL) throws Exception;
+    public abstract void muodostaYhteys(Object... data) throws Exception;
     
     /**Palauttaa listan niiden periodien tai perioidinpuolikkaiden nimistä, joiden 
      * valinta on mahdollista.
@@ -201,4 +202,22 @@ public interface KurssitarjottimenLataaja {
      */
     public abstract Moduuli haeModuulinTiedot(String kurssikoodi) throws Exception;
     
+    
+    /**Poikkeus, joka voidaan heittää, kun kurssitarjottimen latauksessa tapahtuu 
+     * virhe.
+     * 
+     * @author Väinö Viinikka
+     * @see kva.logiikka.lataus.TestiLataaja
+     */
+    public class LataajaPoikkeus extends IOException {
+        
+        /**Luo uuden {@code TestiLataajaPoikkeuksen}.
+         * 
+         * @param viesti poikkeukseen liittyvä viesti, joka voidaan palauttaa metodilla 
+         *        {@link java.lang.Throwable#getMessage()}
+         */
+        public LataajaPoikkeus(String viesti) {
+            super(viesti);
+        }
+    }
 }
