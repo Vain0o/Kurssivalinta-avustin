@@ -73,7 +73,6 @@ public class Kurssitarjotin {
         this.mahdollisetPalkit = new ArrayList<>();
         this.valitutRyhmat = FXCollections.observableSet(new HashSet<>());
         
-        
         valitutRyhmat.addListener((SetChangeListener.Change<? extends Ryhma> change) -> {
             if(change.wasAdded()) {
                 HashSet<Ryhma> poistettavat = new HashSet<>();

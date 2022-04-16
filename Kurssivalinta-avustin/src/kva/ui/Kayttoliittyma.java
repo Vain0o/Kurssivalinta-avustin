@@ -75,8 +75,8 @@ public class Kayttoliittyma {
         });
         
         AsetusNakyma asetusnakyma = new AsetusNakyma("Asetukset", this);
-        //LatausNakyma valintanakyma = new TestiLatausNakyma("Kurssitarjotin", this);
-        LatausNakyma valintanakyma = new WebEngineLatausNakyma("Kurssitarjotin", this);
+        LatausNakyma valintanakyma = new TestiLatausNakyma("Kurssitarjotin", this);
+        //LatausNakyma valintanakyma = new WebEngineLatausNakyma("Kurssitarjotin", this);
         
         valilehdet = new TabPane(asetusnakyma.getValilehti(), valintanakyma.getValilehti());
         valilehdet.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
