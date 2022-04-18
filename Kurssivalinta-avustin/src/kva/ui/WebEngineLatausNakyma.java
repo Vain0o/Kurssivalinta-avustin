@@ -91,7 +91,7 @@ public class WebEngineLatausNakyma extends LatausNakyma {
         
         Button takaisinNappi = new Button("Takaisin");
         takaisinNappi.setOnAction((ev) -> palaaAlkuun());
-        Button latausNappi = new Button("Lataa perodit");
+        Button latausNappi = new Button("Lataa periodit");
         latausNappi.setOnAction((e) -> {
             Consumer<List<PeriodinTunniste>> tuloksenKasittely = (lista) -> {};
             Consumer<Throwable> virheenKasittely = (virhe) -> {

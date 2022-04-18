@@ -40,8 +40,9 @@ public class KurssivalintaAvustin extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-        //KurssitarjottimenLataaja lataaja = new WebEngineLataaja();
-        KurssitarjottimenLataaja lataaja = new TestiLataaja();
+        KurssitarjottimenLataaja lataaja = new WebEngineLataaja();
+        //KurssitarjottimenLataaja lataaja = new TestiLataaja();
+        
         Sovelluslogiikka logiikka = new Sovelluslogiikka(lataaja);
         Kayttoliittyma kayttis = new Kayttoliittyma(logiikka);
         kayttis.luo(primaryStage);
