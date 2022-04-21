@@ -271,18 +271,18 @@ public abstract class KurssitarjottimenLataaja {
      * <p>
      * Metodia voi kutsua taustasäikeestä.
      * 
-     * @param ryhmakoodi {@code Moduulin} ryhmakoodi.
+     * @param kurssikoodi {@code Moduulin} kurssikoodi.
      * @return {@code true}, jos ehdot täyttävä {@code Moduuli} löytyi
      * @throws java.lang.IllegalStateException jos metodia kutsutaan, kun {@code Kurssitarjottimen} 
      *         lataus ei ole käynnissä
      * @see #lisaaModuuli(kva.logiikka.Moduuli) 
      * @see kva.logiikka.Moduuli
      */
-    protected synchronized final boolean onModuulia(String ryhmakoodi) {
+    protected synchronized final boolean onModuulia(String kurssikoodi) {
         if(tarjottimenLatausKaynnissa == false) {
             throw new IllegalStateException("Moduuleja voi kysellä vain latauksen aikana.");
         }
-        return moduulit.containsKey(ryhmakoodi);
+        return moduulit.containsKey(kurssikoodi);
     }
     
     /**Lisää uuden {@code Moduulin Kurssitarjottimeen}.

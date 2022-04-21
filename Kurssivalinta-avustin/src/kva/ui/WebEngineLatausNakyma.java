@@ -39,16 +39,15 @@ import kva.logiikka.PeriodinTunniste;
 public class WebEngineLatausNakyma extends LatausNakyma {
     
     private ScrollPane pohja;
-    private VBox alkuAsettelu;
     
     public WebEngineLatausNakyma(String otsikko, Kayttoliittyma kayttis) {
         super(otsikko, kayttis);
         pohja = new ScrollPane();
-        alkuAsettelu = new VBox();
     }
 
     @Override
     public Node luoAlkuTila() {
+        VBox alkuAsettelu = new VBox();
         alkuAsettelu.setSpacing(10);
         alkuAsettelu.setPadding(new Insets(10, 0, 10, 5));
         
@@ -72,6 +71,7 @@ public class WebEngineLatausNakyma extends LatausNakyma {
     public Consumer<Throwable> tarjottimenLatausVirheenKasittely() {
         return (ex) -> {
                 naytaVirheviesti("Virhe kurssitarjottimen lataamisessa:\n\n" + ex.getMessage());
+                palaaAlkuun();
                 //Seuraavan rivin kommentointi voidaan poistaa testaamisesn ajaksi.
                 ex.printStackTrace();
             };
@@ -113,6 +113,6 @@ public class WebEngineLatausNakyma extends LatausNakyma {
     }
     
     private void palaaAlkuun() {
-        setPohjanSisalto(alkuAsettelu);
+        setPohjanSisalto(luoAlkuTila());
     }
 }

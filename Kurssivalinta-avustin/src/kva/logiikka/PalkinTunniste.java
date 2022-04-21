@@ -30,24 +30,45 @@ import java.util.Objects;
  * @author Väinö Viinikka
  * @see kva.logiikka.Ryhma
  */
-public class PalkinTunniste {
+public class PalkinTunniste implements Comparable<PalkinTunniste> {
     
     private final String oppilaitos;
     private final String periodi;
     private final String palkki;
-
-    /**Luo uuden {@code RyhmanSijainnin}.
-     * 
-     * @param oppilaitos sen oppilaitoksen nimi, jossa ryhmään liittyvä opetus pidetään. 
-     *        Tieto oppilaitoksesta on mukana sekaannusten välttämiseksi
-     * @param periodi sen periodin tai periodinpuolikkaan nimi, jossa ryhmään liittyvä 
-     *        opetus pidetään
-     * @param palkki sen palkin nimi tai numero, jossa ryhmään liittyvä opetus pidetään.
-     */
-    public PalkinTunniste(String oppilaitos, String periodi, String palkki) {
+    private final int jarjestysluku;
+    
+    public PalkinTunniste(String oppilaitos, String periodi, String palkki, int jarjestysluku) {
         this.oppilaitos = oppilaitos;
         this.periodi = periodi;
         this.palkki = palkki;
+        this.jarjestysluku = jarjestysluku;
+    }
+    
+    public PalkinTunniste(PeriodinTunniste periodi, String palkki, int jarjestysluku) {
+        this(periodi.getOppilaitos(), periodi.getPeriodi(), palkki, jarjestysluku);
+    }
+
+    /**Luo uuden {@code PalkinTunnisteen}.
+     * 
+     * @param oppilaitos sen oppilaitoksen nimi, jossa ryhmään liittyvä opetus pidetään. 
+     *        Tieto oppilaitoksesta on mukana sekaannusten välttämiseksi.
+     * @param periodi sen periodin tai periodinpuolikkaan nimi, jossa ryhmään liittyvä 
+     *        opetus pidetään
+     * @param palkki sen palkin nimi tai numero, jossa ryhmään liittyvä opetus pidetään
+     */
+    public PalkinTunniste(String oppilaitos, String periodi, String palkki) {
+        this(oppilaitos, periodi, palkki, Integer.MAX_VALUE);
+    }
+    
+    /**Luo uuden {@code PalkinTunnisteen}.
+     * 
+     * @param periodi sisältää tiedot oppilaitoksesta ja periodista, joissa ryhmään 
+     *        liittyvä opetus pidetään. Tieto oppilaitoksesta on mukana sekaannuksien 
+     *        välttämiseksi.
+     * @param palkki sen palkin nimi tai numero, jossa ryhmään liittyvä opetus pidetään
+     */
+    public PalkinTunniste(PeriodinTunniste periodi, String palkki) {
+        this(periodi.getOppilaitos(), periodi.getPeriodi(), palkki);
     }
 
     /**Palauttaa sen oppilaitoksen nimen, jonka kurssitarjottimiin {@code Ryhma} kuuluu.
@@ -101,6 +122,10 @@ public class PalkinTunniste {
         }
         return getPeriodinTunniste().equals(toinen.getPeriodinTunniste());
     }
+    
+    public int getJarjestysluku() {
+        return jarjestysluku;
+    }
 
     @Override
     public int hashCode() {
@@ -138,5 +163,15 @@ public class PalkinTunniste {
     @Override
     public String toString() {
         return "PalkinTunniste{" + "oppilaitos=" + oppilaitos + ", periodi=" + periodi + ", palkki=" + palkki + '}';
+    }
+
+    @Override
+    public int compareTo(PalkinTunniste o) {
+        int yritys = this.jarjestysluku - o.getJarjestysluku();
+        if(yritys != 0) {
+            return yritys;
+        } else {
+            return palkki.compareTo(o.getPalkki());
+        }
     }
 }

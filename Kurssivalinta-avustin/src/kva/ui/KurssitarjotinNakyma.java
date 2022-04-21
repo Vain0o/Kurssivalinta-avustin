@@ -58,6 +58,7 @@ public class KurssitarjotinNakyma extends Nakyma {
         BorderPane ylin = new BorderPane();
         VBox kehikko = new VBox();
         kehikko.setPadding(new Insets(10, 0, 10, 5));
+        kehikko.setSpacing(10);
         
         String oppilaitos = null;
         String periodi = null;

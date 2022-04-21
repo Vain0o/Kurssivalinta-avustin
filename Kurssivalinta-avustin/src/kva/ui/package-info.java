@@ -1,4 +1,4 @@
-/**Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
+/* Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
  * Copyright (C) 2022 Väinö Viinikka
  *
  * This program is free software: you can redistribute it and/or modify

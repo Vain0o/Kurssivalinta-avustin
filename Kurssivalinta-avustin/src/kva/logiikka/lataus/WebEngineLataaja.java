@@ -17,10 +17,15 @@
 package kva.logiikka.lataus;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Worker;
 import javafx.scene.web.WebEngine;
+import kva.logiikka.Moduuli;
+import kva.logiikka.PalkinTunniste;
 import kva.logiikka.PeriodinTunniste;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -33,6 +38,9 @@ public class WebEngineLataaja extends KurssitarjottimenLataaja {
     private WebEngine moottori;
     private String perusOsoite;
     private HashMap<PeriodinTunniste, String> linkit = new HashMap<>();
+    
+    private ChangeListener<Worker.State> kuuntelija;
+    private PeriodinTunniste nykyinenPeriodi;
 
     @Override
     public void lataaPeriodienTunnisteet(Object[] data) {
@@ -47,20 +55,73 @@ public class WebEngineLataaja extends KurssitarjottimenLataaja {
             return;
         }
         
-        moottori.getLoadWorker().stateProperty().addListener((tarkkailtava, vanhaArvo, uusiArvo) -> {
-            if(uusiArvo == Worker.State.SUCCEEDED) {
-                luePeriodinTunnisteet(moottori.getDocument().getElementById("own-schools"));
-                luePeriodinTunnisteet(moottori.getDocument().getElementById("ext-schools"));
-                lahetaPeriodinTunnisteet();
+        kuuntelija = (tarkkailtava, vanhaArvo, uusiArvo) -> {
+            switch (uusiArvo) {
+                case SUCCEEDED:
+                    try {
+                        luePeriodinTunnisteet(moottori.getDocument().getElementById("own-schools"));
+                        luePeriodinTunnisteet(moottori.getDocument().getElementById("ext-schools"));
+                    } catch(Throwable t) {
+                        lahetaVirhe(t);
+                        moottori.getLoadWorker().stateProperty().removeListener(kuuntelija);
+                        return;
+                    }
+                    lahetaPeriodinTunnisteet();
+                    moottori.getLoadWorker().stateProperty().removeListener(kuuntelija);
+                    break;
+                case FAILED:
+                    lahetaVirhe(moottori.getLoadWorker().getException());
+                    moottori.getLoadWorker().stateProperty().removeListener(kuuntelija);
+                    break;
+                case CANCELLED:
+                    lahetaVirhe(new LataajaPoikkeus("Lataus keskeytettiin."));
+                    moottori.getLoadWorker().stateProperty().removeListener(kuuntelija);
+                    break;
             }
-        });
+        };
+        moottori.getLoadWorker().stateProperty().addListener(kuuntelija);
         
         moottori.load(perusOsoite + "selection/view?");
     }
 
     @Override
     public void lataaKurssitarjotin(List<PeriodinTunniste> periodit) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        kuuntelija = (tarkkailtava, vanhaArvo, uusiArvo) -> {switch (uusiArvo) {
+                case SUCCEEDED:
+                    try {
+                        luePeriodi(moottori.getDocument());
+                    } catch(Throwable t) {
+                        lahetaVirhe(t);
+                        moottori.getLoadWorker().stateProperty().removeListener(kuuntelija);
+                        return;
+                    }
+                    if(!periodit.isEmpty()) {
+                        nykyinenPeriodi = periodit.remove(0);
+                        moottori.load(perusOsoite + "selection/" + linkit.get(nykyinenPeriodi));
+                    } else {
+                        moottori.getLoadWorker().stateProperty().removeListener(kuuntelija);
+                        lahetaKurssitarjotin();
+                    }
+                    break;
+                case FAILED:
+                    lahetaVirhe(moottori.getLoadWorker().getException());
+                    moottori.getLoadWorker().stateProperty().removeListener(kuuntelija);
+                    break;
+                case CANCELLED:
+                    if(vanhaArvo == Worker.State.SUCCEEDED) {
+                        break;
+                    }
+                    lahetaVirhe(new LataajaPoikkeus("Lataus keskeytettiin."));
+                    moottori.getLoadWorker().stateProperty().removeListener(kuuntelija);
+                    break;
+            }
+        };
+        moottori.getLoadWorker().stateProperty().addListener(kuuntelija);
+        
+        if(!periodit.isEmpty()) {
+            nykyinenPeriodi = periodit.remove(0);
+            moottori.load(perusOsoite + "selection/" + linkit.get(nykyinenPeriodi));
+        }
     }
     
     private String perusOsoite(String URL) throws LataajaPoikkeus {
@@ -91,6 +152,67 @@ public class WebEngineLataaja extends KurssitarjottimenLataaja {
                 PeriodinTunniste tunniste = new PeriodinTunniste(oppilaitoksenNimi, periodinNimi);
                 linkit.put(tunniste, linkki.getAttribute("href"));
                 lisaaPeriodinTunniste(tunniste);
+            }
+        }
+    }
+    
+    private void luePeriodi(Document d) {
+        Element paalohko = d.getElementById("main-tray-parent");
+        Element tarjotinSailio = (Element) paalohko.getElementsByTagName("div").item(0);
+        Element taulukkoSailio = (Element) tarjotinSailio.getElementsByTagName("div").item(1);
+        Element tarjotin = (Element) taulukkoSailio.getElementsByTagName("ul").item(0);
+        
+        HashSet<String> kaytetytPalkkienNimet = new HashSet<>();
+        
+        for(int i = 0; i < tarjotin.getElementsByTagName("li").getLength(); i = i + 2) {
+            Element palkkiSailio = (Element) tarjotin.getElementsByTagName("li").item(i);
+            Element otsikko = (Element) palkkiSailio.getElementsByTagName("span").item(0);
+            
+            String palkinNimi = otsikko.getTextContent().trim();
+            if(kaytetytPalkkienNimet.contains(palkinNimi)) {
+                palkinNimi = " " + palkinNimi;
+            }
+            kaytetytPalkkienNimet.add(palkinNimi);
+            PalkinTunniste palkki = new PalkinTunniste(nykyinenPeriodi, palkinNimi, i);
+            
+            Element ryhmienSailio = (Element) palkkiSailio.getElementsByTagName("li").item(0);
+            for(int a = 0; a < ryhmienSailio.getElementsByTagName("a").getLength(); a++) {
+                Element ryhma = (Element) ryhmienSailio.getElementsByTagName("a").item(a);
+                if(ryhma.getAttribute("title").contains("Tämä kurssi on jo suoritettu.")) {
+                    break;
+                }
+                String ryhmakoodi = ryhma.getTextContent();
+                if(ryhmakoodi.split("[.]").length != 2) {
+                    break;
+                }
+                if(!lisaaSijainti(ryhmakoodi, palkki)) {
+                    LuotavaRyhma uusiRyhma = new LuotavaRyhma(ryhmakoodi);
+                    uusiRyhma.lisaaSijainti(palkki);
+                    lisaaRyhma(uusiRyhma);
+                    
+                    String kurssikoodi = ryhmakoodi.split("[.]")[0];
+                    if(!onModuulia(kurssikoodi)) {
+                        Moduuli.Tyyppi uusiTyyppi;
+                        switch(ryhma.getAttribute("class")) {
+                            case " kB123A25D_10026-off":
+                            case " kB123A25D_10024-off":
+                            case " kB123A25D_10024-off disa":
+                                uusiTyyppi = Moduuli.Tyyppi.PAKOLLINEN;
+                                break;
+                            case " kB123A25D_10027-off":
+                            case " kB123A25D_10023-off":
+                            case " kB123A25D_10023-off disa":
+                                uusiTyyppi = Moduuli.Tyyppi.VALTAKUNNALLINEN_SYVENTAVA;
+                                break;
+                            case " kB123A25D_159-off":
+                            case " kB123A25D_10025-off":
+                            case " kB123A25D_10025-off disa":
+                            default:
+                                uusiTyyppi = Moduuli.Tyyppi.SOVELTAVA;
+                        }
+                        lisaaModuuli(new Moduuli(kurssikoodi, uusiTyyppi));
+                    }
+                }
             }
         }
     }
