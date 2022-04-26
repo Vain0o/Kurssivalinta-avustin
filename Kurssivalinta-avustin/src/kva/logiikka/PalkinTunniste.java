@@ -30,7 +30,7 @@ import java.util.Objects;
  * @author Väinö Viinikka
  * @see kva.logiikka.Ryhma
  */
-public class PalkinTunniste implements Comparable<PalkinTunniste> {
+public class PalkinTunniste {
     
     private final String oppilaitos;
     private final String periodi;
@@ -163,15 +163,5 @@ public class PalkinTunniste implements Comparable<PalkinTunniste> {
     @Override
     public String toString() {
         return "PalkinTunniste{" + "oppilaitos=" + oppilaitos + ", periodi=" + periodi + ", palkki=" + palkki + '}';
-    }
-
-    @Override
-    public int compareTo(PalkinTunniste o) {
-        int yritys = this.jarjestysluku - o.getJarjestysluku();
-        if(yritys != 0) {
-            return yritys;
-        } else {
-            return palkki.compareTo(o.getPalkki());
-        }
     }
 }

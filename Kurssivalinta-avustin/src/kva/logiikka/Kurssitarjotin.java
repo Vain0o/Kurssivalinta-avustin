@@ -111,7 +111,7 @@ public class Kurssitarjotin {
             }
             return tulos;
         });
-        Comparator<PalkinTunniste> vertailija2 = vertailija.thenComparing((sijainti) -> sijainti);
+        Comparator<PalkinTunniste> vertailija2 = vertailija.thenComparing(PalkinTunniste::getJarjestysluku);
         mahdollisetPalkit.sort(vertailija2);
     }
     
