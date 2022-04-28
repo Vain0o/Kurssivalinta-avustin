@@ -29,7 +29,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-/**
+/**Toteuttaa {@code KurssitarjottimenLataajan}, jossa {@code Kurssitarjottimen} tiedot 
+ * ladataan suoraan Wilmasta.
+ * <p>
+ * Tiedot luetaan verkkosivujen HTML-lähdekoodista, joka saavutetaan luokan {@link javafx.scene.web.WebEngine} 
+ * avulla.
  *
  * @author Väinö Viinikka
  */
@@ -42,10 +46,13 @@ public class WebEngineLataaja extends KurssitarjottimenLataaja {
     private ChangeListener<Worker.State> kuuntelija;
     private PeriodinTunniste nykyinenPeriodi;
 
+    /**{@inheritDoc}
+     * 
+     * @param data taulukko, jonka solussa 0 on {@code WebEngine}, jolla on kirjauduttu 
+     *        Wilmaan siten, että opiskelijan etusivu on auki.
+     */
     @Override
     public void lataaPeriodienTunnisteet(Object[] data) {
-        //https://helsinki.inschool.fi/!02617820/
-        //https://helsinki.inschool.fi/!02617820/selection/view?
         moottori = (WebEngine) data[0];
         
         try {
@@ -124,6 +131,16 @@ public class WebEngineLataaja extends KurssitarjottimenLataaja {
         }
     }
     
+    /**Palauttaa Wilman opiskelijan etusivun URL-osoitteen.
+     * <p>
+     * Jos käyttäjä on surffannut sivulla ennen periodien lataus -painikkeen painamista, 
+     * etusivun osoite saadaan myöhempää käyttöä varten metodin avulla.
+     * 
+     * @param URL {@code WebEnginen} nykyisen sivun osoite
+     * @return opiskelijan etusivun osoite
+     * @throws kva.logiikka.lataus.KurssitarjottimenLataaja.LataajaPoikkeus jos WebEnginellä 
+     *         ei ole kirjauduttu Wilmaan
+     */
     private String perusOsoite(String URL) throws LataajaPoikkeus {
         int kauttaviivaLaskuri = 0;
         int merkkiLaskuri = 0;
@@ -139,6 +156,13 @@ public class WebEngineLataaja extends KurssitarjottimenLataaja {
         throw new LataajaPoikkeus("WebEnginellä ei ole kirjauduttu Wilmaan. Osoite: " + URL);
     }
     
+    /**Lukee Wilmasta periodien tunnisteet ja lisää ne {@code KurssitarjottimenLataajalle}.
+     * <p>
+     * Metodia kutsutaan Wilman "selection/view?"-sivun elementeille, joiden id:t 
+     * ovat "own-schools" ja "ext-schools".
+     * 
+     * @param e Kurssivalintasivun elementti, joka sisältää vaihtoehtoiset periodit.
+     */
     private void luePeriodinTunnisteet(Element e) {
         for(int i = 0; i < e.getElementsByTagName("h4").getLength(); i++) {
             Node otsikkoSolmu = e.getElementsByTagName("h4").item(i);
@@ -156,6 +180,13 @@ public class WebEngineLataaja extends KurssitarjottimenLataaja {
         }
     }
     
+    /**Lukee tietyn periodin {@code Ryhmat} ja {@code Moduulit} sekä lisää ne {@code KurssitarjottimenLataajalle}.
+     * <p>
+     * Metodia kutsutaan kutakin valittua periodia kuvaavalle dokumentille, jonka 
+     * osoite on [opiskelijan etusivun osoite] + "selection/" + [periodikohtainen merkkijono].
+     * 
+     * @param d periodia kuvaavan sivun lähdekoodin sisältävä HTML-dokumentti
+     */
     private void luePeriodi(Document d) {
         Element paalohko = d.getElementById("main-tray-parent");
         Element tarjotinSailio = (Element) paalohko.getElementsByTagName("div").item(0);

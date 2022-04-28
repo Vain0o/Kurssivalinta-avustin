@@ -37,7 +37,20 @@ import kva.logiikka.Kurssitarjotin;
 import kva.logiikka.PeriodinTunniste;
 import kva.logiikka.Sovelluslogiikka.LatauksenTila;
 
-/**
+/**Yläluokka {@code Nakymille}, jotka vastaavat {@code Kurssitarjottimen} tietojen 
+ * lataamisesta.
+ * <p>
+ * Näkymän toiminnan alkuvaiheessa alaluokka vastaa metodin 
+ * {@link kva.logiikka.Sovelluslogiikka#lataaPeriodienNimet(java.util.function.Consumer, java.util.function.Consumer, java.lang.Object...)} 
+ * kutsumisesta asiaankuuluvilla parametreillä, jotka kysytään tarpeen mukaan käyttäjältä. 
+ * Kun {@code Sovelluslogiikka} on ladannut periodien nimet, {@code LatausNakyma} 
+ * ottaa asiasta automaattisesti kopin, ja luo näkymän, jossa käyttäjä valitsee haluamansa 
+ * periodit, ja käskee kurssitarjottimen latauksen.
+ * <p>
+ * Tämän toiminnallisuuden lisäksi luokka tarjoaa alaluokkien käyttöön metodit {@link #naytaVirheviesti(java.lang.String)} 
+ * ja {@link #palaaAlkuun()}.
+ * <p>
+ * Alaluokkia kannattaa kirjoittaa omansa joka {@link kva.logiikka.lataus.KurssitarjottimenLataaja}lle.
  *
  * @author Väinö Viinikka
  */
@@ -45,6 +58,15 @@ public abstract class LatausNakyma extends Nakyma {
     
     private ScrollPane pohja;
     
+    /**Luo uuden {@code LatausNakyman}, jonka {@code Tabillä} on annettu otsikko ja 
+     * joka käyttää annettua {@code Kurssitarjotinta}.
+     * <p>
+     * {@code LatausNakymat} tulee muiden {@code Nakymien} tapaan luoda luokassa {@link kva.ui.Kayttoliittyma} 
+     * ja parametriksi annetaan {@code Nakyman} luonut {@code Kayttoliittyma}.
+     * 
+     * @param otsikko {@code LatausNakyman} kuvastaman välilehden otsikko
+     * @param kayttis {@code Kayttoliittyma}, johon {@code LatausNakyma} kuuluu 
+     */
     public LatausNakyma(String otsikko, Kayttoliittyma kayttis) {
         super(otsikko, kayttis);
         kayttis.getLogiikka().tilaProperty().addListener((a, vanhaArvo, uusiArvo) -> {
@@ -54,14 +76,25 @@ public abstract class LatausNakyma extends Nakyma {
         });
     }
     
+    /**Luo käyttöliittymän {@code KurssitarjottimenLataajan} vaatimien tietojen kyselylle 
+     * ja {@code PeriodinTunnisteiden} lataamiselle.
+     * <p>
+     * {@code LatausNakyma} luo näkymään valmiiksi {@code ScrollPanen}, jonka sisälle 
+     * palautettu {@code Node} asetetaan.
+     * 
+     * @return sisältää luodut käyttöliittymäkomponentit
+     */
     public abstract Node luoAlkuTila();
     
+    /**Palauttaa {@code Consumer}-olion {@code Kurssitarjottimen} latauksessa mahdollisesti 
+     * syntyvien virheiden käsittelyyn.
+     * 
+     * @return {@code Consumer}, jolle annetaan {@code Kurssitarjottimen} latauksessa 
+     *         mahdollisesti syntyvät poikkeukset
+     */
     public abstract Consumer<Throwable> tarjottimenLatausVirheenKasittely();
 
-    /**
-     *
-     * @return
-     */
+    /**{@inheritDoc}*/
     @Override
     public final Node luoSisalto() {
         pohja = new ScrollPane();
@@ -73,20 +106,39 @@ public abstract class LatausNakyma extends Nakyma {
         return new StackPane(pohja);
     }
     
+    /**Korvaa {@code LatausNakyman} pohjana toimivan {@code ScrollPanen} sisällön 
+     * uudella.
+     * 
+     * @param uusiSisalto {@code ScrollPanen} uusi sisältö
+     * @throws java.lang.NullPointerException jos {@code uusiSisalto} on {@code null}
+     */
     protected void setPohjanSisalto(Node uusiSisalto) {
         pohja.setContent(Objects.requireNonNull(uusiSisalto));
     }
     
+    /**Esittää annetun virheviestin erillisessä ikkunassa.
+     * 
+     * @param teksti virheviestin teksti
+     */
     protected void naytaVirheviesti(String teksti) {
         Alert ikkuna = new Alert(Alert.AlertType.NONE, teksti, ButtonType.OK);
         ikkuna.setTitle("Kurssivalinta-avustin");
         ikkuna.showAndWait();
     }
     
+    /**Palauttaa {@code LatausNakyman} alkuperäiseen tilaansa.
+     * <p>
+     * Metodia voi kutsua esimerkiksi, jos lataus on virheen takia aloitettava alkusta.
+     * Paluu toteutetaan kutsumalla uudelleen metodia {@link #luoAlkuTila()}.
+     */
+    protected final void palaaAlkuun() {
+        setPohjanSisalto(luoAlkuTila());
+    }
+    
     /**Muuttaa näkymän Wilma-palvelimen osoitteen syötöstä ladattavien periodien valintaan.
      * 
      * @param periodit lista {@code PeriodinTunnisteista}, joita kuvaavien periodien 
-     *        lataaminen on mahdollista.
+     *        lataaminen on mahdollista
      */
     private void luoPeriodienValinta(List<PeriodinTunniste> periodit) {
         HashMap<CheckBox, PeriodinTunniste> tunnisteenLoytaja = new HashMap<>();

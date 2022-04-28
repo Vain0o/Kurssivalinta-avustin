@@ -35,7 +35,7 @@ public interface ValintaKuuntelija {
     
     /**Metodia kutsutaan, kun {@code Ryhman} valintatila muuttuu
      * 
-     * @param t 
+     * @param t tilanmuutosta kuvaava {@code ValintaTapahtuma}
      */
     public void tilaMuuttui(ValintaTapahtuma t);
 }

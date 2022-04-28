@@ -29,7 +29,7 @@ import kva.logiikka.lataus.KurssitarjottimenLataaja;
 
 /**Ylin säiliöluokka Kurssivalinta-avustimen sovelluslogiikalle, sisältää {@code Kurssitarjottimen}.
  * <p>
- * {@link kva.logiikka.Kurssitarjotin} luodaan komennoilla {@link #lataaPeriodienNimet(java.lang.String, java.util.function.Consumer, java.util.function.Consumer)}
+ * {@link kva.logiikka.Kurssitarjotin} luodaan komennoilla {@link #lataaPeriodienNimet(java.util.function.Consumer, java.util.function.Consumer, java.lang.Object...)} 
  * ja {@link #lataaKurssitarjotin(java.util.Collection, java.util.function.Consumer, java.util.function.Consumer)}.
  * Lataamiseen käytetään konstruktoriparametrina annettua {@link kva.logiikka.lataus.KurssitarjottimenLataaja}a.
  *
@@ -219,7 +219,7 @@ public class Sovelluslogiikka {
     /**Esitys {@code Sovelluslogiikan} kulloisestakin toimintavaiheesta.
      * <p>
      * {@link kva.logiikka.Sovelluslogiikka} on aina aluksi tilassa {@code LUOTU}. 
-     * Kun käyttäjä kutsuu metodia {@link #lataaPeriodienNimet(java.lang.String, java.util.function.Consumer, java.util.function.Consumer)}, 
+     * Kun käyttäjä kutsuu metodia {@link #lataaPeriodienNimet(java.util.function.Consumer, java.util.function.Consumer, java.lang.Object...)}, 
      * tilaksi vaihtuu {@code LADATAAN_PERIODIEN_NIMIA}. Kun lataus taustasäikeessä 
      * saadaan valmiiksi, tilaksi vaihdetaan {@code PERIODIEN_NIMET_LADATTU}, paitsi 
      * jos lataus kaatuu poikkeukseen, jolloin {@code Sovelluslogiikka} palaa tilaan 

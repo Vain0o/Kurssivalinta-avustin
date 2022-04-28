@@ -37,6 +37,16 @@ public class PalkinTunniste {
     private final String palkki;
     private final int jarjestysluku;
     
+    /**Luo uuden {@code PalkinTunnisteen}.
+     * 
+     * @param oppilaitos sen oppilaitoksen nimi, jossa ryhmään liittyvä opetus pidetään. 
+     *        Tieto oppilaitoksesta on mukana sekaannusten välttämiseksi.
+     * @param periodi sen periodin tai periodinpuolikkaan nimi, jossa ryhmään liittyvä 
+     *        opetus pidetään
+     * @param palkki sen palkin nimi tai numero, jossa ryhmään liittyvä opetus pidetään
+     * @param jarjestysluku määrittää järjestyksen, jossa {@code PalkinTunnisteet} 
+     *        esitetään käyttöliittymässä
+     */
     public PalkinTunniste(String oppilaitos, String periodi, String palkki, int jarjestysluku) {
         this.oppilaitos = oppilaitos;
         this.periodi = periodi;
@@ -44,11 +54,20 @@ public class PalkinTunniste {
         this.jarjestysluku = jarjestysluku;
     }
     
+    /**Luo uuden {@code PalkinTunnisteen}.
+     * 
+     * @param periodi sisältää tiedot oppilaitoksesta ja periodista, joissa ryhmään 
+     *        liittyvä opetus pidetään. Tieto oppilaitoksesta on mukana sekaannuksien 
+     *        välttämiseksi.
+     * @param palkki sen palkin nimi tai numero, jossa ryhmään liittyvä opetus pidetään
+     * @param jarjestysluku määrittää järjestyksen, jossa {@code PalkinTunnisteet} 
+     *        esitetään käyttöliittymässä
+     */
     public PalkinTunniste(PeriodinTunniste periodi, String palkki, int jarjestysluku) {
         this(periodi.getOppilaitos(), periodi.getPeriodi(), palkki, jarjestysluku);
     }
 
-    /**Luo uuden {@code PalkinTunnisteen}.
+    /**Luo uuden {@code PalkinTunnisteen} järjestysluvulla {@code Integer.MAX_VALUE}.
      * 
      * @param oppilaitos sen oppilaitoksen nimi, jossa ryhmään liittyvä opetus pidetään. 
      *        Tieto oppilaitoksesta on mukana sekaannusten välttämiseksi.
@@ -60,7 +79,7 @@ public class PalkinTunniste {
         this(oppilaitos, periodi, palkki, Integer.MAX_VALUE);
     }
     
-    /**Luo uuden {@code PalkinTunnisteen}.
+    /**Luo uuden {@code PalkinTunnisteen} järjestysluvulla {@code Integer.MAX_VALUE}.
      * 
      * @param periodi sisältää tiedot oppilaitoksesta ja periodista, joissa ryhmään 
      *        liittyvä opetus pidetään. Tieto oppilaitoksesta on mukana sekaannuksien 
@@ -71,7 +90,8 @@ public class PalkinTunniste {
         this(periodi.getOppilaitos(), periodi.getPeriodi(), palkki);
     }
 
-    /**Palauttaa sen oppilaitoksen nimen, jonka kurssitarjottimiin {@code Ryhma} kuuluu.
+    /**Palauttaa sen oppilaitoksen nimen, jossa sijaitsevaa palkkia {@code PalkinTunniste} 
+     * kuvaa.
      * 
      * @return oppilaitoksen nimi
      */
@@ -79,8 +99,8 @@ public class PalkinTunniste {
         return oppilaitos;
     }
 
-    /**Palauttaa sen periodin tai periodinpuolikkaan nimen, jossa {@code Ryhma} on 
-     * tarjolla.
+    /**Palauttaa sen periodin tai periodinpuolikkaan nimen, jossa sijaitsevaa palkkia 
+     * {@code PalkinTunniste} kuvaa.
      * 
      * @return periodin tai periodinpuolikkaan nimi
      */
@@ -106,6 +126,14 @@ public class PalkinTunniste {
         return new PeriodinTunniste(oppilaitos, periodi);
     }
     
+    /**Palauttaa {@code PalkinTunnisteen} järjestysluvun.
+     * 
+     * @return luku, joka määrittää {@code PalkinTunnisteiden} järjestyksen käyttöliitymässä
+     */
+    public int getJarjestysluku() {
+        return jarjestysluku;
+    }
+    
     /**Kertoo, kuuluuko annettu {@code PalkinTunniste} samaan periodiin, kuin tämä.
      * <p>
      * {@code true} palautetaan, jos annetun {@code PalkinTunnisteen} oppilaitos ja 
@@ -121,10 +149,6 @@ public class PalkinTunniste {
             return false;
         }
         return getPeriodinTunniste().equals(toinen.getPeriodinTunniste());
-    }
-    
-    public int getJarjestysluku() {
-        return jarjestysluku;
     }
 
     @Override

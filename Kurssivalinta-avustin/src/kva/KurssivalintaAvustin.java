@@ -61,6 +61,9 @@ public class KurssivalintaAvustin extends Application {
         launch(args);
     }
     
+    /**Avaa ikkunan, joka näyttää ohjelman tekijänoikeus- ja lisenssitiedot.
+     * 
+     */
     private void naytaLaillisetIlmoitukset() {
         String teksti = "Kurssivalinta-avustin 1.0 Copyright (C) 2022 Väinö Viinikka\n\n" +
                 "Tämän ohjelman käyttö, muokkaus ja levittäminen on sallittu\n" + 

@@ -43,7 +43,7 @@ public abstract class Nakyma {
      * annettua {@code Kurssitarjotinta}.
      * <p>
      * {@code Nakymat} tulee luoda luokassa {@link kva.ui.Kayttoliittyma} ja parametriksi 
-     * annetun {@code Kurssitarjottimen} tulee {@code Nakyman} luonut {@code Kayttoliittyma}.
+     * annetaan {@code Nakyman} luonut {@code Kayttoliittyma}.
      * 
      * @param otsikko {@code Nakyman} kuvastaman välilehden otsikko
      * @param kayttis {@code Kayttoliittyma}, johon {@code Nakyma} kuuluu

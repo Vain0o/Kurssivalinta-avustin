@@ -32,7 +32,7 @@ import kva.logiikka.PalkinTunniste;
 /**{@code KurssitarjottimenLataaja}, joka lataa tiedot tekstitiedostosta.
  * <p>
  * Luokka hakee kurssitarjottimen tiedot tekstitiedostosta, jonka sijainti annetaan 
- * metodin {@link #muodostaYhteys(java.lang.String)} parametrina. Luokka on tarkoitettu 
+ * metodin {@link #lataaPeriodienTunnisteet(java.lang.Object[])} parametrina. Luokka on tarkoitettu 
  * ohjelman testaamiseen silloin, kun tietoja ei haluta tai voida hakea Wilmasta. 
  * Lopullinen Kurssivalinta-avustimen julkaisu ei sisällä viitteitä tähän luokkaan, 
  * vaan siinä käytetään toista {@code KurssitarjottimenLataajaa}, joka hakee tiedot 

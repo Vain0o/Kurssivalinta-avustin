@@ -32,14 +32,32 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import kva.logiikka.PeriodinTunniste;
 
-/**
+/**Toteuttaa {@code Nakyman}, jossa {@code Kurssitarjotin} ladataan {@code WebEngineLataajan} 
+ * avulla.
+ * <p>
+ * Näkymässä käyttäjä pääsee aluksi syöttämään Wilma-palvelimensa osoitteen. Tämän 
+ * jälkeen avautuu {@link javafx.scene.web.WebView}, jossa käyttäjä kirjautuu Wilmaan
+ * tunnuksillaan ja sen jälkeen käskee napinpainalluksella {@code PeriodinTunnisteiden} 
+ * latauksen. {@code WebView}'n {@link javafx.scene.web.WebEngine} annetaan 
+ * {@link kva.logiikka.lataus.WebEngineLataaja}lle lataamista varten.
+ * <p>
+ * Kun {@code PeriodinTunnisteet} on ladattu, {@code LatausNakyma} huolehtii niiden 
+ * valinnasta.
  *
- * @author vaino
+ * @author Väinö Viinikka.
  */
 public class WebEngineLatausNakyma extends LatausNakyma {
     
     private ScrollPane pohja;
     
+    /**Luo uuden WebEngineLatausNakyman.
+     * <p>
+     * {@code WebEngineLatausNakyma} tulee tavalliseen luoda luokassa {@link kva.ui.Kayttoliittyma} 
+     * ja parametriksi annetaan {@code Nakyman} luonut {@code Kayttoliittyma}.
+     * 
+     * @param otsikko {@code Nakyman} kuvastaman välilehden otsikko
+     * @param kayttis {@code Kayttoliittyma}, johon {@code Nakyma} kuuluu
+     */
     public WebEngineLatausNakyma(String otsikko, Kayttoliittyma kayttis) {
         super(otsikko, kayttis);
         pohja = new ScrollPane();
@@ -57,7 +75,6 @@ public class WebEngineLatausNakyma extends LatausNakyma {
         osoiteKentta.getChildren().addAll(new Label("https://"), tekstikentta);
         alkuAsettelu.getChildren().add(osoiteKentta);
         
-        
         Button nappi = new Button("Seuraava");
         EventHandler<ActionEvent> kasittelija = (e) -> luoKirjautumisNakyma(tekstikentta.getText());
         tekstikentta.setOnAction(kasittelija);
@@ -73,10 +90,14 @@ public class WebEngineLatausNakyma extends LatausNakyma {
                 naytaVirheviesti("Virhe kurssitarjottimen lataamisessa:\n\n" + ex.getMessage());
                 palaaAlkuun();
                 //Seuraavan rivin kommentointi voidaan poistaa testaamisesn ajaksi.
-                ex.printStackTrace();
+                //ex.printStackTrace();
             };
     }
     
+    /**Luo käyttöliittymän, jossa käyttäjä kirjautuu Wilmaan.
+     * 
+     * @param osoite Wilma-palvelimen osoite
+     */
     private void luoKirjautumisNakyma(String osoite) {
         VBox asettelu = new VBox();
         asettelu.setSpacing(10);
@@ -98,7 +119,7 @@ public class WebEngineLatausNakyma extends LatausNakyma {
                 naytaVirheviesti("Virhe periodien lataamisessa:\n\n" + virhe.getMessage());
                 palaaAlkuun();
                 //Seuraavan rivin kommentointi voidaan poistaa testaamisen ajaksi.
-                virhe.printStackTrace();
+                //virhe.printStackTrace();
             };
             getKayttoliittyma().getLogiikka().lataaPeriodienNimet(tuloksenKasittely, 
                     virheenKasittely, moottori);
@@ -110,9 +131,5 @@ public class WebEngineLatausNakyma extends LatausNakyma {
         asettelu.getChildren().add(nappilista);
         
         setPohjanSisalto(asettelu);
-    }
-    
-    private void palaaAlkuun() {
-        setPohjanSisalto(luoAlkuTila());
     }
 }
