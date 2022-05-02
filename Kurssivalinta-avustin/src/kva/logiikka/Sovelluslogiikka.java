@@ -34,6 +34,7 @@ import kva.logiikka.lataus.KurssitarjottimenLataaja;
  * Lataamiseen käytetään konstruktoriparametrina annettua {@link kva.logiikka.lataus.KurssitarjottimenLataaja}a.
  *
  * @author Väinö Viinikka
+ * @since Kurssivalinta-avustin 1.0
  */
 public class Sovelluslogiikka {
 

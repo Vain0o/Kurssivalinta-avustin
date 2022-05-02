@@ -23,6 +23,6 @@
  * joka sisältää tiedot siitä, miten kurssit esitetään kurssitarjottimessa.
  * 
  * @author Väinö Viinikka
- * @since 1.0
+ * @since Kurssivalinta-avustin 1.0
  */
 package kva.ui;

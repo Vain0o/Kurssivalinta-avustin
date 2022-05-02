@@ -53,6 +53,7 @@ import kva.logiikka.Sovelluslogiikka.LatauksenTila;
  * Alaluokkia kannattaa kirjoittaa omansa joka {@link kva.logiikka.lataus.KurssitarjottimenLataaja}lle.
  *
  * @author Väinö Viinikka
+ * @since Kurssivalinta-avustin 1.0
  */
 public abstract class LatausNakyma extends Nakyma {
     

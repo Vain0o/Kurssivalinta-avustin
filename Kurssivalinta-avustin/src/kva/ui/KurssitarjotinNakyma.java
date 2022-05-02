@@ -37,6 +37,7 @@ import kva.ui.tarjotinnakyma.PalkkiEsitys;
  * Lisäksi näkymä sisältää oppilaitoksen ja periodin vaihtumista kuvaavat otsikot.
  *
  * @author Väinö Viinikka
+ * @since Kurssivalinta-avustin 1.0
  */
 public class KurssitarjotinNakyma extends Nakyma {
 

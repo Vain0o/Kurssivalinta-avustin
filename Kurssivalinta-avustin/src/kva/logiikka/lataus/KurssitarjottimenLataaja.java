@@ -41,6 +41,7 @@ import kva.logiikka.PalkinTunniste;
  * @see kva.logiikka.Sovelluslogiikka
  * @see kva.logiikka.Kurssitarjotin
  * @see kva.logiikka.Ryhma
+ * @since Kurssivalinta-avustin 1.0
  */
 public abstract class KurssitarjottimenLataaja {
     

@@ -44,7 +44,8 @@ import kva.logiikka.PeriodinTunniste;
  * Kun {@code PeriodinTunnisteet} on ladattu, {@code LatausNakyma} huolehtii niiden 
  * valinnasta.
  *
- * @author Väinö Viinikka.
+ * @author Väinö Viinikka
+ * @since Kurssivalinta-avustin 1.0
  */
 public class WebEngineLatausNakyma extends LatausNakyma {
     

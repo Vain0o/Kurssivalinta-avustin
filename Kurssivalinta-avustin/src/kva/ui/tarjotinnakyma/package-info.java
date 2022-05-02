@@ -19,6 +19,6 @@
  * 
  * @author Väinö Viinikka
  * @see kva.ui.KurssitarjotinNakyma
- * @since 1.0
+ * @since Kurssivalinta-avustin 1.0
  */
 package kva.ui.tarjotinnakyma;

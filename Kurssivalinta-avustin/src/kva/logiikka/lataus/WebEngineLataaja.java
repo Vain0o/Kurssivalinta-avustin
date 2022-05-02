@@ -36,6 +36,7 @@ import org.w3c.dom.Node;
  * avulla.
  *
  * @author Väinö Viinikka
+ * @since Kurssivalinta-avustin 1.0
  */
 public class WebEngineLataaja extends KurssitarjottimenLataaja {
     

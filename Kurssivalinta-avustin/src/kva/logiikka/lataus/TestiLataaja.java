@@ -20,7 +20,6 @@ import kva.logiikka.PeriodinTunniste;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
@@ -44,6 +43,7 @@ import kva.logiikka.PalkinTunniste;
  *
  * @author Väinö Viinikka
  * @see kva.logiikka.lataus.KurssitarjottimenLataaja
+ * @since Kurssivalinta-avustin 1.0
  */
 public class TestiLataaja extends KurssitarjottimenLataaja {
 

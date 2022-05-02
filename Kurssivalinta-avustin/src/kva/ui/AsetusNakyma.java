@@ -56,6 +56,7 @@ import javafx.scene.layout.VBox;
  *
  * @author Väinö Viinikka
  * @see kva.ui.Asetukset
+ * @since Kurssivalinta-avustin 1.0
  */
 public class AsetusNakyma extends Nakyma {
     

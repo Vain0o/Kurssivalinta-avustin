@@ -28,6 +28,7 @@ import javafx.scene.control.Tab;
  * voi myöhemmin vaihtaa metodin {@link #setSisalto(javafx.scene.Node)} avulla.
  *
  * @author Väinö Viinikka
+ * @since Kurssivalinta-avustin 1.0
  */
 public abstract class Nakyma {
     

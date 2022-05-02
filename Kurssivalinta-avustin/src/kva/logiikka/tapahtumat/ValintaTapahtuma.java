@@ -25,6 +25,7 @@ import kva.logiikka.Ryhma;
  * @see kva.logiikka.tapahtumat.ValintaKuuntelija
  * @see kva.logiikka.tapahtumat.ValintaTapahtuma.TapahtumaTyyppi
  * @see kva.logiikka.Ryhma
+ * @since Kurssivalinta-avustin 1.0
  */
 public class ValintaTapahtuma {
     

@@ -31,6 +31,7 @@ import kva.logiikka.Sovelluslogiikka.LatauksenTila;
  * Näkymien varsinainen toteutus on kyseisissä luokissa.
  *
  * @author Väinö Viinikka
+ * @since Kurssivalinta-avustin 1.0
  */
 public class Kayttoliittyma {
     

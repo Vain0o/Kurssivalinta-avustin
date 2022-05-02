@@ -29,6 +29,7 @@ import java.util.Objects;
  *
  * @author Väinö Viinikka
  * @see kva.logiikka.Ryhma
+ * @since Kurssivalinta-avustin 1.0
  */
 public class PalkinTunniste {
     

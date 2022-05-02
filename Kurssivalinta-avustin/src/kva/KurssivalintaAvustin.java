@@ -38,6 +38,7 @@ import kva.ui.Kayttoliittyma;
  * Tämänhetkinen toteutus käyttää {@code KurssitarjottimenLataajana} {@link kva.logiikka.lataus.TestiLataaja}a.
  *
  * @author Väinö Viinikka
+ * @since Kurssivalinta-avustin 1.0
  */
 public class KurssivalintaAvustin extends Application {
     

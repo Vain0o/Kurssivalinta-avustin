@@ -36,7 +36,6 @@ import javafx.scene.text.Font;
 import kva.logiikka.Kurssitarjotin;
 import kva.logiikka.PalkinTunniste;
 import kva.logiikka.Ryhma;
-import kva.logiikka.tapahtumat.ValintaTapahtuma;
 import kva.ui.Asetukset;
 
 /**Luo esityksen, joka kuvaa yksittäistä kurssitarjottimessa esiintyvää palkkia.
@@ -50,6 +49,7 @@ import kva.ui.Asetukset;
  * Palkkia kuvaava käyttöliittymäkomponentti saadaan metodilla {@link #getEsitys()}.
  *
  * @author Väinö Viinikka
+ * @since Kurssivalinta-avustin 1.0
  */
 public class PalkkiEsitys {
     

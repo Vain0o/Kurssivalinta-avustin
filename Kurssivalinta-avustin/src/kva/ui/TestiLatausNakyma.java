@@ -39,6 +39,7 @@ import kva.logiikka.PeriodinTunniste;
  *
  * @author Väinö Viinikka
  * @see kva.logiikka.lataus.KurssitarjottimenLataaja
+ * @since Kurssivalinta-avustin 1.0
  */
 public class TestiLatausNakyma extends LatausNakyma {
     

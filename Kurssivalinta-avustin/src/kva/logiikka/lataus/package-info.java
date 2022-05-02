@@ -28,6 +28,6 @@
  * {@link kva.logiikka.lataus.LuotavaRyhma}.
  * 
  * @author Väinö Viinikka
- * @since 1.0
+ * @since Kurssivalinta-avustin 1.0
  */
 package kva.logiikka.lataus;

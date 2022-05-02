@@ -42,6 +42,7 @@ import kva.logiikka.lataus.LuotavaRyhma;
  * valinta poistetaan.
  *
  * @author Väinö Viinikka
+ * @since Kurssivalinta-avustin 1.0
  */
 public class Kurssitarjotin {
     

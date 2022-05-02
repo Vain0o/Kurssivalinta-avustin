@@ -31,6 +31,7 @@ import kva.logiikka.PalkinTunniste;
  * @see kva.logiikka.Ryhma
  * @see kva.logiikka.PalkinTunniste
  * @see kva.logiikka.lataus.KurssitarjottimenLataaja
+ * @since Kurssivalinta-avustin 1.0
  */
 public class LuotavaRyhma {
     

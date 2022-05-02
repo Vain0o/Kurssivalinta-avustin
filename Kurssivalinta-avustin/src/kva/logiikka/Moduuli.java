@@ -20,6 +20,7 @@ package kva.logiikka;
  *
  * @author Väinö Viinikka
  * @see kva.logiikka.Ryhma
+ * @since Kurssivalinta-avustin 1.0
  */
 public class Moduuli implements Comparable<Moduuli> {
     
