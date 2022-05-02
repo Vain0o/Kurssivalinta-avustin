@@ -23,6 +23,11 @@ Kun olet asentanut JRE:n, Kurssivalinta-avustimen asentaminen omalle koneelle on
 Nyt ohjelma latautuu koneellesi JAR-tiedostona, joka käynnistyy tuplaklikkaamalla tavalliseen tapaan.
 ## Käyttö
 ### Asetusten asettaminen
+Kun käynnistät Kurssivalinta-avustimen, ensimmäisenä näkyviin tulee Asetukset-kaavake, johon pääset täyttämään ainevalintasi (matematiikan ja ruotsin oppimäärät, opiskelemasi vieraat kielet, jne.). Valintasi vaikuttavat siihen, mitä kursseja sinulle näytetään: jos esimerkiksi valitset pitkän matematiikan, et näe ollenkaan lyhyen matematiikan kursseja. Kaavakkeen lopussa on kolme kenttää joihin voit lisätä kurssien ja aineiden koodeja: yksi kursseille, joita et halua nähdä, toinen aineille, joiden kursseja et halua nähdä ollenkaan, ja kolmas aineille, joista haluat nähdä vain pakolliset kurssit.
+
+Piilotettavien aineiden listalla on valmiiksi merkkijonoja. Niistä ei tarvitse välittää, vaan ne ovat seurausta aiemmin tekemistäsi valinnoista. Kurssit, joiden koodit alkavat v-kirjaimella, saa näppärästi piilotettua lisäämällä merkkijonon "v" piilotettaviin aineisiin. Muiden kuin v:llä alkavien kurssien piilottamiseen ei valitettavasti ole yhtä helppoa tapaa.
+
+Asetuksia ei tarvitse erikseen tallentaa, ja voit palata myöhemmin muokkaamaan niitä.
 ### Kurssitarjottimen lataaminen Wilmasta
 ### Kurssien valitseminen
 ## Lisenssi- ja tekijänoikeustiedot
@@ -32,4 +37,16 @@ Kurssivalinta-avustin on lisensoitu Free Software Foundationin julkaiseman GNU G
 - OHJELMALLA EI OLE MINKÄÄNLAISTA TAKUUTA. KÄYTÄT OHJELMAA OMALLA VASTUULLASI.
 Lisenssin (englanninkielinen) teksti löytyy tiedostosta [LICENSE.txt](LICENSE.txt).
 ## Tulevaisuus
-Kurssivalinta-avustimeen on suunnitteilla uusia ominaisuuksia, jotka toivon mukaan lisäävät sen käyttökelpoisuutta ja helppokäyttöisyyttä.
+Kurssivalinta-avustimeen on suunnitteilla uusia ominaisuuksia, jotka toivon mukaan lisäävät sen käyttökelpoisuutta ja helppokäyttöisyyttä. Suunnitteilla ovat:
+- erilliset Ladataan-näkymät kurssitarjottimen latausvälilehteen
+- mahdollisuus hakea ryhmiä ryhmäkoodeilla ja niiden osilla
+- mahdollisuus piilottaa ryhmä, aine tai aineen ei-pakolliset kurssit klikkaamalla ryhmänappia hiiren oikealla näppäimellä
+- kurssin tietojen esittäminen
+- ryhmän tietojen (esim. opettajan) esittäminen
+- täysien ja lukittujen ryhmien merkitseminen ja mahdollisuus piilottaa ne
+- paraikaa käytävien kurssien piilottaminen
+- mahdollisesti ilmenevien bugien korjaaminen
+
+Uusia ominaisuuksia tullaan toteuttamaan sen mukaan, miten kirjoittajalla riittää aikaa, kiinnostusta ja jaksamista.
+
+Osa Suomen kunnista luopuu Wilmasta vuosina 2023-24. Kurssivalinta-avustimeen saatetaan toteuttaa yhteensopivuus korvaavan ohjelmiston kanssa, mikäli se osoittautuu mielekkääksi ja mahdolliseksi.
