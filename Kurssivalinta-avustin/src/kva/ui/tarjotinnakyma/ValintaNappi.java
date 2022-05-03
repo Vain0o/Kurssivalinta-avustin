@@ -40,6 +40,7 @@ import kva.logiikka.Ryhma;
  *
  * @author Väinö Viinikka
  * @see kva.ui.tarjotinnakyma.ValintaNappiLista
+ * @since Kurssivalinta-avustin 1.0
  */
 public class ValintaNappi extends Button implements Comparable<ValintaNappi> {
     

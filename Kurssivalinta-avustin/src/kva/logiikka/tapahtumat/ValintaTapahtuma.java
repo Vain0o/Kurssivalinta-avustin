@@ -25,6 +25,7 @@ import kva.logiikka.Ryhma;
  * @see kva.logiikka.tapahtumat.ValintaKuuntelija
  * @see kva.logiikka.tapahtumat.ValintaTapahtuma.TapahtumaTyyppi
  * @see kva.logiikka.Ryhma
+ * @since Kurssivalinta-avustin 1.0
  */
 public class ValintaTapahtuma {
     
@@ -90,7 +91,7 @@ public class ValintaTapahtuma {
         VALITTU_MUUALTA, 
         
         /**Kertoo, että samassa {@code Kurssitarjottimessa} ei ole enää valittuna 
-         * {@code Ryhmaa}, jonka {@code Moduuli olisi sama, kuin kyseessä olevan {@code Ryhman}.
+         * {@code Ryhmaa}, jonka {@code Moduuli} olisi sama, kuin kyseessä olevan {@code Ryhman}.
          * 
          */
         VALINTA_POISTETTU_MUUALTA;

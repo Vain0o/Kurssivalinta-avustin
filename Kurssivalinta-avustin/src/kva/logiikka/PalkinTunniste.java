@@ -29,28 +29,70 @@ import java.util.Objects;
  *
  * @author Väinö Viinikka
  * @see kva.logiikka.Ryhma
+ * @since Kurssivalinta-avustin 1.0
  */
 public class PalkinTunniste {
     
     private final String oppilaitos;
     private final String periodi;
     private final String palkki;
-
-    /**Luo uuden {@code RyhmanSijainnin}.
+    private final int jarjestysluku;
+    
+    /**Luo uuden {@code PalkinTunnisteen}.
      * 
      * @param oppilaitos sen oppilaitoksen nimi, jossa ryhmään liittyvä opetus pidetään. 
-     *        Tieto oppilaitoksesta on mukana sekaannusten välttämiseksi
+     *        Tieto oppilaitoksesta on mukana sekaannusten välttämiseksi.
      * @param periodi sen periodin tai periodinpuolikkaan nimi, jossa ryhmään liittyvä 
      *        opetus pidetään
-     * @param palkki sen palkin nimi tai numero, jossa ryhmään liittyvä opetus pidetään.
+     * @param palkki sen palkin nimi tai numero, jossa ryhmään liittyvä opetus pidetään
+     * @param jarjestysluku määrittää järjestyksen, jossa {@code PalkinTunnisteet} 
+     *        esitetään käyttöliittymässä
      */
-    public PalkinTunniste(String oppilaitos, String periodi, String palkki) {
+    public PalkinTunniste(String oppilaitos, String periodi, String palkki, int jarjestysluku) {
         this.oppilaitos = oppilaitos;
         this.periodi = periodi;
         this.palkki = palkki;
+        this.jarjestysluku = jarjestysluku;
+    }
+    
+    /**Luo uuden {@code PalkinTunnisteen}.
+     * 
+     * @param periodi sisältää tiedot oppilaitoksesta ja periodista, joissa ryhmään 
+     *        liittyvä opetus pidetään. Tieto oppilaitoksesta on mukana sekaannuksien 
+     *        välttämiseksi.
+     * @param palkki sen palkin nimi tai numero, jossa ryhmään liittyvä opetus pidetään
+     * @param jarjestysluku määrittää järjestyksen, jossa {@code PalkinTunnisteet} 
+     *        esitetään käyttöliittymässä
+     */
+    public PalkinTunniste(PeriodinTunniste periodi, String palkki, int jarjestysluku) {
+        this(periodi.getOppilaitos(), periodi.getPeriodi(), palkki, jarjestysluku);
     }
 
-    /**Palauttaa sen oppilaitoksen nimen, jonka kurssitarjottimiin {@code Ryhma} kuuluu.
+    /**Luo uuden {@code PalkinTunnisteen} järjestysluvulla {@code Integer.MAX_VALUE}.
+     * 
+     * @param oppilaitos sen oppilaitoksen nimi, jossa ryhmään liittyvä opetus pidetään. 
+     *        Tieto oppilaitoksesta on mukana sekaannusten välttämiseksi.
+     * @param periodi sen periodin tai periodinpuolikkaan nimi, jossa ryhmään liittyvä 
+     *        opetus pidetään
+     * @param palkki sen palkin nimi tai numero, jossa ryhmään liittyvä opetus pidetään
+     */
+    public PalkinTunniste(String oppilaitos, String periodi, String palkki) {
+        this(oppilaitos, periodi, palkki, Integer.MAX_VALUE);
+    }
+    
+    /**Luo uuden {@code PalkinTunnisteen} järjestysluvulla {@code Integer.MAX_VALUE}.
+     * 
+     * @param periodi sisältää tiedot oppilaitoksesta ja periodista, joissa ryhmään 
+     *        liittyvä opetus pidetään. Tieto oppilaitoksesta on mukana sekaannuksien 
+     *        välttämiseksi.
+     * @param palkki sen palkin nimi tai numero, jossa ryhmään liittyvä opetus pidetään
+     */
+    public PalkinTunniste(PeriodinTunniste periodi, String palkki) {
+        this(periodi.getOppilaitos(), periodi.getPeriodi(), palkki);
+    }
+
+    /**Palauttaa sen oppilaitoksen nimen, jossa sijaitsevaa palkkia {@code PalkinTunniste} 
+     * kuvaa.
      * 
      * @return oppilaitoksen nimi
      */
@@ -58,8 +100,8 @@ public class PalkinTunniste {
         return oppilaitos;
     }
 
-    /**Palauttaa sen periodin tai periodinpuolikkaan nimen, jossa {@code Ryhma} on 
-     * tarjolla.
+    /**Palauttaa sen periodin tai periodinpuolikkaan nimen, jossa sijaitsevaa palkkia 
+     * {@code PalkinTunniste} kuvaa.
      * 
      * @return periodin tai periodinpuolikkaan nimi
      */
@@ -83,6 +125,14 @@ public class PalkinTunniste {
      */
     public PeriodinTunniste getPeriodinTunniste() {
         return new PeriodinTunniste(oppilaitos, periodi);
+    }
+    
+    /**Palauttaa {@code PalkinTunnisteen} järjestysluvun.
+     * 
+     * @return luku, joka määrittää {@code PalkinTunnisteiden} järjestyksen käyttöliitymässä
+     */
+    public int getJarjestysluku() {
+        return jarjestysluku;
     }
     
     /**Kertoo, kuuluuko annettu {@code PalkinTunniste} samaan periodiin, kuin tämä.

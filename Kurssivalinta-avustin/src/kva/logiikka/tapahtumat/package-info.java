@@ -18,5 +18,6 @@
 /**Sisältää luokat ja rajapinnat, joita käytetään sovelluslogiikan tapahtumien kuunteluun.
  * 
  * @author Väinö Viinikka
+ * @since Kurssivalinta-avustin 1.0
  */
 package kva.logiikka.tapahtumat;

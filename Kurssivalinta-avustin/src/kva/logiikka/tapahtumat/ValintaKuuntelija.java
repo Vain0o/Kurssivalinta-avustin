@@ -30,12 +30,14 @@ package kva.logiikka.tapahtumat;
  * ensin poistamisesta ja sitten muualta valinnasta.
  *
  * @author Väinö Viinikka
+ * @since Kurssivalinta-avustin 1.0
  */
+@FunctionalInterface
 public interface ValintaKuuntelija {
     
     /**Metodia kutsutaan, kun {@code Ryhman} valintatila muuttuu
      * 
-     * @param t 
+     * @param t tilanmuutosta kuvaava {@code ValintaTapahtuma}
      */
     public void tilaMuuttui(ValintaTapahtuma t);
 }

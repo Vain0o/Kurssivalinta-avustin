@@ -1,4 +1,4 @@
-/**Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
+/* Kurssivalinta-avustin – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
  * Copyright (C) 2022 Väinö Viinikka
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,6 +42,7 @@ import kva.logiikka.lataus.LuotavaRyhma;
  * valinta poistetaan.
  *
  * @author Väinö Viinikka
+ * @since Kurssivalinta-avustin 1.0
  */
 public class Kurssitarjotin {
     
@@ -72,7 +73,6 @@ public class Kurssitarjotin {
         this.moduulit = new HashSet<>(moduulit);
         this.mahdollisetPalkit = new ArrayList<>();
         this.valitutRyhmat = FXCollections.observableSet(new HashSet<>());
-        
         
         valitutRyhmat.addListener((SetChangeListener.Change<? extends Ryhma> change) -> {
             if(change.wasAdded()) {
@@ -112,7 +112,7 @@ public class Kurssitarjotin {
             }
             return tulos;
         });
-        Comparator<PalkinTunniste> vertailija2 = vertailija.thenComparing((sijainti) -> sijainti.getPalkki());
+        Comparator<PalkinTunniste> vertailija2 = vertailija.thenComparing(PalkinTunniste::getJarjestysluku);
         mahdollisetPalkit.sort(vertailija2);
     }
     

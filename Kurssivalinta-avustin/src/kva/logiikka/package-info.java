@@ -29,5 +29,6 @@
  *  ja muista tiedoista, jotka vaihtelevat ryhmittäin.
  * 
  * @author Väinö Viinikka
+ * @since Kurssivalinta-avustin 1.0
  */
 package kva.logiikka;

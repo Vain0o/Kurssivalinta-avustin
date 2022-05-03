@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!-- Kurssivalinta-avustin  – työkalu lukiolaisille helpottamaan kurssivalintojen tekoa
+Copyright (C) 2022 Väinö Viinikka
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html lang="fi">
+    <head>
+        <title>Kurssivalinta-avustin 1.0 dokumentaatio</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>Kurssivalinta-avustin 1.0 dokumentaatio</h1>
+        <p>
+        Kurssivalinta-avustin on ohjelma, jonka tarkoituksena on yksinkertaistaa työkalua, 
+        jolla Wilmassa tehdään lukion kurssivalinnat. Se lataa kurssitarjottimet suoraan 
+        Wilman nettisivuilta, ja esittää ne omassa käyttöliittymässään, joka tarjoaa 
+        seuraavia ominaisuuksia valintojen teon helpottamiseksi:
+        
+        <ul>
+            <li>kun käyttjäjä valitsee tietyn kurssin, saman kurssin muut ryhmät siirretään 
+                erilleen muista. Näin ne ovat edelleen nähtävillä, mutta eivät tiellä.
+            <li>jo käytyjen kurssien piilottaminen
+            <li>mahdollisuus piilottaa tietyt kurssit
+            <li>mahdollisuus piilottaa saman aineen kaikki kurssit
+            <li>mahdollisuus piilottaa muut, kuin pakolliset kurssit tietystä aineesta
+        </ul>
+        
+        Kurssivalinta-avustimen käyttöliittymä on toteutettu JavaFX-kirjaston avulla. 
+        Tietojen hakuun Wilmasta käytetään JavaFX:n tarjoamaa luokkaa <code>WebEngine</code>.
+        
+        @author Väinö Viinikka
+    </body>
+</html>

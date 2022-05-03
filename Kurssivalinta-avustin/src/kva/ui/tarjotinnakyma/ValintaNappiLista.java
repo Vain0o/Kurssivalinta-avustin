@@ -40,6 +40,7 @@ import javafx.scene.layout.FlowPane;
  *
  * @author Väinö Viinikka
  * @see kva.ui.tarjotinnakyma.ValintaNappi
+ * @since Kurssivalinta-avustin 1.0
  */
 public class ValintaNappiLista {
     

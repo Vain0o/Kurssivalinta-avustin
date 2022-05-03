@@ -18,12 +18,16 @@
 /**Sisältää luokat, joita käytetään {@code Kurssitarjottimen} lataamiseen ulkoisen 
  * tiedon perusteella.
  * <p>
- * Lataukseen tarvittavat komennot määritellään rajapinnassa {@link kva.logiikka.lataus.KurssitarjottimenLataaja}. 
- * Rajapinnan toteutukset vastaavat tietojen hakemisesta kukin omalla tavallaan. Toistaiseksi 
- * valmiina on ainoastaan {@link kva.logiikka.lataus.TestiLataaja}, joka hakee tiedot 
- * tekstitiedostosta. Internetiä hyödyntävä lataaja tullaa toteuttamaan lopulliseen 
- * versioon.
+ * Abstrakti luokka {@link kva.logiikka.lataus.KurssitarjottimenLataaja} toimii yläluokkana 
+ * luokille, jotka lataavat kurssitarjottimeen tulevat tiedot. Alaluokat vastaavat 
+ * tietojen hakemisesta kukin omalla tavallaan: {@link kva.logiikka.lataus.WebEngineLataaja} 
+ * lataa tiedot suoraan Wilmasta, kun taas testaamiseen tarkoitettu {@link kva.logiikka.lataus.TestiLataaja} 
+ * lataa ne tekstitiedostosta.
+ * <p>
+ * Pakkaus sisältää lataajaluokkien lisäksi tiedon säilytykseen tarkoitetun luokan 
+ * {@link kva.logiikka.lataus.LuotavaRyhma}.
  * 
  * @author Väinö Viinikka
+ * @since Kurssivalinta-avustin 1.0
  */
 package kva.logiikka.lataus;

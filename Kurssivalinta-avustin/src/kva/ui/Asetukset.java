@@ -30,6 +30,7 @@ import kva.logiikka.Moduuli.Tyyppi;
  * tulisi piilottaa.
  *
  * @author Väinö Viinikka
+ * @since Kurssivalinta-avustin 1.0
  */
 public class Asetukset {
     

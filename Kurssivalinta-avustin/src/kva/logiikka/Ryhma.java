@@ -36,6 +36,7 @@ import kva.logiikka.tapahtumat.ValintaTapahtuma.TapahtumaTyyppi;
  * tietojen pohjalta. {@code Ryhmien} sisältämiä tietoja ei voi muuttaa jälkikäteen.
  *
  * @author Väinö Viinikka
+ * @since Kurssivalinta-avustin 1.0
  */
 public class Ryhma {
     

@@ -16,27 +16,22 @@
  */
 package kva.ui;
 
-import java.util.Collection;
-import java.util.function.Consumer;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
-import kva.logiikka.Kurssitarjotin;
-import kva.logiikka.PeriodinTunniste;
 import kva.logiikka.Sovelluslogiikka;
+import kva.logiikka.Sovelluslogiikka.LatauksenTila;
 
 /**JavaFX-kirjastojen avulla luotu Kurssivalinta-avustimen käyttöliittymä.
  * <p>
  * Käyttöliittymä-ikkuna luodaan metodissa {@code luo} annettuun {@code Stage}-olioon. 
  * Ikkuna koostuu {@link kva.ui.Nakyma}-olioista, jotka näytetään {@link javafx.scene.control.TabPane}n 
- * välilehdillä. Aluksi näkyvissä ovat {@link kva.ui.AsetusNakyma} sekä {@link kva.ui.KurssitarjottimenValintaNakyma}, 
+ * välilehdillä. Aluksi näkyvissä ovat {@link kva.ui.AsetusNakyma} sekä {@link kva.ui.TestiLatausNakyma}, 
  * joka korvataan {@link kva.ui.KurssitarjotinNakyma}lla kun kurssitarjotin luodaan. 
  * Näkymien varsinainen toteutus on kyseisissä luokissa.
  *
  * @author Väinö Viinikka
+ * @since Kurssivalinta-avustin 1.0
  */
 public class Kayttoliittyma {
     
@@ -74,8 +69,15 @@ public class Kayttoliittyma {
      * @param ikkuna {@code Stage}, johon käyttöliittymä luodaan
      */
     public void luo(Stage ikkuna) {
+        logiikka.tilaProperty().addListener((a, vanhaArvo, uusiArvo) -> {
+            if(uusiArvo == LatauksenTila.KURSSITARJOTIN_LADATTU) {
+                luoKurssitarjotinNakyma();
+            }
+        });
+        
         AsetusNakyma asetusnakyma = new AsetusNakyma("Asetukset", this);
-        KurssitarjottimenValintaNakyma valintanakyma = new KurssitarjottimenValintaNakyma("Kurssitarjotin", this);
+        //LatausNakyma valintanakyma = new TestiLatausNakyma("Kurssitarjotin", this);
+        LatausNakyma valintanakyma = new WebEngineLatausNakyma("Kurssitarjotin", this);
         
         valilehdet = new TabPane(asetusnakyma.getValilehti(), valintanakyma.getValilehti());
         valilehdet.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
@@ -103,42 +105,12 @@ public class Kayttoliittyma {
         return asetukset;
     }
     
-    /**Käskee {@code Sovelluslogiikkaa} lataamaan {@code Kurssitarjottimen} ja luo 
-     * sen perusteella {@link kva.ui.KurssitarjotinNakyma}n.
-     * <p>
-     * Metodin kutsuminen edellyttää, että {@code Sovelluslogiikasta} on jo ladattu 
-     * periodien nimet, ja {@code valittavat} kuuluvat niihin.
-     * 
-     * @param valittavat niiden periodien tunnisteet, joiden halutaan kuuluvan {@code Kurssitarjottimeen}
-     * @throws java.lang.IllegalArgumentException jos {@code valittavat} sisältää 
-     *         {@code PeriodinTunnisteita}, joita ei löydy {@link kva.logiikka.Sovelluslogiikka#getPeriodienTunnisteet() }-listalta
-     * @throws java.lang.IllegalStateException jos {@code Sovelluslogiikan Tila} on 
-     *         {@code LUOTU}, {@code LADATAAN_PERIODIEN_NIMIA} tai {@code LADATAAN_KURSSITARJOTINTA}
-     * @throws java.lang.NullPointerException jos {@code valittavat} on {@code null}
-     */
-    public void lataaKurssitarjotin(Collection<PeriodinTunniste> valittavat) {
-        Consumer<Kurssitarjotin> tuloksenKasittely = (tarjotin) -> luoKurssitarjotinNakyma(tarjotin);
-        Consumer<Throwable> virheenKasittely = (ex) -> {
-            naytaVirheviesti("Virhe kurssitarjottimen lataamisessa:\n\n" + ex.getMessage());
-            //Seuraavan rivin kommentointi voidaan poistaa testaamisesn ajaksi.
-            //ex.printStackTrace();
-        };
-        getLogiikka().lataaKurssitarjotin(valittavat, tuloksenKasittely, virheenKasittely);
-    }
-    
-    public void naytaVirheviesti(String teksti) {
-        Alert ikkuna = new Alert(AlertType.NONE, teksti, ButtonType.OK);
-        ikkuna.setTitle("Kurssivalinta-avustin");
-        ikkuna.showAndWait();
-    }
-    
     /**Luo {@code Kayttoliittymalle KurssitarjotinNakyman} ja korvaa sillä {@code KurssitarjottimenValintaNakyman}. 
      * 
-     * @param tarjotin {@code Sovelluslogiikan Kurssitarjotin} 
      */
-    private void luoKurssitarjotinNakyma(Kurssitarjotin tarjotin) {
+    private void luoKurssitarjotinNakyma() {
         valilehdet.getTabs().removeIf((tab) -> tab.getText().equals("Kurssitarjotin"));
-        KurssitarjotinNakyma tarjotinNakyma = new KurssitarjotinNakyma("Kurssitarjotin", this, tarjotin);
+        KurssitarjotinNakyma tarjotinNakyma = new KurssitarjotinNakyma("Kurssitarjotin", this, logiikka.getTarjotin());
         valilehdet.getTabs().add(tarjotinNakyma.getValilehti());
         valilehdet.getSelectionModel().select(tarjotinNakyma.getValilehti());
     }

@@ -18,5 +18,6 @@
 /**Sisältää Kurssivalinta-avustimen pääluokan.
  * 
  * @author Väinö Viinikka
+ * @since Kurssivalinta-avustin 1.0
  */
 package kva;
