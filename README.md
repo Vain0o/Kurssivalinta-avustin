@@ -29,12 +29,17 @@ Piilotettavien aineiden listalla on valmiiksi merkkijonoja. Niistä ei tarvitse 
 
 Asetuksia ei tarvitse erikseen tallentaa, ja voit palata myöhemmin muokkaamaan niitä.
 ### Kurssitarjottimen lataaminen Wilmasta
+Nyt voit siirtyä Kurssitarjotin-välilehdelle. Syötä ensiksi näkymään Wilma-palvelimesi osoite (esim. https://helsinki.inschool.fi) ja klikkaa "Seuraava". Nyt näytölle ilmestyy selainnäkymä, jossa pääset kirjautumaan Wilmaan. Näkymän avautuminen kestää hetken aikaa, ole kärsivällinen. Kun olet kirjautunut Wilmaan, ja etusivu on latautunut, paina "Lataa periodit". Wilma-tunnuksiasi ei tallenneta mihinkään.
+
+Seuraavaksi näytölle ilmestyy kaavake, josta pääset valitsemaan ne periodit, jotka haluat ladattavan. Kun olet saanut valinnat mieleisiksesi, klikkaa "Lataa"-painiketta, joka löytyy kaavakkeen alalaidasta, ja kurssitarjottimet latautuvat tietokoneellesi. Lataus lähtee käyntiin, vaikka aluksi mitään ei näytä tapahtuvan. Älä klikkaa nappia toista kertaa.
 ### Kurssien valitseminen
+Kurssivalintanäkymä on päällisin puolin samanlainen, kuin Wilmassa. Siinä ei kuitenkaan näy kursseja, jotka olet jo käynyt tai jotka olet valinnut piilotettaviksi. Kurssit valitaan klikkaamalla niitä, jolloin kaikki saman kurssin muut ryhmät hyppäävät oikealle erilleen muista. Tällä tavoin voit keskittyä kursseihin, joita et ole vielä valinnut. Näin voit huomata esimerkiksi, että toisen jakson neljännessä palkissa on vain yksi kurssi, jonka aiot käydä. Muualta valitut kurssit ovat kuitenkin näkyvillä siltä varalta, että satut tarvitsemaan niitä.
 ## Lisenssi- ja tekijänoikeustiedot
 Kurssivalinta-avustin on lisensoitu Free Software Foundationin julkaiseman GNU General Public Licensen versiolla 3 tai myöhemmillä versioilla. Pähkinänkuoressa tämä tarkoittaa seuraavaa:
 - Saat ladata ohjelman koneellesi ja käyttää sitä ilman minkäänlaisia rajoituksia.
 - Saat muokata ja levittää ohjelmaa tietyillä ehdoilla.
 - OHJELMALLA EI OLE MINKÄÄNLAISTA TAKUUTA. KÄYTÄT OHJELMAA OMALLA VASTUULLASI.
+
 Lisenssin (englanninkielinen) teksti löytyy tiedostosta [LICENSE.txt](LICENSE.txt).
 ## Tulevaisuus
 Kurssivalinta-avustimeen on suunnitteilla uusia ominaisuuksia, jotka toivon mukaan lisäävät sen käyttökelpoisuutta ja helppokäyttöisyyttä. Suunnitteilla ovat:
